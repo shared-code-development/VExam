@@ -1,6 +1,13 @@
 package org.exam.service;
 
+import org.exam.bean.entity.TMenu;
+import org.exam.bean.entity.TMenuExample;
+import org.exam.common.UserUtils;
+import org.exam.mapper.TMenuMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author heshiyuan
@@ -14,4 +21,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class MenuService {
+
+    @Autowired
+    private TMenuMapper tMenuMapper;
+
+    public List<TMenu> getMenusByUserId(){
+        return tMenuMapper.getMenusByUserId(UserUtils.getCurrentUser().getUserId());
+    }
 }

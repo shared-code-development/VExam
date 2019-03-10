@@ -3,12 +3,14 @@ package org.exam.service;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.exam.bean.entity.TUser;
+import org.exam.bean.entity.TUserExample;
 import org.exam.mapper.TUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,22 +26,19 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@Transactional
 public class UserService implements UserDetailsService {
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     TUserMapper tUserMapper;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("[username]:{}", username);
-        if(StringUtils.isBlank(username)){
-            throw new UsernameNotFoundException(username + "is not exists!");
+        if (StringUtils.isBlank(username)) {
+            throw new UsernameNotFoundException(username + " is not exists!");
         }
-        TUser user = new TUser();
-        user.setUsername(username);
-//        List<TUser> userList = tUserMapper.selectBy(user);
-        List<TUser> userList = tUserMapper.selectAll();
-        if(null!=userList&&userList.size()>0){
-            return userList.get(0);
-        }
-        return null;
+        TUser user = tUserMapper.loadUserByUsername(username);
+        return user;
     }
 }

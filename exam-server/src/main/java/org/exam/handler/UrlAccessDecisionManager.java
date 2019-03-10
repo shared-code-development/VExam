@@ -1,5 +1,7 @@
-package org.exam.config;
+package org.exam.handler;
 
+import org.exam.enums.BusinessEnum;
+import org.exam.enums.RoleEnum;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -20,11 +22,12 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
             ConfigAttribute ca = iterator.next();
             //当前请求需要的权限
             String needRole = ca.getAttribute();
-            if ("ROLE_LOGIN".equals(needRole)) {
+            if (RoleEnum.LOGIN.getCode().equals(needRole)) {
                 if (auth instanceof AnonymousAuthenticationToken) {
-                    throw new BadCredentialsException("未登录");
-                } else
+                    throw new BadCredentialsException(BusinessEnum.AUTHORITY_NOT_LOGIN_EXCEPTION.getMessage());
+                } else{
                     return;
+                }
             }
             //当前用户所具有的权限
             Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
@@ -34,7 +37,7 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
                 }
             }
         }
-        throw new AccessDeniedException("权限不足!");
+        throw new AccessDeniedException(BusinessEnum.AUTHORITY_NOT_ENOUGH_EXCEPTION.getMessage());
     }
     @Override
     public boolean supports(ConfigAttribute configAttribute) {

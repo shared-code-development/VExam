@@ -1,14 +1,21 @@
 package org.exam.bean.dto;
 
+import org.exam.enums.BusinessEnum;
+
 /**
  * @author heshiyuan
  */
 public class RespBean {
-    private Integer status;
+    private Integer status = 200;
     private String msg;
     private Object obj;
 
     private RespBean() {
+    }
+    private RespBean(BusinessEnum businessEnum, Object obj) {
+        this.status = businessEnum.getCode();
+        this.msg = businessEnum.getMessage();
+        this.obj = obj;
     }
 
     public static RespBean build() {
@@ -19,17 +26,18 @@ public class RespBean {
         return new RespBean(200, msg, obj);
     }
 
+    public static RespBean ok(BusinessEnum businessEnum,Object obj) {
+        return new RespBean(businessEnum, obj);
+    }
+
     public static RespBean ok(String msg) {
         return new RespBean(200, msg, null);
     }
 
-    public static RespBean error(String msg, Object obj) {
-        return new RespBean(500, msg, obj);
+    public static RespBean error(BusinessEnum businessEnum) {
+        return new RespBean(businessEnum, null);
     }
 
-    public static RespBean error(String msg) {
-        return new RespBean(500, msg, null);
-    }
 
     private RespBean(Integer status, String msg, Object obj) {
         this.status = status;

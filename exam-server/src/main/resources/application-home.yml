@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -16,3 +17,6 @@ spring:
 #        max-idle: 8
 #        max-wait: -1ms
 #        min-idle: 0
+
+server:
+  port: 8082
