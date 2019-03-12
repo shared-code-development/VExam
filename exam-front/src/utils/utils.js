@@ -16,7 +16,6 @@ export const initMenu = (router, store)=> {
     return;
   }
   getRequest("/config/menu").then(resp=> {
-    debugger
     if (resp && resp.status == 200) {
       var fmtRoutes = formatRoutes(resp.data);
       router.addRoutes(fmtRoutes);
@@ -26,7 +25,6 @@ export const initMenu = (router, store)=> {
   })
 }
 export const formatRoutes = (routes)=> {
-  debugger
   let fmRoutes = [];
   routes.forEach(router=> {
     let {
@@ -43,7 +41,6 @@ export const formatRoutes = (routes)=> {
     let fmRouter = {
       path: path,
       component(resolve){
-        debugger
         if (component.startsWith("Home")) {
           require(['../components/' + component + '.vue'], resolve)
         } else if (component.startsWith("System")) {

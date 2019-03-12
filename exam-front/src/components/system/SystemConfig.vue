@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-  import MenuManager from './basic/MenuManage.vue'
+  import MenuManage from './basic/MenuManage.vue'
   export default {
     data() {
       return {
@@ -17,7 +17,7 @@
     },
     methods: {},
     components: {
-      'menu-manager': MenuManager,
+      'menu-manage': MenuManage,
     }
   };
 </script>

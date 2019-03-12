@@ -1,11 +1,12 @@
 package org.exam.controller;
 
 import io.swagger.annotations.*;
+import org.exam.bean.dto.RespBean;
 import org.exam.bean.entity.TMenu;
+import org.exam.enums.BusinessEnum;
 import org.exam.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +41,11 @@ public class ConfigController {
         return menuService.getMenusByUserId();
     }
 
+    @GetMapping("/menu/{parentId}")
+    public List<TMenu> menu(@PathVariable Integer parentId) {
+        return menuService.getMenuByParentId(parentId);
+    }
+
     @ApiOperation(value = "配置菜单", notes = "根据当前登陆用户获取当前用户的菜单列表")
     @ApiResponses({
             @ApiResponse(code=100,message="参数校验失败"),
@@ -49,8 +55,13 @@ public class ConfigController {
             @ApiResponse(code=600,message="业务异常"),
             @ApiResponse(code=700,message="其它异常")
     })
-    @RequestMapping("/menu/list")
+    @GetMapping("/menu/list")
     public List<TMenu> menuList() {
-        return menuService.getMenusByUserId();
+        return menuService.getMenuList();
+    }
+
+    @PostMapping("/menu")
+    public RespBean menu(TMenu menu) {
+        return RespBean.ok(BusinessEnum.SERVER_SUCCESS_EXCEPTION, menuService.addMenu(menu));
     }
 }

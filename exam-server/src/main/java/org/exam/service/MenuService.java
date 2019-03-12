@@ -32,6 +32,23 @@ public class MenuService {
 
 
     public List<TMenu> getMenuList(){
-        return tMenuMapper.getMenusByUserId(UserUtils.getCurrentUser().getUserId());
+        TMenuExample menuExample = new TMenuExample();
+        menuExample.createCriteria().andIsDelEqualTo((byte) 0);
+        return tMenuMapper.selectByExample(menuExample);
+    }
+
+    public List<TMenu> getMenuByParentId(Integer parentId){
+        TMenuExample menuExample = new TMenuExample();
+        menuExample.createCriteria()
+                .andParentIdEqualTo(parentId)
+                .andIsDelEqualTo((byte) 0);
+        return tMenuMapper.selectByExample(menuExample);
+    }
+
+    public boolean addMenu(TMenu menu){
+        if(tMenuMapper.insertSelective(menu)==1){
+            return true;
+        }
+        return false;
     }
 }

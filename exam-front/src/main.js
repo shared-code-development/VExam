@@ -25,7 +25,6 @@ Vue.prototype.putRequest = putRequest;
 Vue.prototype.isNotNullORBlank = isNotNullORBlank;
 
 router.beforeEach((to, from, next)=> {
-    debugger
     if (to.name == 'Login') {
       next();
       return;
