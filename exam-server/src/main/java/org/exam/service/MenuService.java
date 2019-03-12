@@ -22,10 +22,16 @@ import java.util.List;
 @Service
 public class MenuService {
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private TMenuMapper tMenuMapper;
 
     public List<TMenu> getMenusByUserId(){
+        return tMenuMapper.getMenusByUserId(UserUtils.getCurrentUser().getUserId());
+    }
+
+
+    public List<TMenu> getMenuList(){
         return tMenuMapper.getMenusByUserId(UserUtils.getCurrentUser().getUserId());
     }
 }
