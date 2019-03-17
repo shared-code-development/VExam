@@ -71,4 +71,6 @@ public interface TMenuMapper {
      * @return
      */
     List<TMenu> getMenusByUserId(String userId);
+
+    List<TMenu> getMenusByParentId(Integer parentId);
 }

@@ -19,9 +19,9 @@
         <result column="version" jdbcType="INTEGER" property="version"/>
 
         <collection property="roles" ofType="org.exam.bean.entity.TRole">
-            <id column="id" property="id"/>
-            <result column="name" property="name"/>
-            <result column="nameZh" property="namezh"/>
+            <id column="id1" property="id"/>
+            <result column="name1" property="name"/>
+            <result column="nameZh1" property="namezh"/>
         </collection>
 
         <collection property="children" ofType="org.exam.bean.entity.TMenu">
@@ -32,10 +32,36 @@
             <result column="icon_cls2" property="iconCls" jdbcType="VARCHAR"/>
             <result column="keep_alive2" property="keepAlive"/>
             <result column="require_auth2" property="requireAuth"/>
-            <collection property="children" ofType="org.exam.bean.entity.TMenu">
+            <collection property="children" ofType="org.exam.bean.entity.TMenu" javaType="ArrayList">
                 <id column="id3" property="id"/>
                 <result column="name3" property="name" jdbcType="VARCHAR"/>
             </collection>
+        </collection>
+    </resultMap>
+    <resultMap id="BaseResultTree" type="org.exam.bean.entity.TMenu">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="path" jdbcType="VARCHAR" property="path"/>
+        <result column="component" jdbcType="VARCHAR" property="component"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="icon_cls" jdbcType="VARCHAR" property="iconCls"/>
+        <result column="keep_alive" jdbcType="BIT" property="keepAlive"/>
+        <result column="require_auth" jdbcType="BIT" property="requireAuth"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
+        <result column="is_del" jdbcType="BIT" property="isDel"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
+        <result column="creater" jdbcType="INTEGER" property="creater"/>
+        <result column="updater" jdbcType="INTEGER" property="updater"/>
+        <result column="version" jdbcType="INTEGER" property="version"/>
+
+        <collection property="roles" ofType="org.exam.bean.entity.TRole">
+            <id column="id1" property="id"/>
+            <result column="name1" property="name"/>
+            <result column="nameZh1" property="namezh"/>
+        </collection>
+
+        <collection property="children" ofType="org.exam.bean.entity.TMenu" select="getMenusByParentId" column="id" javaType="java.util.ArrayList">
         </collection>
     </resultMap>
     <sql id="Example_Where_Clause">
@@ -122,8 +148,17 @@
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.exam.bean.entity.TMenu"
+    <insert id="insertSelective"
+            keyColumn="id"
+            keyProperty="id"
+            parameterType="org.exam.bean.entity.TMenu"
             useGeneratedKeys="true">
+        <selectKey keyProperty="sort" order="BEFORE" resultType="byte">
+            select max(sort) from t_menu
+            <if test="parentId != null">
+              where parent_id = #{parentId} and is_del = 0
+            </if>
+        </selectKey>
         insert into t_menu
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="url != null">
@@ -150,7 +185,7 @@
             <if test="parentId != null">
                 parent_id,
             </if>
-            <if test="is_del != null">
+            <if test="isDel != null">
                 is_del,
             </if>
             <if test="createTime != null">
@@ -167,6 +202,9 @@
             </if>
             <if test="version != null">
                 version,
+            </if>
+            <if test="sort != null">
+                sort,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -194,7 +232,7 @@
             <if test="parentId != null">
                 #{parentId,jdbcType=INTEGER},
             </if>
-            <if test="is_del != null">
+            <if test="isDel != null">
                 #{is_del,jdbcType=BIT},
             </if>
             <if test="createTime != null">
@@ -211,6 +249,9 @@
             </if>
             <if test="version != null">
                 #{version,jdbcType=INTEGER},
+            </if>
+            <if test="sort != null">
+                #{sort,jdbcType=BIT},
             </if>
         </trim>
     </insert>
@@ -250,7 +291,7 @@
             <if test="record.parentId != null">
                 parent_id = #{record.parentId,jdbcType=INTEGER},
             </if>
-            <if test="record.is_del != null">
+            <if test="record.isDel != null">
                 is_del = #{record.is_del,jdbcType=BIT},
             </if>
             <if test="record.createTime != null">
@@ -284,7 +325,7 @@
         keep_alive = #{record.keepAlive,jdbcType=BIT},
         require_auth = #{record.requireAuth,jdbcType=BIT},
         parent_id = #{record.parentId,jdbcType=INTEGER},
-        is_del = #{record.is_del,jdbcType=BIT},
+        is_del = #{record.isDel,jdbcType=BIT},
         create_time = #{record.createTime,jdbcType=BIGINT},
         update_time = #{record.updateTime,jdbcType=BIGINT},
         creater = #{record.creater,jdbcType=INTEGER},
@@ -367,7 +408,7 @@
                 #{keepAlive,jdbcType=BIT},
                 #{requireAuth,jdbcType=BIT},
                 #{parentId,jdbcType=INTEGER},
-                #{is_del,jdbcType=BIT},
+                #{isDel,jdbcType=BIT},
                 #{createTime,jdbcType=BIGINT},
                 #{updateTime,jdbcType=BIGINT},
                 #{creater,jdbcType=INTEGER},
@@ -408,5 +449,10 @@
                            and ur.`user_id` = #{userId, jdbcType=VARCHAR})
           and m2.is_del = 0
         order by m1.sort, m2.sort;
+    </select>
+
+    <select id="getMenusByParentId" resultMap="BaseResultTree">
+        select *
+        from t_menu where parent_id = #{parentId} and is_del = 0;
     </select>
 </mapper>

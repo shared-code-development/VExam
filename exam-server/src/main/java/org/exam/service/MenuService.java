@@ -6,7 +6,9 @@ import org.exam.common.UserUtils;
 import org.exam.mapper.TMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,17 +40,24 @@ public class MenuService {
     }
 
     public List<TMenu> getMenuByParentId(Integer parentId){
-        TMenuExample menuExample = new TMenuExample();
-        menuExample.createCriteria()
-                .andParentIdEqualTo(parentId)
-                .andIsDelEqualTo((byte) 0);
-        return tMenuMapper.selectByExample(menuExample);
+      try{
+        return tMenuMapper.getMenusByParentId(parentId);
+      }catch (Exception e){
+          e.printStackTrace();
+          return new ArrayList<>();
+      }
     }
-
+    @Transactional(rollbackFor = Exception.class)
     public boolean addMenu(TMenu menu){
         if(tMenuMapper.insertSelective(menu)==1){
             return true;
         }
         return false;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteMenu(Integer id){
+        tMenuMapper.deleteByPrimaryKey(id);
+        return true;
     }
 }

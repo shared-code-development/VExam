@@ -2,7 +2,11 @@ package org.exam.bean.entity;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
+/**
+ * @author heshiyuan
+ */
 @Data
 public class TMenu {
     private Integer id;
@@ -34,7 +38,7 @@ public class TMenu {
     private Integer updater;
 
     private Integer version;
-    private List<TRole> roles;
-    private List<TMenu> children;
-
+    private List<TRole> roles = new ArrayList<>();
+    private List<TMenu> children = new ArrayList<>();
+    private Byte sort;
 }

@@ -12,7 +12,7 @@ package org.exam.enums;
  */
 public enum BusinessEnum {
     //
-    SERVER_SUCCESS_EXCEPTION(200, "操作成功!"),
+    SERVER_SUCCESS(200, "操作成功!"),
     LOGIN_SUCCESS(200, "登录成功!"),
 
 

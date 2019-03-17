@@ -86,7 +86,7 @@
       loadTreeData() {
         debugger
         var _this = this;
-        this.getRequest("/config/menu/0").then(resp => {
+        this.getRequest("/system/config/menu/0").then(resp => {
           debugger
           _this.treeLoading = false;
           if (resp && resp.status == 200) {
@@ -110,10 +110,11 @@
         var _this = this;
         this.dialogVisible = false;
         this.treeLoading = true;
-        this.postRequest("/config/menu", {
+        this.postRequest("/system/config/menu", {
           name: this.menuName,
           parentId: this.menuTree
         }).then(resp => {
+          debugger
           _this.treeLoading = false;
           if (resp && resp.status == 200) {
             var respData = resp.data;
@@ -124,13 +125,14 @@
       },
       loadAllMenu() {
         var _this = this;
-        this.getRequest("/config/menu/list").then(resp => {
+        this.getRequest("/system/config/menu/list").then(resp => {
           if (resp && resp.status == 200) {
             _this.allMenu = resp.data;
           }
         });
       },
       showAddMenuView(data, event) {
+        debugger
         this.loadAllMenu();
         this.dialogVisible = true;
         this.parentMenu = data.id;
@@ -150,7 +152,7 @@
             type: 'warning'
           }).then(() => {
             _this.treeLoading = true;
-            _this.deleteRequest("/system/basic/dep/" + data.id).then(resp => {
+            _this.deleteRequest("/system/config/menu/" + data.id).then(resp => {
               _this.treeLoading = false;
               if (resp && resp.status == 200) {
                 var respData = resp.data;

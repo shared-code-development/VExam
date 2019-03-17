@@ -12,6 +12,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,6 +31,7 @@ public class CustomMetadataSource implements FilterInvocationSecurityMetadataSou
 //        List<TMenu> allMenu = tMenuMapper.selectByExample(menuExample);
         List<TMenu> allMenu = tMenuMapper.getAllMenu();
         for (TMenu menu : allMenu) {
+            if(StringUtils.isEmpty(menu.getUrl())) {continue;}
             if (antPathMatcher.match(menu.getUrl(), requestUrl) && menu.getRoles().size()>0) {
                 List<TRole> roles = menu.getRoles();
                 int size = roles.size();

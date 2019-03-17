@@ -1,4 +1,4 @@
-package org.exam.controller;
+package org.exam.controller.system;
 
 import io.swagger.annotations.*;
 import org.exam.bean.dto.RespBean;
@@ -20,10 +20,10 @@ import java.util.List;
  * Copyright (c) 2019 shiyuan4work@126.com All rights reserved.
  * @price ¥5    微信：hewei1109
  */
-@Api(tags = "微考试系统-配置接口")
+@Api(tags = "微考试系统-菜单配置接口")
 @RestController
-@RequestMapping("/config")
-public class ConfigController {
+@RequestMapping("/system/config")
+public class MenuController {
     @Autowired
     private MenuService menuService;
 
@@ -56,12 +56,17 @@ public class ConfigController {
             @ApiResponse(code=700,message="其它异常")
     })
     @GetMapping("/menu/list")
-    public List<TMenu> menuList() {
+    public List<TMenu> getList() {
         return menuService.getMenuList();
     }
 
     @PostMapping("/menu")
-    public RespBean menu(TMenu menu) {
-        return RespBean.ok(BusinessEnum.SERVER_SUCCESS_EXCEPTION, menuService.addMenu(menu));
+    public RespBean insert(TMenu menu) {
+        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, menuService.addMenu(menu));
+    }
+
+    @DeleteMapping("/menu/{id}")
+    public RespBean delete(@PathVariable Integer id) {
+        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, menuService.deleteMenu(id));
     }
 }
