@@ -56,8 +56,8 @@ public class MenuController {
             @ApiResponse(code=700,message="其它异常")
     })
     @GetMapping("/menu/list")
-    public List<TMenu> getList() {
-        return menuService.getMenuList();
+    public RespBean getList() {
+        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, menuService.getMenuList());
     }
 
     @PostMapping("/menu")
@@ -68,5 +68,10 @@ public class MenuController {
     @DeleteMapping("/menu/{id}")
     public RespBean delete(@PathVariable Integer id) {
         return RespBean.ok(BusinessEnum.SERVER_SUCCESS, menuService.deleteMenu(id));
+    }
+
+    @GetMapping("/menu/{parentId}/{roleId}")
+    public RespBean getListByRole(@PathVariable Integer parentId, @PathVariable Integer roleId) {
+        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, menuService.getMenuByParentId(parentId));
     }
 }

@@ -17,7 +17,7 @@
     </div>
     <div style="margin-top: 10px;text-align: left">
       <el-collapse v-model="activeColItem" accordion style="width: 500px;" @change="collapseChange">
-        <el-collapse-item v-for="(item,index) in roles" :title="item.nameZh" :name="item.id" :key="item.name">
+        <el-collapse-item v-for="(item,index) in roles" :title="item.namezh" :name="item.id" :key="item.name">
           <el-card class="box-card">
             <div slot="header">
               <span>可访问的资源</span>
@@ -87,7 +87,6 @@
           }).then(resp=> {
             if (resp && resp.status == 200) {
               var data = resp.data;
-              _
               _this.initRoles();
               _this.newRole = '';
               _this.newRoleZh = '';
@@ -97,7 +96,6 @@
           })
         }
       },
-      //有五个树，但是五个树用的同一个数据源
       updateRoleMenu(index){
         var checkedKeys = this.$refs.tree[index].getCheckedKeys(true);
         var _this = this;
@@ -111,15 +109,17 @@
         })
       },
       collapseChange(activeName){
+        debugger
         if (activeName == '') {
           return;
         }
         var _this = this;
-        this.getRequest("/system/config/menuTree/" + activeName).then(resp=> {
+        this.getRequest("/system/config/menu/0/" + activeName).then(resp=> {
+          debugger
           if (resp && resp.status == 200) {
-            var data = resp.data;
-            _this.treeData = data.menus;
-            _this.checkedKeys = data.mids;
+            _this.treeData = resp.data.obj;
+            // 以下是被选中的id
+            _this.checkedKeys = resp.data.obj.mids;
           }
         })
       },
@@ -129,9 +129,10 @@
       initRoles(){
         var _this = this;
         this.getRequest("/system/config/roles").then(resp=> {
+          debugger
           _this.loading = false;
           if (resp && resp.status == 200) {
-            _this.roles = resp.data;
+            _this.roles = resp.data.obj;
             _this.activeColItem=-1;
           }
         })

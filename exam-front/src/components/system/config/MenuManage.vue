@@ -73,13 +73,11 @@
     },
     watch: {
       keywords(val) {
-        debugger
         this.$refs.tree.filter(val);
       }
     },
     methods: {
       filterNode(value, data) {
-        debugger
         if (!value) return true;
         return data.name.indexOf(value) !== -1;
       },
@@ -87,7 +85,6 @@
         debugger
         var _this = this;
         this.getRequest("/system/config/menu/0").then(resp => {
-          debugger
           _this.treeLoading = false;
           if (resp && resp.status == 200) {
             _this.treeData = resp.data;
@@ -127,7 +124,7 @@
         var _this = this;
         this.getRequest("/system/config/menu/list").then(resp => {
           if (resp && resp.status == 200) {
-            _this.allMenu = resp.data;
+            _this.allMenu = resp.data.obj;
           }
         });
       },
@@ -139,7 +136,8 @@
         event.stopPropagation()
       },
       deleteMenu(data, event) {
-        var _this = this;
+        debugger
+        let _this = this;
         if (data.children.length > 0) {
           this.$message({
             message: '该菜单下尚有其他部门，不能被删除!',
