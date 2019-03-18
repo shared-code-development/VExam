@@ -140,7 +140,7 @@
         let _this = this;
         if (data.children.length > 0) {
           this.$message({
-            message: '该菜单下尚有其他部门，不能被删除!',
+            message: '该菜单下尚有其他菜单，不能被删除!',
             type: 'warning'
           });
         } else {
