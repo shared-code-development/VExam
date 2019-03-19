@@ -11,8 +11,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
+/**
+ * @author heshiyuan
+ */
 @Data
 public class TUser implements UserDetails {
     private Integer id;
@@ -22,6 +24,15 @@ public class TUser implements UserDetails {
     private String name;
 
     private String phone;
+
+    private Byte sex;
+    private Long birthday;
+    private Long enrollmentDate;
+    private Long graduationDate;
+    private String idCard;
+    private String maritalStatus;
+    private Long nationId;
+    private String nativePlace;
 
     private String telePhone;
 
@@ -42,12 +53,13 @@ public class TUser implements UserDetails {
     private Long updateTime;
 
     private Integer creater;
-
+    private String email;
     private Integer updater;
 
     private Integer version;
 
     private List<TRole> roles;
+    private TNation nation;
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -64,7 +76,7 @@ public class TUser implements UserDetails {
         TRole role = new TRole();
         role.setId(0);
         role.setName(RoleEnum.ADMIN.getCode());
-        role.setNamezh(RoleEnum.ADMIN.getDescription());
+        role.setNameZh(RoleEnum.ADMIN.getDescription());
         roleList.add(role);
         return roleList;
     }

@@ -21,7 +21,7 @@
         <collection property="roles" ofType="org.exam.bean.entity.TRole">
             <id column="id1" property="id"/>
             <result column="name1" property="name"/>
-            <result column="nameZh1" property="namezh"/>
+            <result column="nameZh1" property="nameZh"/>
         </collection>
 
         <collection property="children" ofType="org.exam.bean.entity.TMenu">
@@ -58,7 +58,7 @@
         <collection property="roles" ofType="org.exam.bean.entity.TRole">
             <id column="id1" property="id"/>
             <result column="name1" property="name"/>
-            <result column="nameZh1" property="namezh"/>
+            <result column="nameZh1" property="nameZh"/>
         </collection>
 
         <collection property="children" ofType="org.exam.bean.entity.TMenu" select="getMenusByParentId" column="id" javaType="java.util.ArrayList">
@@ -417,7 +417,7 @@
     </insert>
 
     <select id="getAllMenu" resultMap="BaseResultMap">
-        select m.*, r.`id` as rid, r.`name` as name, r.`nameZh` as namezh
+        select m.*, r.`id` as rid, r.`name` as name, r.`nameZh` as nameZh
         from t_menu m
                  left join t_menu_role mr on m.`id` = mr.`id`
                  left join t_role r on mr.`id` = r.`id`

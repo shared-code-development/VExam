@@ -9,15 +9,27 @@
         <result column="tele_phone" jdbcType="VARCHAR" property="telePhone"/>
         <result column="address" jdbcType="VARCHAR" property="address"/>
         <result column="is_del" jdbcType="BIT" property="isDel"/>
+        <result column="sex" jdbcType="BIT" property="sex"/>
+        <result column="marital_status" jdbcType="BIT" property="maritalStatus"/>
         <result column="username" jdbcType="VARCHAR" property="username"/>
         <result column="password" jdbcType="VARCHAR" property="password"/>
         <result column="userface" jdbcType="VARCHAR" property="userface"/>
+        <result column="id_card" jdbcType="VARCHAR" property="idCard"/>
+        <result column="native_place" jdbcType="VARCHAR" property="nativePlace"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
         <result column="create_time" jdbcType="BIGINT" property="createTime"/>
         <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
         <result column="creater" jdbcType="INTEGER" property="creater"/>
         <result column="updater" jdbcType="INTEGER" property="updater"/>
         <result column="version" jdbcType="INTEGER" property="version"/>
+        <result column="enrollment_date" jdbcType="BIGINT" property="enrollmentDate"/>
+        <result column="graduation_date" jdbcType="BIGINT" property="graduationDate"/>
+        <result column="birthday" jdbcType="BIGINT" property="birthday"/>
+        <association property="nation" javaType="org.exam.bean.entity.TNation">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+        </association>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -81,7 +93,8 @@
     </sql>
     <sql id="Base_Column_List">
         id, user_id, name, phone, tele_phone, address, is_del, username, password, userface,
-        remark, create_time, update_time, creater, updater, version
+        remark, create_time, update_time, creater, updater, version, sex, id_card,
+        marital_status, native_place, birthday, email, enrollment_date, graduation_date
     </sql>
 
     <resultMap id="lazyLoadRoles" type="org.exam.bean.entity.TUser" extends="BaseResultMap">
@@ -101,6 +114,12 @@
         from t_user
         WHERE username = #{username}
           and is_del = 0;
+    </select>
+    <select id="getAllUsers" resultMap="BaseResultMap">
+        select *
+        from t_user
+        WHERE
+           is_del = 0;
     </select>
     <select id="getRolesById" resultType="org.exam.bean.entity.TRole">
         SELECT r.*

@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-@Transactional
+@Transactional(rollbackFor = Exception.class)
 public class UserService implements UserDetailsService {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
@@ -41,4 +41,10 @@ public class UserService implements UserDetailsService {
         TUser user = tUserMapper.loadUserByUsername(username);
         return user;
     }
+
+    public List<TUser> getUserList(){
+        TUserExample userExample = new TUserExample();
+        return tUserMapper.selectByExample(userExample);
+    }
+
 }

@@ -20,6 +20,7 @@ import java.util.List;
  * Copyright (c) 2019 shiyuan4work@126.com All rights reserved.
  * @price ¥5    微信：hewei1109
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Slf4j
 @Service
 public class RoleService {

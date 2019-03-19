@@ -17,7 +17,7 @@
     </div>
     <div style="margin-top: 10px;text-align: left">
       <el-collapse v-model="activeColItem" accordion style="width: 500px;" @change="collapseChange">
-        <el-collapse-item v-for="(item,index) in roles" :title="item.namezh" :name="item.id" :key="item.name">
+        <el-collapse-item v-for="(item,index) in roles" :title="item.nameZh" :name="item.id" :key="item.name">
           <el-card class="box-card">
             <div slot="header">
               <span>可访问的资源</span>
@@ -52,6 +52,7 @@
   export default{
     mounted: function () {
       this.loading = true;
+      debugger
       this.initRoles();
     },
     methods: {
@@ -127,7 +128,7 @@
 //        console.log(data,checked,indeterminate)
       },
       initRoles(){
-        var _this = this;
+        let _this = this;
         this.getRequest("/system/config/roles").then(resp=> {
           debugger
           _this.loading = false;

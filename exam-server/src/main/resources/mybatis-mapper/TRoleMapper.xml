@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="org.exam.bean.entity.TRole">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="nameZh" jdbcType="VARCHAR" property="namezh" />
+    <result column="nameZh" jdbcType="VARCHAR" property="nameZh" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>

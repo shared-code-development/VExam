@@ -34,11 +34,11 @@
                                                                                           style="margin-right: 5px"></i>{{fileUploadBtnText}}
             </el-button>
           </el-upload>
-          <el-button type="success" size="mini" @click="exportEmps"><i class="fa fa-lg fa-level-down"
+          <el-button type="success" size="mini" @click="exportUsers"><i class="fa fa-lg fa-level-down"
                                                                        style="margin-right: 5px"></i>导出数据
           </el-button>
           <el-button type="primary" size="mini" icon="el-icon-plus"
-                     @click="showaddUserView">
+                     @click="showAddUserView">
             添加
           </el-button>
         </div>
@@ -169,8 +169,8 @@
             </el-table-column>
           </el-table>
           <div style="display: flex;justify-content: space-between;margin: 2px">
-            <el-button type="danger" size="mini" v-if="emps.length>0" :disabled="multipleSelection.length==0"
-                       @click="deleteManyEmps">批量删除
+            <el-button type="danger" size="mini" v-if="users.length>0" :disabled="multipleSelection.length==0"
+                       @click="deleteManyUsers">批量删除
             </el-button>
             <el-pagination
               background
@@ -184,7 +184,7 @@
         </div>
       </el-main>
     </el-container>
-    <el-form :model="emp" :rules="rules" ref="addUserForm" style="margin: 0px;padding: 0px;">
+    <el-form :model="user" :rules="rules" ref="addUserForm" style="margin: 0px;padding: 0px;">
       <div style="text-align: left">
         <el-dialog
           :title="dialogTitle"
@@ -617,7 +617,7 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      deleteManyEmps() {
+      deleteManyUsers() {
         this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -675,8 +675,8 @@
             this.tableLoading = false;
             if (resp && resp.status == 200) {
               var data = resp.data;
-              _this.users = data.users;
-              _this.totalCount = data.count;
+              _this.users = data.obj;
+              _this.totalCount = data.obj.length;
               //            _this.emptyUserData();
             }
           })
@@ -765,7 +765,7 @@
         delete this.user.notWorkDate;
         this.dialogVisible = true;
       },
-      showaddUserView() {
+      showAddUserView() {
         this.dialogTitle = "添加员工";
         this.dialogVisible = true;
         var _this = this;

@@ -19,6 +19,7 @@ public interface TUserMapper {
      * @return
      */
     TUser loadUserByUsername(String username);
+    List<TUser> getAllUsers();
     List<TRole> getRolesById(Long id);
     long countByExample(TUserExample example);
 

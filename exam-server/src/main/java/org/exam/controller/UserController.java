@@ -3,13 +3,14 @@ package org.exam.controller;
 import org.exam.bean.dto.RespBean;
 import org.exam.bean.entity.TUser;
 import org.exam.enums.BusinessEnum;
+import org.exam.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +27,9 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController {
 
+    @Autowired
+    UserService userService;
+
     @GetMapping(value = "/init")
     public RespBean init(){
         Map<String, Object> initMap = new HashMap<>(5);
@@ -41,7 +45,7 @@ public class UserController {
             @RequestParam(defaultValue = "") String keywords,
             String beginDateScope){
 
-        return null;
+        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, userService.getUserList());
     }
 
     @PutMapping
