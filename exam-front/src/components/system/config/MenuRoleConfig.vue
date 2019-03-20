@@ -52,7 +52,6 @@
   export default{
     mounted: function () {
       this.loading = true;
-      debugger
       this.initRoles();
     },
     methods: {
@@ -100,37 +99,36 @@
       updateRoleMenu(index){
         var checkedKeys = this.$refs.tree[index].getCheckedKeys(true);
         var _this = this;
-        this.putRequest("/system/config/updateMenuRole", {
-          rid: this.activeColItem,
-          mids: checkedKeys
+        this.putRequest("/system/config/role/menu", {
+          roleId: this.activeColItem,
+          menuIds: checkedKeys
         }).then(resp=> {
           if (resp && resp.status == 200) {
             _this.activeColItem = -1;
           }
         })
       },
+      // 展开时调用
       collapseChange(activeName){
-        debugger
         if (activeName == '') {
           return;
         }
         var _this = this;
         this.getRequest("/system/config/menu/0/" + activeName).then(resp=> {
-          debugger
           if (resp && resp.status == 200) {
-            _this.treeData = resp.data.obj;
+            _this.treeData = resp.data.obj.menuTrees;
             // 以下是被选中的id
-            _this.checkedKeys = resp.data.obj.mids;
+            _this.checkedKeys = resp.data.obj.menuIds;
           }
         })
       },
       handleCheckChange(data, checked, indeterminate) {
-//        console.log(data,checked,indeterminate)
+        debugger
+       console.log(data,checked,indeterminate)
       },
       initRoles(){
         let _this = this;
         this.getRequest("/system/config/roles").then(resp=> {
-          debugger
           _this.loading = false;
           if (resp && resp.status == 200) {
             _this.roles = resp.data.obj;

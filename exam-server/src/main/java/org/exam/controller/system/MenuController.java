@@ -72,6 +72,6 @@ public class MenuController {
 
     @GetMapping("/menu/{parentId}/{roleId}")
     public RespBean getListByRole(@PathVariable Integer parentId, @PathVariable Integer roleId) {
-        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, menuService.getMenuByParentId(parentId));
+        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, menuService.getMenuTreeByRoleId(parentId, roleId));
     }
 }

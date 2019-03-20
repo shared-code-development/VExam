@@ -55,4 +55,5 @@ public interface TMenuRoleMapper {
         "where id = #{id,jdbcType=INTEGER}"
     })
     int updateByPrimaryKey(TMenuRole record);
+    int batchInsert(@Param("roleId") Integer roleId, @Param("menuIdList") List<Integer> menuIdList);
 }

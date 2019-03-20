@@ -54,4 +54,8 @@ public class RoleController {
     public RespBean delete(@PathVariable Integer id) {
         return RespBean.ok(BusinessEnum.SERVER_SUCCESS, roleService.deleteRole(id));
     }
+    @PutMapping("/role/menu")
+    public RespBean updateMenuOfRole(@RequestParam("roleId") Integer roleId, @RequestParam("menuIds") Integer[] menuIds){
+        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, roleService.updateMenusOfRole(roleId, menuIds));
+    }
 }

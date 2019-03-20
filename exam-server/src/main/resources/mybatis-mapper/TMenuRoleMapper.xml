@@ -150,4 +150,10 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <insert id="batchInsert">
+        INSERT INTO t_menu_role(menu_id,role_id) VALUES
+        <foreach collection="menuIdList" item="menuId" separator=",">
+            (#{menuId},#{roleId})
+        </foreach>
+    </insert>
 </mapper>

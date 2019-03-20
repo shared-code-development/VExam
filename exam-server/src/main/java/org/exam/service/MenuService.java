@@ -2,14 +2,19 @@ package org.exam.service;
 
 import org.exam.bean.entity.TMenu;
 import org.exam.bean.entity.TMenuExample;
+import org.exam.bean.entity.TMenuRoleExample;
 import org.exam.common.UserUtils;
 import org.exam.mapper.TMenuMapper;
+import org.exam.mapper.TMenuRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author heshiyuan
@@ -21,12 +26,15 @@ import java.util.List;
  * Copyright (c) 2019 shiyuan4work@126.com All rights reserved.
  * @price ¥5    微信：hewei1109
  */
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 public class MenuService {
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+
     @Autowired
     private TMenuMapper tMenuMapper;
+    @Autowired
+    private TMenuRoleMapper tMenuRoleMapper;
 
     public List<TMenu> getMenusByUserId(){
         return tMenuMapper.getMenusByUserId(UserUtils.getCurrentUser().getUserId());
@@ -59,5 +67,15 @@ public class MenuService {
     public boolean deleteMenu(Integer id){
         tMenuMapper.deleteByPrimaryKey(id);
         return true;
+    }
+
+    public Map<String, Object> getMenuTreeByRoleId(Integer parentId, Integer roleId){
+        Map<String, Object> returnMap = new HashMap<>(4);
+        returnMap.put("menuTrees", tMenuMapper.getMenusByParentId(parentId));
+
+        TMenuRoleExample menuRoleExample = new TMenuRoleExample();
+        menuRoleExample.createCriteria().andRoleIdEqualTo(roleId);
+        returnMap.put("menuIds", tMenuRoleMapper.selectByExample(menuRoleExample).stream().map(entity -> entity.getMenuId()));
+        return returnMap;
     }
 }
