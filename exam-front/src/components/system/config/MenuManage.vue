@@ -181,14 +181,15 @@
       renderContent(h, {node, data, store}) {
         return (
           <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-            <span>
-              <span>{node.label}</span>
-            </span>
-          <span>
-            <el-button style="font-size: 12px;" type="primary" size="mini" style="padding:3px" on-click={ () => this.showAddMenuView(data,event) }>添加菜单</el-button>
-            <el-button style="font-size: 12px;" type="danger" size="mini" style="padding:3px" on-click={ () => this.deleteMenu(data,event) }>删除菜单</el-button>
+              <span>
+                <span>{node.label}</span>
+              </span>
+              <span>
+                <el-button style="font-size: 12px;" type="primary" size="mini" style="padding:3px" on-click={ () => this.showAddMenuView(data,event) }>添加菜单</el-button>
+                <el-button style="font-size: 12px;" type="danger" size="mini" style="padding:3px" on-click={ () => this.deleteMenu(data,event) }>删除菜单</el-button>
+              </span>
           </span>
-        </span>);
+        );
       }
     }
   };
