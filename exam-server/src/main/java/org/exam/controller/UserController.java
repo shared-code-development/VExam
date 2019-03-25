@@ -1,18 +1,19 @@
 package org.exam.controller;
 
+import io.swagger.annotations.Api;
 import org.exam.bean.dto.RespBean;
+import org.exam.bean.entity.TNation;
 import org.exam.bean.entity.TUser;
+import org.exam.common.IdGen.UKeyWorker;
 import org.exam.enums.BusinessEnum;
+import org.exam.service.NationService;
 import org.exam.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author heshiyuan
@@ -24,19 +25,21 @@ import java.util.Map;
  * Copyright (c) 2019 shiyuan4work@126.com All rights reserved.
  * @price ¥5    微信：hewei1109
  */
+@Api(tags = "用户相关")
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    UKeyWorker userIdWorker;
+    @Autowired
+    NationService nationService;
 
-    @GetMapping(value = "/init")
-    public RespBean init(){
-        Map<String, Object> initMap = new HashMap<>(5);
-        initMap.put("nation", new ArrayList<>());
-
-        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, initMap);
+    @GetMapping(value = "/nation/list")
+    public RespBean<List<TNation>> nationList(){
+        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, nationService.nationList());
     }
 
     @GetMapping(value = "/list")
@@ -50,18 +53,16 @@ public class UserController {
 
     @PutMapping
     public RespBean put(TUser user){
-
-        return null;
+        return RespBean.ok(userService.updateUser(user));
     }
-    @PostMapping
+    @PostMapping(value = "/")
     public RespBean post(TUser user){
-
-        return null;
+        return RespBean.ok(userService.addUser(user));
     }
-    @GetMapping(value = "/nextUserId")
-    public RespBean nextUserId(){
 
-        return null;
+    @GetMapping(value = "/nextUserId")
+    public RespBean<Long> nextUserId(){
+        return RespBean.ok(userIdWorker.getId());
     }
 
 

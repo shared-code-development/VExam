@@ -106,7 +106,7 @@
         <collection property="roles" ofType="org.exam.bean.entity.TRole">
             <id property="id" column="rid"/>
             <result property="name" column="name"/>
-            <result property="namezh" column="nameZh"/>
+            <result property="nameZh" column="nameZh"/>
         </collection>
     </resultMap>
     <select id="loadUserByUsername" resultMap="lazyLoadRoles">

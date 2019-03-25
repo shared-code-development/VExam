@@ -2,7 +2,7 @@
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://192.168.1.105:3306/v_exam?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://192.168.216.129:3306/v_exam?useUnicode=true&characterEncoding=UTF-8
     username: root
     password: root@mariadb
 
@@ -24,3 +24,7 @@ server:
 swagger2:
   host: localhost
   enable: true
+
+UKeyWorker:
+  workid: 1
+  bizid: 1

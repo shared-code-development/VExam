@@ -1,33 +1,45 @@
 package org.exam.bean.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.exam.enums.BusinessEnum;
+
+import java.io.Serializable;
 
 /**
  * @author heshiyuan
  */
-public class RespBean {
+@ApiModel(value = "RestModel")
+public class RespBean<T> implements Serializable {
+    @ApiModelProperty(value = "status", dataType = "Integer")
     private Integer status = 200;
+    @ApiModelProperty(value = "返回消息", dataType = "String")
     private String msg;
-    private Object obj;
+    @ApiModelProperty(value = "返回数据", dataType = "Object")
+    private T obj;
 
     private RespBean() {
     }
-    private RespBean(BusinessEnum businessEnum, Object obj) {
+    private RespBean(BusinessEnum businessEnum, T data) {
         this.status = businessEnum.getCode();
         this.msg = businessEnum.getMessage();
-        this.obj = obj;
+        this.obj = data;
     }
 
     public static RespBean build() {
         return new RespBean();
     }
 
-    public static RespBean ok(String msg, Object obj) {
-        return new RespBean(200, msg, obj);
+    public static <T> RespBean ok(String msg, T data) {
+        return new RespBean(200, msg, data);
     }
 
-    public static RespBean ok(BusinessEnum businessEnum,Object obj) {
-        return new RespBean(businessEnum, obj);
+    public static <T> RespBean<T> ok(T data) {
+        return new RespBean(BusinessEnum.SERVER_SUCCESS, data);
+    }
+
+    public static <T> RespBean<T> ok(BusinessEnum businessEnum,T data) {
+        return new RespBean(businessEnum, data);
     }
 
     public static RespBean ok(String msg) {
@@ -39,10 +51,10 @@ public class RespBean {
     }
 
 
-    private RespBean(Integer status, String msg, Object obj) {
+    private RespBean(Integer status, String msg, T data) {
         this.status = status;
         this.msg = msg;
-        this.obj = obj;
+        this.obj = data;
     }
 
     public Integer getStatus() {
@@ -68,8 +80,8 @@ public class RespBean {
         return obj;
     }
 
-    public RespBean setObj(Object obj) {
-        this.obj = obj;
+    public RespBean setObj(T data) {
+        this.obj = data;
         return this;
     }
 }

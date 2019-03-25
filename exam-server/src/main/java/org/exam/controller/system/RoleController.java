@@ -41,21 +41,21 @@ public class RoleController {
             @ApiResponse(code=700,message="其它异常")
     })
     @GetMapping("/roles")
-    public RespBean getList() {
+    public RespBean<List<TRole>> getList() {
         return RespBean.ok(BusinessEnum.SERVER_SUCCESS, roleService.roles());
     }
 
     @PostMapping("/role")
-    public RespBean insert(TRole role) {
+    public RespBean<Boolean> insert(TRole role) {
         return RespBean.ok(BusinessEnum.SERVER_SUCCESS, roleService.addRole(role));
     }
 
     @DeleteMapping("/role/{id}")
-    public RespBean delete(@PathVariable Integer id) {
+    public RespBean<Boolean> delete(@PathVariable Integer id) {
         return RespBean.ok(BusinessEnum.SERVER_SUCCESS, roleService.deleteRole(id));
     }
     @PutMapping("/role/menu")
-    public RespBean updateMenuOfRole(@RequestParam("roleId") Integer roleId, @RequestParam("menuIds") Integer[] menuIds){
+    public RespBean<Boolean> updateMenuOfRole(@RequestParam("roleId") Integer roleId, @RequestParam("menuIds") Integer[] menuIds){
         return RespBean.ok(BusinessEnum.SERVER_SUCCESS, roleService.updateMenusOfRole(roleId, menuIds));
     }
 }

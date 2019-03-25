@@ -32,13 +32,15 @@ axios.interceptors.response.use(data => {
   }
   // return Promise.resolve(err);
 })
+// let base = 'http://localhost:8082';
 let base = '';
 export const postRequest = (url, params) => {
   return axios({
     method: 'post',
-    url: `${base}${url}`,
+    url: `http://localhost:8082${url}`,
     data: params,
     transformRequest: [function (data) {
+      debugger
       let ret = ''
       for (let it in data) {
         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'

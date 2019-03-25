@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.exam.bean.entity.TUser;
 import org.exam.bean.entity.TUserExample;
+import org.exam.enums.BusinessEnum;
+import org.exam.exception.BusinessException;
 import org.exam.mapper.TUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,4 +49,18 @@ public class UserService implements UserDetailsService {
         return tUserMapper.selectByExample(userExample);
     }
 
+    public Boolean addUser(TUser user){
+        if(1==tUserMapper.insertSelective(user)){
+            return true;
+        }
+        throw new BusinessException(BusinessEnum.USER_ADD_FAILURE);
+    }
+
+    public Boolean updateUser(TUser user){
+        TUserExample userExample = new TUserExample();
+        if(1==tUserMapper.updateByExampleSelective(user, userExample)){
+            return true;
+        }
+        throw new BusinessException(BusinessEnum.USER_ADD_FAILURE);
+    }
 }
