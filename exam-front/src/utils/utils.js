@@ -17,7 +17,7 @@ export const initMenu = (router, store)=> {
   }
   getRequest("/system/config/menu").then(resp=> {
     if (resp && resp.status == 200) {
-      var fmtRoutes = formatRoutes(resp.data);
+      var fmtRoutes = formatRoutes(resp.data.obj);
       router.addRoutes(fmtRoutes);
       store.commit('initMenu', fmtRoutes);
       store.dispatch('connect');

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import {Message} from 'element-ui'
+
 axios.interceptors.request.use(config => {
   return config;
 }, err => {
@@ -14,8 +15,8 @@ axios.interceptors.response.use(data => {
   if (data.data.msg) {
     Message.success({message: data.data.msg});
   }
-  return data;
-}, err => {
+    return data;
+  }, err => {
   if (err.response.status == 504 || err.response.status == 404) {
     Message.error({message: '服务器被吃了⊙﹏⊙∥'});
   } else if (err.response.status == 403) {
@@ -25,7 +26,7 @@ axios.interceptors.response.use(data => {
   } else {
     if (err.response.data.msg) {
       Message.error({message: err.response.data.msg});
-    }else{
+    } else {
       Message.error({message: '未知错误!'});
     }
   }

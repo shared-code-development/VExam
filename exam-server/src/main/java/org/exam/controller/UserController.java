@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,13 +40,12 @@ public class UserController {
     }
 
     @GetMapping(value = "/list")
-    public RespBean list(
+    public RespBean<List<TUser>> list(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             @RequestParam(defaultValue = "") String keywords,
             String beginDateScope){
-
-        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, userService.getUserList());
+        return RespBean.ok(userService.getUserList());
     }
 
     @PutMapping

@@ -84,7 +84,6 @@
       loadTreeData() {
         let _this = this;
         this.getRequest("/system/config/menu/0").then(resp => {
-          debugger
           _this.treeLoading = false;
           if (resp && resp.status == 200) {
             _this.treeData = resp.data.obj;
@@ -92,7 +91,6 @@
         })
       },
       setDataToTree(treeData, pId, respData) {
-        debugger
         for (let i = 0; i < treeData.length; i++) {
           let td = treeData[i];
           if (td.id == pId) {
@@ -111,7 +109,6 @@
           name: this.menuName,
           parentId: this.menuTree
         }).then(resp => {
-          debugger
           _this.treeLoading = false;
           if (resp && resp.status == 200) {
             let respData = resp.data;
