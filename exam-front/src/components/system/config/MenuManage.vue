@@ -82,19 +82,19 @@
         return data.name.indexOf(value) !== -1;
       },
       loadTreeData() {
-        debugger
-        var _this = this;
+        let _this = this;
         this.getRequest("/system/config/menu/0").then(resp => {
+          debugger
           _this.treeLoading = false;
           if (resp && resp.status == 200) {
-            _this.treeData = resp.data;
+            _this.treeData = resp.data.obj;
           }
         })
       },
       setDataToTree(treeData, pId, respData) {
         debugger
-        for (var i = 0; i < treeData.length; i++) {
-          var td = treeData[i];
+        for (let i = 0; i < treeData.length; i++) {
+          let td = treeData[i];
           if (td.id == pId) {
             treeData[i].children = treeData[i].children.concat(respData);
             return;
@@ -104,7 +104,7 @@
         }
       },
       addMenu() {
-        var _this = this;
+        let _this = this;
         this.dialogVisible = false;
         this.treeLoading = true;
         this.postRequest("/system/config/menu", {
@@ -114,14 +114,14 @@
           debugger
           _this.treeLoading = false;
           if (resp && resp.status == 200) {
-            var respData = resp.data;
+            let respData = resp.data;
             _this.name = '';
             _this.setDataToTree(_this.treeData, _this.parentMenu, respData.msg)
           }
         })
       },
       loadAllMenu() {
-        var _this = this;
+        let _this = this;
         this.getRequest("/system/config/menu/list").then(resp => {
           if (resp && resp.status == 200) {
             _this.allMenu = resp.data.obj;
@@ -129,14 +129,12 @@
         });
       },
       showAddMenuView(data, event) {
-        debugger
         this.loadAllMenu();
         this.dialogVisible = true;
         this.parentMenu = data.id;
         event.stopPropagation()
       },
       deleteMenu(data, event) {
-        debugger
         let _this = this;
         if (data.children.length > 0) {
           this.$message({
@@ -153,8 +151,7 @@
             _this.deleteRequest("/system/config/menu/" + data.id).then(resp => {
               _this.treeLoading = false;
               if (resp && resp.status == 200) {
-                var respData = resp.data;
-
+                let respData = resp.data;
                 _this.deleteLocalMenu(_this.treeData, data);
               }
             });
@@ -168,8 +165,8 @@
         event.stopPropagation()
       },
       deleteLocalMenu(treeData, data) {
-        for (var i = 0; i < treeData.length; i++) {
-          var td = treeData[i];
+        for (let i = 0; i < treeData.length; i++) {
+          let td = treeData[i];
           if (td.id == data.id) {
             treeData.splice(i, 1);
             return;
@@ -179,18 +176,26 @@
         }
       },
       renderContent(h, {node, data, store}) {
-        return (
-          <span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-              <span>
-                <span>{node.label}</span>
-              </span>
-              <span>
-                <el-button style="font-size: 12px;" type="primary" size="mini" style="padding:3px" on-click={ () => this.showAddMenuView(data,event) }>添加菜单</el-button>
-                <el-button style="font-size: 12px;" type="danger" size="mini" style="padding:3px" on-click={ () => this.deleteMenu(data,event) }>删除菜单</el-button>
-              </span>
+        return (<span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+          <span><span>{node.label}</span></span>
+          <span><el-button style="font-size: 12px;" type="primary" size="mini" style="padding:3px" on-click={ () => this.showAddMenuView(data,event) }>添加菜单</el-button>
+            <el-button style="font-size: 12px;" type="danger" size="mini" style="padding:3px" on-click={ () => this.deleteMenu(data,event) }>删除菜单</el-button>
           </span>
-        );
+        </span>);
       }
+      /*renderContent(h, {node, data, store}) {
+        return (
+          "<span style=\"flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;\">"+
+          "<span>"+
+          "<span>{node.label}</span>"+
+          "</span>"+
+          "<span>"+
+          "<el-button style=\"font-size: 12px;\" type=\"primary\" size=\"mini\" style=\"padding:3px\" on-click={() => this.showAddMenuView(data,event)}>添加菜单</el-button>"+
+          "<el-button style=\"font-size: 12px;\" type=\"danger\" size=\"mini\" style=\"padding:3px\" on-click={ () => this.deleteMenu(data,event) }>删除菜单</el-button>"+
+          "</span>"+
+          "</span>"
+        );
+      }*/
     }
   };
 </script>

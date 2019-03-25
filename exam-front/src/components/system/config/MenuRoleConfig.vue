@@ -123,7 +123,7 @@
         })
       },
       handleCheckChange(data, checked, indeterminate) {
-        debugger
+
        console.log(data,checked,indeterminate)
       },
       initRoles(){

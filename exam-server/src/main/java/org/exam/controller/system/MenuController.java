@@ -42,8 +42,8 @@ public class MenuController {
     }
 
     @GetMapping("/menu/{parentId}")
-    public List<TMenu> menu(@PathVariable Integer parentId) {
-        return menuService.getMenuByParentId(parentId);
+    public RespBean menu(@PathVariable Integer parentId) {
+        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, menuService.getMenuByParentId(parentId));
     }
 
     @ApiOperation(value = "配置菜单", notes = "根据当前登陆用户获取当前用户的菜单列表")
