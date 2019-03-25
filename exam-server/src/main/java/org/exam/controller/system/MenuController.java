@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author heshiyuan
@@ -29,21 +30,21 @@ public class MenuController {
 
     @ApiOperation(value = "配置菜单", notes = "根据当前登陆用户获取当前用户的菜单列表")
     @ApiResponses({
-            @ApiResponse(code=100,message="参数校验失败"),
-            @ApiResponse(code=200,message="请求成功"),
-            @ApiResponse(code=400,message="无权访问"),
-            @ApiResponse(code=500,message="服务器错误"),
-            @ApiResponse(code=600,message="业务异常"),
-            @ApiResponse(code=700,message="其它异常")
+        @ApiResponse(code=100,message="参数校验失败"),
+        @ApiResponse(code=200,message="请求成功"),
+        @ApiResponse(code=400,message="无权访问"),
+        @ApiResponse(code=500,message="服务器错误"),
+        @ApiResponse(code=600,message="业务异常"),
+        @ApiResponse(code=700,message="其它异常")
     })
     @RequestMapping("/menu")
-    public List<TMenu> menu() {
-        return menuService.getMenusByUserId();
+    public RespBean<List<TMenu>> menu() {
+        return RespBean.ok(menuService.getMenusByUserId());
     }
 
     @GetMapping("/menu/{parentId}")
-    public List<TMenu> menu(@PathVariable Integer parentId) {
-        return menuService.getMenuByParentId(parentId);
+    public RespBean<List<TMenu>> menu(@PathVariable Integer parentId) {
+        return RespBean.ok(menuService.getMenuByParentId(parentId));
     }
 
     @ApiOperation(value = "配置菜单", notes = "根据当前登陆用户获取当前用户的菜单列表")
@@ -56,22 +57,22 @@ public class MenuController {
             @ApiResponse(code=700,message="其它异常")
     })
     @GetMapping("/menu/list")
-    public RespBean getList() {
+    public RespBean<List<TMenu>> getList() {
         return RespBean.ok(BusinessEnum.SERVER_SUCCESS, menuService.getMenuList());
     }
 
     @PostMapping("/menu")
-    public RespBean insert(TMenu menu) {
+    public RespBean<Boolean> insert(TMenu menu) {
         return RespBean.ok(BusinessEnum.SERVER_SUCCESS, menuService.addMenu(menu));
     }
 
     @DeleteMapping("/menu/{id}")
-    public RespBean delete(@PathVariable Integer id) {
-        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, menuService.deleteMenu(id));
+    public RespBean<Boolean> delete(@PathVariable Integer id) {
+        return RespBean.ok(menuService.deleteMenu(id));
     }
 
     @GetMapping("/menu/{parentId}/{roleId}")
-    public RespBean getListByRole(@PathVariable Integer parentId, @PathVariable Integer roleId) {
+    public RespBean<Map<String, Object>> getListByRole(@PathVariable Integer parentId, @PathVariable Integer roleId) {
         return RespBean.ok(BusinessEnum.SERVER_SUCCESS, menuService.getMenuTreeByRoleId(parentId, roleId));
     }
 }

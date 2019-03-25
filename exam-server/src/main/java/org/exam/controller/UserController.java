@@ -1,7 +1,10 @@
 package org.exam.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiResponse;
 import org.exam.bean.dto.RespBean;
 import org.exam.bean.entity.TUser;
+import org.exam.common.IdGen.UKeyWorker;
 import org.exam.enums.BusinessEnum;
 import org.exam.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +26,15 @@ import java.util.Map;
  * Copyright (c) 2019 shiyuan4work@126.com All rights reserved.
  * @price ¥5    微信：hewei1109
  */
+@Api(tags = "用户相关")
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    UKeyWorker userIdWorker;
 
     @GetMapping(value = "/init")
     public RespBean init(){
@@ -50,18 +56,16 @@ public class UserController {
 
     @PutMapping
     public RespBean put(TUser user){
-
-        return null;
+        return RespBean.ok(userService.updateUser(user));
     }
     @PostMapping
     public RespBean post(TUser user){
-
-        return null;
+        return RespBean.ok(userService.addUser(user));
     }
+
     @GetMapping(value = "/nextUserId")
     public RespBean nextUserId(){
-
-        return null;
+        return RespBean.ok(BusinessEnum.SERVER_SUCCESS,userIdWorker.getId());
     }
 
 

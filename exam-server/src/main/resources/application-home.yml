@@ -24,3 +24,7 @@ server:
 swagger2:
   host: localhost
   enable: true
+
+UKeyWorker:
+  workid: 1
+  bizid: 1

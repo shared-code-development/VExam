@@ -26,6 +26,9 @@ public enum BusinessEnum {
     LOGIN_ERROR(40008, "账户被禁用，请联系管理员!"),
     SERVER_ERROR_EXCEPTION(500, "操作失败!"),
     BUSINESS_HANDLE_EXCEPTION(50000, "业务处理异常"),
+
+
+    USER_ADD_FAILURE(60000, "用户添加失败"),
     ;
 
     private Integer code ;
