@@ -33,7 +33,7 @@ axios.interceptors.response.use(data => {
   // return Promise.resolve(err);
 })
 // let base = 'http://localhost:8082';
-let base = '';
+var base = '';
 export const postRequest = (url, params) => {
   return axios({
     method: 'post',
