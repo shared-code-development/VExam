@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -60,7 +61,7 @@ public class UserService implements UserDetailsService {
             criteria.andBirthdayGreaterThanOrEqualTo(0L);
         }
         List<TUser> list = tUserMapper.selectByExample(userExample);
-        if(null==list&&list.size()>0){
+        if(null!=list&&list.size()>0){
             return new PageInfo(list);
         }else{
             return new PageInfo<>(new ArrayList<>());
@@ -69,6 +70,20 @@ public class UserService implements UserDetailsService {
 
     public Boolean addUser(TUser user){
         if(1==tUserMapper.insertSelective(user)){
+            return true;
+        }
+        throw new BusinessException(BusinessEnum.USER_ADD_FAILURE);
+    }
+
+    public Boolean deleteUser(String ids){
+        TUserExample userExample = new TUserExample();
+        List<Integer> idList = new ArrayList<>();
+        for (String id : ids.split(",")){
+            idList.add(Integer.parseInt(id));
+        }
+        userExample.createCriteria().andIdIn(idList)
+                .andIsDelEqualTo((byte)0);
+        if(tUserMapper.deleteByExample(userExample)>0){
             return true;
         }
         throw new BusinessException(BusinessEnum.USER_ADD_FAILURE);

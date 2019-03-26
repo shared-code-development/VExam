@@ -26,6 +26,9 @@ public class CustomMetadataSource implements FilterInvocationSecurityMetadataSou
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) {
         String requestUrl = ((FilterInvocation) o).getRequestUrl();
+        /*if(requestUrl.contains("swagger-ui.html")){
+            return SecurityConfig.createList(RoleEnum.LOGIN.getCode());
+        }*/
         TMenuExample menuExample = new TMenuExample();
         menuExample.createCriteria().andIsDelEqualTo((byte) 0);
 //        List<TMenu> allMenu = tMenuMapper.selectByExample(menuExample);

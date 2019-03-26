@@ -53,7 +53,7 @@
                 <el-col :span="10">
                   入学日期:
                   <el-date-picker
-                    v-model="beginDateScope"
+                    v-model="enrollmentDate"
                     unlink-panels
                     size="mini"
                     type="daterange"
@@ -149,7 +149,7 @@
               width="85"
               align="left"
               label="入学日期">
-              <template slot-scope="scope">{{ scope.row.beginDate | formatDate}}</template>
+              <template slot-scope="scope">{{ scope.row.enrollmentDate | formatDate}}</template>
             </el-table-column>
             <el-table-column
               fixed="right"
@@ -163,7 +163,7 @@
                            size="mini">查看高级资料
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="deleteEmp(scope.row)">删除
+                           @click="deleteUser(scope.row)">删除
                 </el-button>
               </template>
             </el-table-column>
@@ -204,9 +204,9 @@
             <el-col :span="5">
               <div>
                 <el-form-item label="性别:" prop="gender">
-                  <el-radio-group v-model="user.gender">
-                    <el-radio label="男">男</el-radio>
-                    <el-radio style="margin-left: 15px" label="女">女</el-radio>
+                  <el-radio-group v-model="user.sex">
+                    <el-radio label="男" aria-valuenow="1">男</el-radio>
+                    <el-radio style="margin-left: 15px" label="女"  aria-valuenow="2">女</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </div>
@@ -252,7 +252,7 @@
             <el-col :span="5">
               <div>
                 <el-form-item label="籍贯:" prop="nativePlace">
-                  <el-input v-model="user.nativePlace" size="mini" style="width: 120px" placeholder="员工籍贯"></el-input>
+                  <el-input v-model="user.nativePlace" size="mini" style="width: 120px" placeholder="籍贯"></el-input>
                 </el-form-item>
               </div>
             </el-col>
@@ -299,19 +299,15 @@
         users: [],
         keywords: '',
         fileUploadBtnText: '导入数据',
-        beginDateScope: '',
+        enrollmentDate: '',
         faangledoubleup: 'fa-angle-double-up',
         faangledoubledown: 'fa-angle-double-down',
         dialogTitle: '',
         multipleSelection: [],
         depTextColor: '#c0c4cc',
         nations: [],
-        politics: [],
-        positions: [],
-        joblevels: [],
         totalCount: -1,
         currentPage: 1,
-        deps: [],
         defaultProps: {
           label: 'name',
           isLeaf: 'leaf',
@@ -324,29 +320,18 @@
         showOrHidePop2: false,
         user: {
           name: '',
-          gender: '',
+          sex: '',
           birthday: '',
           idCard: '',
           nationId: '',
           nativePlace: '',
           email: '',
           phone: '',
-          address: '',
-          engageForm: '',
-          specialty: '',
-          beginDate: '',
-          workState: '',
-          workID: '',
-          contractTerm: '',
-          conversionTime: '',
-          notWorkDate: '',
-          beginContract: '',
-          endContract: '',
-          workAge: ''
+          address: ''
         },
         rules: {
           name: [{required: true, message: '必填:姓名', trigger: 'blur'}],
-          gender: [{required: true, message: '必填:性别', trigger: 'blur'}],
+          sex: [{required: true, message: '必填:性别', trigger: 'blur'}],
           birthday: [{required: true, message: '必填:出生日期', trigger: 'blur'}],
           idCard: [{
             required: true,
@@ -394,7 +379,7 @@
       cancelSearch() {
         this.advanceSearchViewVisible = false;
         this.emptyUserData();
-        this.beginDateScope = '';
+        this.enrollmentDate = '';
         this.loadUsers();
       },
       showAdvanceSearchView() {
@@ -402,7 +387,7 @@
         this.keywords = '';
         if (!this.advanceSearchViewVisible) {
           this.emptyUserData();
-          this.beginDateScope = '';
+          this.enrollmentDate = '';
           this.loadUsers();
         }
       },
@@ -415,15 +400,15 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          var ids = '';
-          for (var i = 0; i < this.multipleSelection.length; i++) {
+          let ids = '';
+          for (let i = 0; i < this.multipleSelection.length; i++) {
             ids += this.multipleSelection[i].id + ",";
           }
           this.doDelete(ids);
         }).catch(() => {
         });
       },
-      deleteEmp(row) {
+      deleteUser(row) {
         this.$confirm('此操作将永久删除[' + row.name + '], 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -435,12 +420,10 @@
       },
       doDelete(ids) {
         this.tableLoading = true;
-        var _this = this;
-        this.deleteRequest("/employee/basic/emp/" + ids).then(resp => {
+        let _this = this;
+        this.deleteRequest("/user/" + ids).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
-            var data = resp.data;
-            _
             _this.loadUsers();
           }
         })
@@ -458,17 +441,18 @@
         this.loadUsers();
       },
       loadUsers() {
-        var _this = this;
+        let _this = this;
         this.tableLoading = true;
-        this.getRequest("/user/list?page=" + this.currentPage +
-          "&size=10&keywords=" + this.keywords +
-          "&beginDateScope=" + this.beginDateScope)
+        this.getRequest("/user/list?pageNum=" + this.currentPage +
+          "&pageSize=10&keywords=" + this.keywords +
+          "&enrollmentDate=" + this.enrollmentDate)
           .then(resp => {
+            debugger
             this.tableLoading = false;
             if (resp && resp.status == 200) {
-              var data = resp.data;
-              _this.users = data.obj;
-              _this.totalCount = data.obj.length;
+              let data = resp.data;
+              _this.users = data.obj.list;
+              _this.totalCount = data.obj.total;
               //            _this.emptyUserData();
             }
           })
@@ -484,7 +468,6 @@
               this.putRequest("/user", this.user).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
-                  var data = resp.data;
                   _this.dialogVisible = false;
                   _this.emptyUserData();
                   _this.loadUsers();
@@ -496,7 +479,6 @@
               this.postRequest("/user", this.user).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
-                  var data = resp.data;
                   _this.dialogVisible = false;
                   _this.emptyUserData();
                   _this.loadUsers();
@@ -519,19 +501,15 @@
         this.showOrHidePop2 = !this.showOrHidePop2;
       },
       handleNodeClick(data) {
-        this.user.departmentName = data.name;
-        this.user.departmentId = data.id;
         this.showOrHidePop = false;
         this.depTextColor = '#606266';
       },
       handleNodeClick2(data) {
-        this.user.departmentName = data.name;
-        this.user.departmentId = data.id;
         this.showOrHidePop2 = false;
         this.depTextColor = '#606266';
       },
       initData() {
-        var _this = this;
+        let _this = this;
         this.getRequest("/user/nation/list").then(resp => {
           if (resp && resp.status == 200) {
             _this.nations = resp.data.obj;
@@ -543,24 +521,13 @@
         this.dialogTitle = "编辑员工";
         this.user = row;
         this.user.birthday = this.formatDate(row.birthday);
-        this.user.conversionTime = this.formatDate(row.conversionTime);
-        this.user.beginContract = this.formatDate(row.beginContract);
-        this.user.endContract = this.formatDate(row.endContract);
-        this.user.beginDate = this.formatDate(row.beginDate);
         this.user.nationId = row.nation.id;
-        this.user.politicId = row.politicsStatus.id;
-        this.user.departmentId = row.department.id;
-        this.user.departmentName = row.department.name;
-        this.user.jobLevelId = row.jobLevel.id;
-        this.user.posId = row.position.id;
-        delete this.user.workAge;
-        delete this.user.notWorkDate;
         this.dialogVisible = true;
       },
       showAddUserView() {
         this.dialogTitle = "添加员工";
         this.dialogVisible = true;
-        var _this = this;
+        let _this = this;
         this.getRequest("/user/nextUserId").then(resp => {
           if (resp && resp.status == 200) {
             _this.user.workID = resp.data.obj;
@@ -572,10 +539,9 @@
           name: '',
           sex: '',
           email: '',
-          telephone: '',
+          phone: '',
           address: '',
-          school: '',
-          beginDate: ''
+          birthday: ''
         }
       }
     }

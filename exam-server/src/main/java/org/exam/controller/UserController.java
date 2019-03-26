@@ -61,6 +61,13 @@ public class UserController {
         return RespBean.ok(userService.addUser(user));
     }
 
+
+    @DeleteMapping(value = "/{ids}")
+    public RespBean delete(@PathVariable("ids") String ids){
+        return RespBean.ok(userService.deleteUser(ids));
+    }
+
+
     @GetMapping(value = "/nextUserId")
     public RespBean<Long> nextUserId(){
         return RespBean.ok(userIdWorker.getId());

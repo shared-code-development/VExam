@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         webSecurity
                 // 以下资源放行
                 .ignoring()
-                    .antMatchers("/index.html", "/static/**", "/login_p", "/favicon.ico");
+                    .antMatchers("/index.html", "/static/**", "/login_p", "/favicon.ico", "/swagger-ui.html");
     }
 
     @Override

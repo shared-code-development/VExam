@@ -53,18 +53,18 @@ public class Swagger2Config {
         };
 
 
-        List<Parameter> pars = new ArrayList<Parameter>();
+/*        List<Parameter> pars = new ArrayList<Parameter>();
         ParameterBuilder ticketPar = new ParameterBuilder();
         //header中的ticket参数非必填，传空也可以
         ticketPar
                 .name("access-token")
                 .description("用户token")
-                .defaultValue("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMDU4NjE5ODI3MTMzOTMxNTIwIiwiaWF0IjoxNTQzNTQzNTE0LCJleHAiOjE1NDM2Mjk5MTR9.US6H6C3JjsYIQ74X_u-KLaHgZgWNR-DQyaIiNk9sde9HiKxnkjxc_Ng6Rz_jajs0swMwPqhpR0Ze9aYqxMBJQw")
+                .defaultValue("eyJhbGciOiJIUzUxMwIjw")
                 .modelRef(new ModelRef("string")).parameterType("header")
                 .required(false).build();
 
         //根据每个方法名也知道当前方法在设置什么参数
-        pars.add(ticketPar.build());
+        pars.add(ticketPar.build());*/
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .host(swaggerhost)
@@ -107,7 +107,6 @@ public class Swagger2Config {
                 new SecurityReference("access-token", authorizationScopes)
         );
     }
-    //构建 api文档的详细信息函数,注意这里的注解引用的是哪个
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 //页面标题

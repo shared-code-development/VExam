@@ -10,3 +10,6 @@ pagehelper:
   params: count=countSql
   reasonable: true
   supportMethodsArguments: true
+swagger2:
+  host: localhost
+  enable: true
