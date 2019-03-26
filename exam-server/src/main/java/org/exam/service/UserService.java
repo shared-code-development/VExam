@@ -1,5 +1,7 @@
 package org.exam.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.exam.bean.entity.TUser;
@@ -14,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,9 +47,24 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public List<TUser> getUserList(){
+    public PageInfo<List<TUser>> getUserList(Integer pageNum, Integer pageSize,
+                                             String keywords, String beginDateScope){
+        PageHelper.startPage(pageNum, pageSize);
         TUserExample userExample = new TUserExample();
-        return tUserMapper.selectByExample(userExample);
+        TUserExample.Criteria criteria = userExample.createCriteria();
+        if(StringUtils.isNotBlank(keywords)){
+            criteria.andNameLike(keywords);
+        }
+
+        if(StringUtils.isNotBlank(beginDateScope)){
+            criteria.andBirthdayGreaterThanOrEqualTo(0L);
+        }
+        List<TUser> list = tUserMapper.selectByExample(userExample);
+        if(null==list&&list.size()>0){
+            return new PageInfo(list);
+        }else{
+            return new PageInfo<>(new ArrayList<>());
+        }
     }
 
     public Boolean addUser(TUser user){

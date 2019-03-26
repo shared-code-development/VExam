@@ -1,0 +1,30 @@
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://120.92.79.194:3306/v_exam?useUnicode=true&characterEncoding=UTF8&useSSL=false
+    username: lima_user
+    password: Mysql@1234
+
+#  redis:
+#    database: 0
+#    host: 192.168.216.200
+#    port: 6379
+#    password: 123456
+#    jedis:
+#      pool:
+#        max-active: 8
+#        max-idle: 8
+#        max-wait: -1ms
+#        min-idle: 0
+
+server:
+  port: 8082
+
+swagger2:
+  host: localhost
+  enable: true
+
+UKeyWorker:
+  workid: 1
+  bizid: 1

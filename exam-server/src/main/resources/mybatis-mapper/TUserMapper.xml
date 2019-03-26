@@ -26,9 +26,9 @@
         <result column="enrollment_date" jdbcType="BIGINT" property="enrollmentDate"/>
         <result column="graduation_date" jdbcType="BIGINT" property="graduationDate"/>
         <result column="birthday" jdbcType="BIGINT" property="birthday"/>
-        <association property="nation" javaType="org.exam.bean.entity.TNation">
-            <id property="id" column="id"/>
-            <result property="name" column="name"/>
+        <result column="nation_id" jdbcType="BIGINT" property="nationId"/>
+        <association property="nation" javaType="org.exam.bean.entity.TNation"
+                     column="id" select="org.exam.mapper.TNationMapper.selectByPrimaryKey">
         </association>
     </resultMap>
     <sql id="Example_Where_Clause">

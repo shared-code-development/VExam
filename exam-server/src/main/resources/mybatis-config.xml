@@ -3,5 +3,6 @@
 <configuration>
     <settings>
         <setting name="logImpl" value="STDOUT_LOGGING" />
+        <setting name="aggressiveLazyLoading" value="true"/>
     </settings>
 </configuration>

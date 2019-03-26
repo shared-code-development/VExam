@@ -1,7 +1,12 @@
 spring:
   profiles:
-    active: home
+    active: company
 
 mybatis:
   mapper-locations: classpath:/mybatis-mapper/**Mapper.xml
   config-location: classpath:/mybatis-config.xml
+pagehelper:
+  helper-dialect: mysql
+  params: count=countSql
+  reasonable: true
+  supportMethodsArguments: true

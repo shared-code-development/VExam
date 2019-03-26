@@ -37,7 +37,7 @@ let base = '';
 export const postRequest = (url, params) => {
   return axios({
     method: 'post',
-    url: `http://localhost:8082${url}`,
+    url: `${base}${url}`,
     data: params,
     transformRequest: [function (data) {
       debugger

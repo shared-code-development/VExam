@@ -1,5 +1,6 @@
 package org.exam.controller;
 
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import org.exam.bean.dto.RespBean;
 import org.exam.bean.entity.TNation;
@@ -43,19 +44,19 @@ public class UserController {
     }
 
     @GetMapping(value = "/list")
-    public RespBean<List<TUser>> list(
-            @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
+    public RespBean<PageInfo<List<TUser>>> list(
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "") String keywords,
-            String beginDateScope){
-        return RespBean.ok(userService.getUserList());
+            @RequestParam(required = false) String beginDateScope){
+        return RespBean.ok(userService.getUserList(pageNum, pageSize, keywords, beginDateScope));
     }
 
     @PutMapping
     public RespBean put(TUser user){
         return RespBean.ok(userService.updateUser(user));
     }
-    @PostMapping(value = "/")
+    @PostMapping
     public RespBean post(TUser user){
         return RespBean.ok(userService.addUser(user));
     }
