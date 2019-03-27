@@ -1,0 +1,327 @@
+<template>
+  <div>
+    <el-container>
+      <el-header style="padding: 0px;display:flex;justify-content:space-between;align-items: center">
+        <div style="display: inline">
+          <el-input
+            placeholder="通过学院名称搜索学院,记得回车哦..."
+            clearable
+            @change="keywordsChange"
+            style="width: 300px;margin: 0px;padding: 0px;"
+            size="mini"
+            :disabled="advanceSearchViewVisible"
+            @keyup.enter.native="searchUser"
+            prefix-icon="el-icon-search"
+            v-model="keywords">
+          </el-input>
+          <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchAcademy">搜索
+          </el-button>
+          <el-button slot="reference" type="primary" size="mini" style="margin-left: 5px"
+                     @click="showAdvanceSearchView"><i
+            class="fa fa-lg" v-bind:class="[advanceSearchViewVisible ? faangledoubleup:faangledoubledown]"
+            style="margin-right: 5px"></i>高级搜索
+          </el-button>
+        </div>
+        <div style="margin-left: 5px;margin-right: 20px;display: inline">
+          <el-button type="primary" size="mini" icon="el-icon-plus"
+                     @click="showAddUserView">
+            添加
+          </el-button>
+        </div>
+      </el-header>
+      <el-main style="padding-left: 0px;padding-top: 0px">
+        <div>
+          <el-table
+            :data="academies"
+            v-loading="tableLoading"
+            border
+            stripe
+            @selection-change="handleSelectionChange"
+            size="mini"
+            style="width: 100%">
+            <el-table-column
+              type="selection"
+              align="left"
+              width="30">
+            </el-table-column>
+            <el-table-column
+              prop="id"
+              align="left"
+              fixed
+              label="ID"
+              width="90">
+            </el-table-column>
+            <el-table-column
+              prop="academyNo"
+              width="200"
+              align="left"
+              label="学员编号">
+            </el-table-column>
+            <el-table-column
+              prop="academyName"
+              label="学院名称"
+              width="200">
+            </el-table-column>
+            <el-table-column
+              fixed="right"
+              label="操作"
+              width="195">
+              <template slot-scope="scope">
+                <el-button @click="showEditUserView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                           size="mini">编辑
+                </el-button>
+                <el-button style="padding: 3px 4px 3px 4px;margin: 2px" type="primary"
+                           size="mini">查看高级资料
+                </el-button>
+                <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
+                           @click="deleteUser(scope.row)">删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div style="display: flex;justify-content: space-between;margin: 2px">
+            <el-button type="danger" size="mini" v-if="academies.length>0" :disabled="multipleSelection.length==0"
+                       @click="deleteManyUsers">批量删除
+            </el-button>
+            <el-pagination
+              background
+              :page-size="10"
+              :current-page="currentPage"
+              @current-change="currentChange"
+              layout="prev, pager, next"
+              :total="totalCount">
+            </el-pagination>
+          </div>
+        </div>
+      </el-main>
+    </el-container>
+    <el-form :model="academy" :rules="rules" ref="addUserForm" style="margin: 0px;padding: 0px;">
+      <div style="text-align: left">
+        <el-dialog
+          :title="dialogTitle"
+          style="padding: 0px;"¡
+          :close-on-click-modal="false"
+          :visible.sync="dialogVisible"
+          width="77%">
+          <el-row>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="学院编号:" prop="academyNo">
+                  <el-input prefix-icon="el-icon-edit" v-model="academy.academyNo" size="mini" style="width: 150px"
+                            placeholder="请输入学院编号"></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div>
+                <el-form-item label="学院名称:" prop="academyName">
+                  <el-input prefix-icon="el-icon-edit" v-model="academy.academyName" size="mini" style="width: 150px"
+                            placeholder="请输入学院名称"></el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+          <span slot="footer" class="dialog-footer">
+            <el-button size="mini" @click="cancelEidt">取 消</el-button>
+            <el-button size="mini" type="primary" @click="addAcademy('addAcademyForm')">确 定</el-button>
+          </span>
+        </el-dialog>
+      </div>
+    </el-form>
+  </div>
+</template>
+<script>
+  export default {
+    data() {
+      return {
+        academies: [],
+        keywords: '',
+        enrollmentDate: '',
+        faangledoubleup: 'fa-angle-double-up',
+        faangledoubledown: 'fa-angle-double-down',
+        dialogTitle: '',
+        multipleSelection: [],
+        depTextColor: '#c0c4cc',
+        totalCount: -1,
+        currentPage: 1,
+        /*defaultProps: {
+          label: 'academyName',
+          isLeaf: 'leaf',
+          children: 'children'
+        },*/
+        dialogVisible: false,
+        tableLoading: false,
+        advanceSearchViewVisible: false,
+        showOrHidePop: false,
+        showOrHidePop2: false,
+        academy: {
+          id: '',
+          academyNo: '',
+          academyName: ''
+        },
+        rules: {
+          academyNo: [{required: true, message: '必填:学院编号', trigger: 'blur'}],
+          academyName: [{required: true, message: '必填:学院名称', trigger: 'blur'}]
+        }
+      };
+    },
+    mounted: function () {
+      this.initData();
+      this.loadAcademies();
+    },
+    methods: {
+      cancelSearch() {
+        this.advanceSearchViewVisible = false;
+        // this.emptyUserData();
+        this.enrollmentDate = '';
+        this.loadAcademies();
+      },
+      showAdvanceSearchView() {
+        this.advanceSearchViewVisible = !this.advanceSearchViewVisible;
+        this.keywords = '';
+        if (!this.advanceSearchViewVisible) {
+          // this.emptyUserData();
+          this.loadAcademies();
+        }
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+      deleteManyAcademies() {
+        this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let ids = '';
+          for (let i = 0; i < this.multipleSelection.length; i++) {
+            ids += this.multipleSelection[i].id + ",";
+          }
+          this.doDelete(ids);
+        }).catch(() => {
+        });
+      },
+      deleteAcademy(row) {
+        this.$confirm('此操作将永久删除[' + row.name + '], 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.doDelete(row.id);
+        }).catch(() => {
+        });
+      },
+      doDelete(ids) {
+        this.tableLoading = true;
+        let _this = this;
+        this.deleteRequest("/academy/" + ids).then(resp => {
+          _this.tableLoading = false;
+          if (resp && resp.status == 200) {
+            _this.loadAcademies();
+          }
+        })
+      },
+      keywordsChange(val) {
+        if (val == '') {
+          this.loadUsers();
+        }
+      },
+      searchAcademy() {
+        this.loadAcademies();
+      },
+      currentChange(currentChange) {
+        this.currentPage = currentChange;
+        this.loadAcademies();
+      },
+      loadAcademies() {
+        let _this = this;
+        this.tableLoading = true;
+        this.getRequest("/academy/list?pageNum=" + this.currentPage + "&pageSize=10")
+          .then(resp => {
+            this.tableLoading = false;
+            if (resp && resp.status == 200) {
+              let data = resp.data;
+              _this.users = data.obj.list;
+              _this.totalCount = data.obj.total;
+            }
+          })
+      },
+      addAcademy(formName) {
+        let _this = this;
+        this.$refs[formName].validate((valid) => {
+          debugger
+          if (valid) {
+            if (this.academy.id) {
+              //更新
+              this.tableLoading = true;
+              this.putRequest("/academy", this.academy).then(resp => {
+                _this.tableLoading = false;
+                if (resp && resp.status == 200) {
+                  _this.dialogVisible = false;
+                  // _this.emptyUserData();
+                  _this.loadAcademies();
+                }
+              })
+            } else {
+              //添加
+              this.tableLoading = true;
+              this.postRequest("/academy", this.user).then(resp => {
+                _this.tableLoading = false;
+                if (resp && resp.status == 200) {
+                  _this.dialogVisible = false;
+                  // _this.emptyUserData();
+                  _this.loadAcademies();
+                }
+              })
+            }
+          } else {
+            return false;
+          }
+        });
+      },
+      cancelEidt() {
+        this.dialogVisible = false;
+        this.emptyUserData();
+      },
+      showDepTree() {
+        this.showOrHidePop = !this.showOrHidePop;
+      },
+      showDepTree2() {
+        this.showOrHidePop2 = !this.showOrHidePop2;
+      },
+      handleNodeClick(data) {
+        this.showOrHidePop = false;
+        this.depTextColor = '#606266';
+      },
+      handleNodeClick2(data) {
+        this.showOrHidePop2 = false;
+        this.depTextColor = '#606266';
+      },
+      showEditAcademyView(row) {
+        console.log(row)
+        this.dialogTitle = "编辑学院";
+        this.user = row;
+        this.user.birthday = this.formatDate(row.birthday);
+        this.user.nationId = row.nation.id;
+        this.dialogVisible = true;
+      },
+      showAddAcademyView() {
+        this.dialogTitle = "添加学院";
+        this.dialogVisible = true;
+        let _this = this;
+        this.getRequest("/user/nextAcademyId").then(resp => {
+          if (resp && resp.status == 200) {
+            _this.academy.id = resp.data.obj;
+          }
+        })
+      },
+      emptyAcademyData() {
+        this.academy = {
+          id: '',
+          academyName: '',
+          academyNo: ''
+        }
+      }
+    }
+  };
+</script>
