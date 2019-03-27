@@ -23,5 +23,5 @@ create table t_academy(
   academy_no bigint(20) not null default 0 comment '学院编号',
   academy_name varchar(40) not null default '' comment '学院名称',
   is_del tinyint(1) not null default 0 comment '删除标识：0-未删除；1-已删除'
-) default charset = utf8 comment '专业表';
+) default charset = utf8 comment '学院表';
 
