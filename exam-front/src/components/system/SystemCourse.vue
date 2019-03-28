@@ -4,17 +4,17 @@
       <el-header style="padding: 0px;display:flex;justify-content:space-between;align-items: center">
         <div style="display: inline">
           <el-input
-            placeholder="通过专业名称搜索专业,记得回车哦..."
+            placeholder="通过课程名称搜索课程,记得回车哦..."
             clearable
             @change="keywordsChange"
             style="width: 300px;margin: 0px;padding: 0px;"
             size="mini"
             :disabled="advanceSearchViewVisible"
-            @keyup.enter.native="searchMajor"
+            @keyup.enter.native="searchCourse"
             prefix-icon="el-icon-search"
             v-model="keywords">
           </el-input>
-          <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchMajor">搜索
+          <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchCourse">搜索
           </el-button>
           <el-button slot="reference" type="primary" size="mini" style="margin-left: 5px"
                      @click="showAdvanceSearchView"><i
@@ -24,7 +24,7 @@
         </div>
         <div style="margin-left: 5px;margin-right: 20px;display: inline">
           <el-button type="primary" size="mini" icon="el-icon-plus"
-                     @click="showAddMajorView">
+                     @click="showAddCourseView">
             添加
           </el-button>
         </div>
@@ -32,7 +32,7 @@
       <el-main style="padding-left: 0px;padding-top: 0px">
         <div>
           <el-table
-            :data="majors"
+            :data="course"
             v-loading="tableLoading"
             border
             stripe
@@ -52,19 +52,14 @@
               width="90">
             </el-table-column>
             <el-table-column
-              prop="majorNo"
+              prop="courseNo"
               width="200"
               align="left"
-              label="专业编号">
+              label="课程编号">
             </el-table-column>
             <el-table-column
-              prop="majorName"
-              label="专业名称"
-              width="200">
-            </el-table-column>
-            <el-table-column
-              prop="majorName"
-              label="所属院系"
+              prop="courseName"
+              label="课程名称"
               width="200">
             </el-table-column>
             <el-table-column
@@ -79,14 +74,14 @@
                            size="mini">查看高级资料
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="deleteMajor(scope.row)">删除
+                           @click="deleteCourse(scope.row)">删除
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
           <div style="display: flex;justify-content: space-between;margin: 2px">
-            <el-button type="danger" size="mini" v-if="majors.length>0" :disabled="multipleSelection.length==0"
-                       @click="deleteManyMajors">批量删除
+            <el-button type="danger" size="mini" v-if="course.length>0" :disabled="multipleSelection.length==0"
+                       @click="deleteManyCourses">批量删除
             </el-button>
             <el-pagination
               background
@@ -100,7 +95,7 @@
         </div>
       </el-main>
     </el-container>
-    <el-form :model="major" :rules="rules" ref="addMajorForm" style="margin: 0px;padding: 0px;">
+    <el-form :model="course" :rules="rules" ref="addCourseForm" style="margin: 0px;padding: 0px;">
       <div style="text-align: left">
         <el-dialog
           :title="dialogTitle"
@@ -111,24 +106,24 @@
           <el-row>
             <el-col :span="6">
               <div>
-                <el-form-item label="专业编号:" prop="majorNo">
-                  <el-input prefix-icon="el-icon-edit" v-model="major.majorNo" size="mini" style="width: 150px"
-                            placeholder="请输入专业编号"></el-input>
+                <el-form-item label="课程编号:" prop="courseNo">
+                  <el-input prefix-icon="el-icon-edit" v-model="course.courseNo" size="mini" style="width: 150px"
+                            placeholder="请输入课程编号"></el-input>
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="6">
               <div>
-                <el-form-item label="专业名称:" prop="majorName">
-                  <el-input prefix-icon="el-icon-edit" v-model="major.majorName" size="mini" style="width: 150px"
-                            placeholder="请输入专业名称"></el-input>
+                <el-form-item label="课程名称:" prop="courseName">
+                  <el-input prefix-icon="el-icon-edit" v-model="course.courseName" size="mini" style="width: 150px"
+                            placeholder="请输入课程名称"></el-input>
                 </el-form-item>
               </div>
             </el-col>
           </el-row>
           <span slot="footer" class="dialog-footer">
             <el-button size="mini" @click="cancelEidt">取 消</el-button>
-            <el-button size="mini" type="primary" @click="addMajor('addMajorForm')">确 定</el-button>
+            <el-button size="mini" type="primary" @click="addCourse('addCourseForm')">确 定</el-button>
           </span>
         </el-dialog>
       </div>
@@ -139,7 +134,7 @@
   export default {
     data() {
       return {
-        majors: [],
+        course: [],
         keywords: '',
         enrollmentDate: '',
         faangledoubleup: 'fa-angle-double-up',
@@ -150,7 +145,7 @@
         totalCount: -1,
         currentPage: 1,
         /*defaultProps: {
-          label: 'majorName',
+          label: 'courseName',
           isLeaf: 'leaf',
           children: 'children'
         },*/
@@ -159,41 +154,41 @@
         advanceSearchViewVisible: false,
         showOrHidePop: false,
         showOrHidePop2: false,
-        major: {
+        course: {
           id: '',
-          majorNo: '',
-          majorName: '',
-          majorId: ''
+          courseNo: '',
+          courseName: '',
+          courseId: ''
         },
         rules: {
-          majorNo: [{required: true, message: '必填:专业编号', trigger: 'blur'}],
-          majorName: [{required: true, message: '必填:专业名称', trigger: 'blur'}]
+          courseNo: [{required: true, message: '必填:课程编号', trigger: 'blur'}],
+          courseName: [{required: true, message: '必填:课程名称', trigger: 'blur'}]
         }
       };
     },
     mounted: function () {
       this.initData();
-      this.loadMajors();
+      this.loadCourses();
     },
     methods: {
       cancelSearch() {
         this.advanceSearchViewVisible = false;
-        this.emptyMajorData();
+        this.emptyCourseData();
         this.enrollmentDate = '';
-        this.loadMajors();
+        this.loadCourses();
       },
       showAdvanceSearchView() {
         this.advanceSearchViewVisible = !this.advanceSearchViewVisible;
         this.keywords = '';
         if (!this.advanceSearchViewVisible) {
-          this.emptyMajorData();
-          this.loadMajors();
+          this.emptyCourseData();
+          this.loadCourses();
         }
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      deleteManyMajors() {
+      deleteManyCourses() {
         this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -207,7 +202,7 @@
         }).catch(() => {
         });
       },
-      deleteMajor(row) {
+      deleteCourse(row) {
         this.$confirm('此操作将永久删除[' + row.name + '], 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -220,10 +215,10 @@
       doDelete(ids) {
         this.tableLoading = true;
         let _this = this;
-        this.deleteRequest("/major/" + ids).then(resp => {
+        this.deleteRequest("/course/" + ids).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
-            _this.loadMajors();
+            _this.loadCourses();
           }
         })
       },
@@ -232,51 +227,51 @@
           this.loadUsers();
         }
       },
-      searchMajor() {
-        this.loadMajors();
+      searchCourse() {
+        this.loadCourses();
       },
       currentChange(currentChange) {
         this.currentPage = currentChange;
-        this.loadMajors();
+        this.loadCourses();
       },
-      loadMajors() {
+      loadCourses() {
         let _this = this;
         this.tableLoading = true;
-        this.getRequest("/major/list?pageNum=" + this.currentPage + "&pageSize=10")
+        this.getRequest("/course/list?pageNum=" + this.currentPage + "&pageSize=10")
           .then(resp => {
             this.tableLoading = false;
             if (resp && resp.status == 200) {
               let data = resp.data;
-              _this.major = data.obj.list;
+              _this.course = data.obj.list;
               _this.totalCount = data.obj.total;
             }
           })
       },
-      addMajor(formName) {
+      addCourse(formName) {
         let _this = this;
         this.$refs[formName].validate((valid) => {
           debugger
           if (valid) {
-            if (this.major.id) {
+            if (this.course.id) {
               //更新
               this.tableLoading = true;
-              this.putRequest("/major", this.major).then(resp => {
+              this.putRequest("/course", this.course).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
-                  _this.emptyMajorData();
-                  _this.loadMajors();
+                  _this.emptyCourseData();
+                  _this.loadCourses();
                 }
               })
             } else {
               //添加
               this.tableLoading = true;
-              this.postRequest("/major", this.user).then(resp => {
+              this.postRequest("/course", this.user).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
-                  _this.emptyMajorData();
-                  _this.loadMajors();
+                  _this.emptyCourseData();
+                  _this.loadCourses();
                 }
               })
             }
@@ -287,9 +282,9 @@
       },
       cancelEidt() {
         this.dialogVisible = false;
-        this.emptyMajorData();
+        this.emptyCourseData();
       },
-      showMajorTree() {
+      showCourseTree() {
         this.showOrHidePop = !this.showOrHidePop;
       },
       showDepTree2() {
@@ -303,27 +298,27 @@
         this.showOrHidePop2 = false;
         this.depTextColor = '#606266';
       },
-      showEditMajorView(row) {
+      showEditCourseView(row) {
         console.log(row)
-        this.dialogTitle = "编辑专业";
+        this.dialogTitle = "编辑课程";
         this.user = row;
         this.dialogVisible = true;
       },
-      showAddMajorView() {
-        this.dialogTitle = "添加专业";
+      showAddCourseView() {
+        this.dialogTitle = "添加课程";
         this.dialogVisible = true;
         let _this = this;
-        this.getRequest("/user/nextMajorId").then(resp => {
+        this.getRequest("/user/nextCourseId").then(resp => {
           if (resp && resp.status == 200) {
-            _this.major.id = resp.data.obj;
+            _this.course.id = resp.data.obj;
           }
         })
       },
-      emptyMajorData() {
-        this.Major = {
+      emptyCourseData() {
+        this.Course = {
           id: '',
-          majorName: '',
-          majorNo: ''
+          courseName: '',
+          courseNo: ''
         }
       }
     }

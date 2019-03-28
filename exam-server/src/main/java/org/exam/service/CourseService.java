@@ -29,6 +29,21 @@ public class CourseService {
         return new PageInfo(tCourseMapper.selectByExample(new TCourseExample()));
     }
 
+    public int insert(TCourse course){
+        return tCourseMapper.insertSelective(course);
+    }
+
+    public int update(TCourse course){
+        return tCourseMapper.updateByPrimaryKeySelective(course);
+    }
+
+    public int delete(Long id){
+        return tCourseMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     *
+     */
     public void selectCourse(){
 
     }
