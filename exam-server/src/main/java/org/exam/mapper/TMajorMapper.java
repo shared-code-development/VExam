@@ -7,8 +7,6 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.exam.bean.entity.TMajor;
-import org.exam.bean.entity.TMajorExample;
 
 public interface TMajorMapper {
     long countByExample(TMajorExample example);

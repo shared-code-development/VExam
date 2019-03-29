@@ -3,18 +3,9 @@ package org.exam.controller;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import org.exam.bean.dto.RespBean;
-import org.exam.bean.entity.TAcademy;
-import org.exam.bean.entity.TNation;
-import org.exam.bean.entity.TUser;
-import org.exam.common.IdGen.UKeyWorker;
-import org.exam.enums.BusinessEnum;
 import org.exam.service.AcademyService;
-import org.exam.service.NationService;
-import org.exam.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
