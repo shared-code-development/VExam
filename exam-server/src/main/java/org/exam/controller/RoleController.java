@@ -1,4 +1,4 @@
-package org.exam.controller.system;
+package org.exam.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

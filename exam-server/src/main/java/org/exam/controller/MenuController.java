@@ -1,4 +1,4 @@
-package org.exam.controller.system;
+package org.exam.controller;
 
 import io.swagger.annotations.*;
 import org.exam.bean.dto.RespBean;
