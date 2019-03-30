@@ -33,7 +33,7 @@ public class TMenu {
 
     private Long updateTime;
 
-    private Integer creater;
+    private Integer creator;
 
     private Integer updater;
 

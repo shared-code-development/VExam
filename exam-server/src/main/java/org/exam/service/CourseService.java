@@ -2,6 +2,8 @@ package org.exam.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.exam.bean.entity.TCourse;
+import org.exam.bean.entity.TCourseExample;
 import org.exam.mapper.TCourseMapper;
 import org.exam.mapper.TUserMajorCourseMapper;
 import org.springframework.beans.factory.annotation.Autowired;

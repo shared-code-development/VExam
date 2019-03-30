@@ -2,6 +2,8 @@ package org.exam.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.exam.bean.entity.TMajor;
+import org.exam.bean.entity.TMajorExample;
 import org.exam.mapper.TMajorMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -52,7 +52,7 @@ public class TUser implements UserDetails {
 
     private Long updateTime;
 
-    private Integer creater;
+    private Integer creator;
     private String email;
     private Integer updater;
 

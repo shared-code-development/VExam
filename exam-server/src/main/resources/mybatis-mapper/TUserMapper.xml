@@ -20,7 +20,7 @@
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
         <result column="create_time" jdbcType="BIGINT" property="createTime"/>
         <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
-        <result column="creater" jdbcType="INTEGER" property="creater"/>
+        <result column="creator" jdbcType="INTEGER" property="creator"/>
         <result column="updater" jdbcType="INTEGER" property="updater"/>
         <result column="version" jdbcType="INTEGER" property="version"/>
         <result column="enrollment_date" jdbcType="BIGINT" property="enrollmentDate"/>
@@ -93,7 +93,7 @@
     </sql>
     <sql id="Base_Column_List">
         id, user_id, name, phone, tele_phone, address, is_del, username, password, userface,
-        remark, create_time, update_time, creater, updater, version, sex, id_card,
+        remark, create_time, update_time, creator, updater, version, sex, id_card,
         marital_status, native_place, birthday, email, enrollment_date, graduation_date
     </sql>
 
@@ -188,8 +188,8 @@
             <if test="updateTime != null">
                 update_time,
             </if>
-            <if test="creater != null">
-                creater,
+            <if test="creator != null">
+                creator,
             </if>
             <if test="updater != null">
                 updater,
@@ -235,8 +235,8 @@
             <if test="updateTime != null">
                 #{updateTime,jdbcType=BIGINT},
             </if>
-            <if test="creater != null">
-                #{creater,jdbcType=INTEGER},
+            <if test="creator != null">
+                #{creator,jdbcType=INTEGER},
             </if>
             <if test="updater != null">
                 #{updater,jdbcType=INTEGER},
@@ -294,8 +294,8 @@
             <if test="record.updateTime != null">
                 update_time = #{record.updateTime,jdbcType=BIGINT},
             </if>
-            <if test="record.creater != null">
-                creater = #{record.creater,jdbcType=INTEGER},
+            <if test="record.creator != null">
+                creator = #{record.creator,jdbcType=INTEGER},
             </if>
             <if test="record.updater != null">
                 updater = #{record.updater,jdbcType=INTEGER},
@@ -323,7 +323,7 @@
         remark = #{record.remark,jdbcType=VARCHAR},
         create_time = #{record.createTime,jdbcType=BIGINT},
         update_time = #{record.updateTime,jdbcType=BIGINT},
-        creater = #{record.creater,jdbcType=INTEGER},
+        creator = #{record.creator,jdbcType=INTEGER},
         updater = #{record.updater,jdbcType=INTEGER},
         version = #{record.version,jdbcType=INTEGER}
         <if test="_parameter != null">
@@ -369,8 +369,8 @@
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=BIGINT},
             </if>
-            <if test="creater != null">
-                creater = #{creater,jdbcType=INTEGER},
+            <if test="creator != null">
+                creator = #{creator,jdbcType=INTEGER},
             </if>
             <if test="updater != null">
                 updater = #{updater,jdbcType=INTEGER},
@@ -395,7 +395,7 @@
                             remark,
                             create_time,
                             update_time,
-                            creater,
+                            creator,
                             updater,
                             version)
         values (#{id,jdbcType=INTEGER},
@@ -411,14 +411,14 @@
                 #{remark,jdbcType=VARCHAR},
                 #{createTime,jdbcType=BIGINT},
                 #{updateTime,jdbcType=BIGINT},
-                #{creater,jdbcType=INTEGER},
+                #{creator,jdbcType=INTEGER},
                 #{updater,jdbcType=INTEGER},
                 #{version,jdbcType=INTEGER})
     </insert>
 
     <!-- &lt;select id="selectBy" resultMap="BaseResultMap"&gt;
        select id, user_id, name, phone, tele_phone, address, is_del, username, password,
-       userface, remark, create_time, update_time, creater, updater, version
+       userface, remark, create_time, update_time, creator, updater, version
        from t_user
          &lt;where&gt;
              &lt;if test="null!=user and null != username"&gt;

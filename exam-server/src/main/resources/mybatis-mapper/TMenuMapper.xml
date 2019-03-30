@@ -14,7 +14,7 @@
         <result column="is_del" jdbcType="BIT" property="isDel"/>
         <result column="create_time" jdbcType="BIGINT" property="createTime"/>
         <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
-        <result column="creater" jdbcType="INTEGER" property="creater"/>
+        <result column="creator" jdbcType="INTEGER" property="creator"/>
         <result column="updater" jdbcType="INTEGER" property="updater"/>
         <result column="version" jdbcType="INTEGER" property="version"/>
 
@@ -51,7 +51,7 @@
         <result column="is_del" jdbcType="BIT" property="isDel"/>
         <result column="create_time" jdbcType="BIGINT" property="createTime"/>
         <result column="update_time" jdbcType="BIGINT" property="updateTime"/>
-        <result column="creater" jdbcType="INTEGER" property="creater"/>
+        <result column="creator" jdbcType="INTEGER" property="creator"/>
         <result column="updater" jdbcType="INTEGER" property="updater"/>
         <result column="version" jdbcType="INTEGER" property="version"/>
 
@@ -126,7 +126,7 @@
     </sql>
     <sql id="Base_Column_List">
         id, url, path, component, name, icon_cls, keep_alive, require_auth, parent_id, is_del,
-        create_time, update_time, creater, updater, version
+        create_time, update_time, creator, updater, version
     </sql>
     <select id="selectByExample" parameterType="org.exam.bean.entity.TMenuExample" resultMap="BaseResultMap">
         select
@@ -194,8 +194,8 @@
             <if test="updateTime != null">
                 update_time,
             </if>
-            <if test="creater != null">
-                creater,
+            <if test="creator != null">
+                creator,
             </if>
             <if test="updater != null">
                 updater,
@@ -241,8 +241,8 @@
             <if test="updateTime != null">
                 #{updateTime,jdbcType=BIGINT},
             </if>
-            <if test="creater != null">
-                #{creater,jdbcType=INTEGER},
+            <if test="creator != null">
+                #{creator,jdbcType=INTEGER},
             </if>
             <if test="updater != null">
                 #{updater,jdbcType=INTEGER},
@@ -300,8 +300,8 @@
             <if test="record.updateTime != null">
                 update_time = #{record.updateTime,jdbcType=BIGINT},
             </if>
-            <if test="record.creater != null">
-                creater = #{record.creater,jdbcType=INTEGER},
+            <if test="record.creator != null">
+                creator = #{record.creator,jdbcType=INTEGER},
             </if>
             <if test="record.updater != null">
                 updater = #{record.updater,jdbcType=INTEGER},
@@ -328,7 +328,7 @@
         is_del = #{record.isDel,jdbcType=BIT},
         create_time = #{record.createTime,jdbcType=BIGINT},
         update_time = #{record.updateTime,jdbcType=BIGINT},
-        creater = #{record.creater,jdbcType=INTEGER},
+        creator = #{record.creator,jdbcType=INTEGER},
         updater = #{record.updater,jdbcType=INTEGER},
         version = #{record.version,jdbcType=INTEGER}
         <if test="_parameter != null">
@@ -371,8 +371,8 @@
             <if test="updateTime != null">
                 update_time = #{updateTime,jdbcType=BIGINT},
             </if>
-            <if test="creater != null">
-                creater = #{creater,jdbcType=INTEGER},
+            <if test="creator != null">
+                creator = #{creator,jdbcType=INTEGER},
             </if>
             <if test="updater != null">
                 updater = #{updater,jdbcType=INTEGER},
@@ -396,7 +396,7 @@
                             is_del,
                             create_time,
                             update_time,
-                            creater,
+                            creator,
                             updater,
                             version)
         values (#{id,jdbcType=INTEGER},
@@ -411,7 +411,7 @@
                 #{isDel,jdbcType=BIT},
                 #{createTime,jdbcType=BIGINT},
                 #{updateTime,jdbcType=BIGINT},
-                #{creater,jdbcType=INTEGER},
+                #{creator,jdbcType=INTEGER},
                 #{updater,jdbcType=INTEGER},
                 #{version,jdbcType=INTEGER})
     </insert>

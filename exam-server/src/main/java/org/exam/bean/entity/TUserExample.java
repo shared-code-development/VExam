@@ -975,62 +975,62 @@ public class TUserExample {
         }
 
         public Criteria andCreaterIsNull() {
-            addCriterion("creater is null");
+            addCriterion("creator is null");
             return (Criteria) this;
         }
 
         public Criteria andCreaterIsNotNull() {
-            addCriterion("creater is not null");
+            addCriterion("creator is not null");
             return (Criteria) this;
         }
 
         public Criteria andCreaterEqualTo(Integer value) {
-            addCriterion("creater =", value, "creater");
+            addCriterion("creator =", value, "creator");
             return (Criteria) this;
         }
 
         public Criteria andCreaterNotEqualTo(Integer value) {
-            addCriterion("creater <>", value, "creater");
+            addCriterion("creator <>", value, "creator");
             return (Criteria) this;
         }
 
         public Criteria andCreaterGreaterThan(Integer value) {
-            addCriterion("creater >", value, "creater");
+            addCriterion("creator >", value, "creator");
             return (Criteria) this;
         }
 
         public Criteria andCreaterGreaterThanOrEqualTo(Integer value) {
-            addCriterion("creater >=", value, "creater");
+            addCriterion("creator >=", value, "creator");
             return (Criteria) this;
         }
 
         public Criteria andCreaterLessThan(Integer value) {
-            addCriterion("creater <", value, "creater");
+            addCriterion("creator <", value, "creator");
             return (Criteria) this;
         }
 
         public Criteria andCreaterLessThanOrEqualTo(Integer value) {
-            addCriterion("creater <=", value, "creater");
+            addCriterion("creator <=", value, "creator");
             return (Criteria) this;
         }
 
         public Criteria andCreaterIn(List<Integer> values) {
-            addCriterion("creater in", values, "creater");
+            addCriterion("creator in", values, "creator");
             return (Criteria) this;
         }
 
         public Criteria andCreaterNotIn(List<Integer> values) {
-            addCriterion("creater not in", values, "creater");
+            addCriterion("creator not in", values, "creator");
             return (Criteria) this;
         }
 
         public Criteria andCreaterBetween(Integer value1, Integer value2) {
-            addCriterion("creater between", value1, value2, "creater");
+            addCriterion("creator between", value1, value2, "creator");
             return (Criteria) this;
         }
 
         public Criteria andCreaterNotBetween(Integer value1, Integer value2) {
-            addCriterion("creater not between", value1, value2, "creater");
+            addCriterion("creator not between", value1, value2, "creator");
             return (Criteria) this;
         }
 

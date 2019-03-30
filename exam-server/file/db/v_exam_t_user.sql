@@ -13,7 +13,7 @@ CREATE TABLE v_exam.t_user
     remark varchar(255),
     create_time bigint(16) DEFAULT '0' NOT NULL COMMENT '创建时间',
     update_time bigint(16) DEFAULT '0' NOT NULL COMMENT '更新时间',
-    creater int(11) COMMENT '创建者',
+    creator int(11) COMMENT '创建者',
     updater int(11) COMMENT '更新者',
     version int(11) DEFAULT '0' NOT NULL COMMENT '版本号，乐观锁专用',
     sex tinyint(1) DEFAULT '0' NOT NULL COMMENT '性别：1-男；2-女；0-保密',
@@ -26,4 +26,4 @@ CREATE TABLE v_exam.t_user
     enrollment_date bigint(16) DEFAULT '0' NOT NULL COMMENT '入学日期',
     graduation_date bigint(16) DEFAULT '0' NOT NULL COMMENT '毕业日期'
 );
-INSERT INTO v_exam.t_user (id, user_id, name, phone, tele_phone, address, is_del, username, password, userface, remark, create_time, update_time, creater, updater, version, sex, id_card, nation_id, marital_status, native_place, birthday, email, enrollment_date, graduation_date) VALUES (1, '1', '系统管理员', '18568887789', '010-82881234', '北京昌平', 0, 'admin', '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm', 'http://bpic.588ku.com/element_pic/01/40/00/64573ce2edc0728.jpg', null, 20181225014253, 20181225014253, 0, 0, 0, 0, '', 0, '', '', 0, '', 0, 0);
+INSERT INTO v_exam.t_user (id, user_id, name, phone, tele_phone, address, is_del, username, password, userface, remark, create_time, update_time, creator, updater, version, sex, id_card, nation_id, marital_status, native_place, birthday, email, enrollment_date, graduation_date) VALUES (1, '1', '系统管理员', '18568887789', '010-82881234', '北京昌平', 0, 'admin', '$2a$10$ySG2lkvjFHY5O0./CPIE1OI8VJsuKYEzOYzqIa7AJR6sEgSzUFOAm', 'http://bpic.588ku.com/element_pic/01/40/00/64573ce2edc0728.jpg', null, 20181225014253, 20181225014253, 0, 0, 0, 0, '', 0, '', '', 0, '', 0, 0);

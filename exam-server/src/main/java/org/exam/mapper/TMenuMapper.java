@@ -31,7 +31,7 @@ public interface TMenuMapper {
     @Select({
         "select",
         "id, url, path, component, name, icon_cls, keep_alive, require_auth, parent_id, ",
-        "is_del, create_time, update_time, creater, updater, version",
+        "is_del, create_time, update_time, creator, updater, version",
         "from t_menu",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -57,7 +57,7 @@ public interface TMenuMapper {
           "is_del = #{is_del,jdbcType=BIT},",
           "create_time = #{createTime,jdbcType=BIGINT},",
           "update_time = #{updateTime,jdbcType=BIGINT},",
-          "creater = #{creater,jdbcType=INTEGER},",
+          "creator = #{creator,jdbcType=INTEGER},",
           "updater = #{updater,jdbcType=INTEGER},",
           "version = #{version,jdbcType=INTEGER}",
         "where id = #{id,jdbcType=INTEGER}"

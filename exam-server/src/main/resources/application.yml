@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: home
+    active: company
 
 mybatis:
   mapper-locations: classpath:/mybatis-mapper/**Mapper.xml

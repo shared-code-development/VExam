@@ -40,7 +40,7 @@ public interface TUserMapper {
     @Select({
         "select",
         "id, user_id, name, phone, tele_phone, address, is_del, username, password, userface, ",
-        "remark, create_time, update_time, creater, updater, version",
+        "remark, create_time, update_time, creator, updater, version",
         "from t_user",
         "where id = #{id,jdbcType=INTEGER}"
     })
@@ -67,7 +67,7 @@ public interface TUserMapper {
           "remark = #{remark,jdbcType=VARCHAR},",
           "create_time = #{createTime,jdbcType=BIGINT},",
           "update_time = #{updateTime,jdbcType=BIGINT},",
-          "creater = #{creater,jdbcType=INTEGER},",
+          "creator = #{creator,jdbcType=INTEGER},",
           "updater = #{updater,jdbcType=INTEGER},",
           "version = #{version,jdbcType=INTEGER}",
         "where id = #{id,jdbcType=INTEGER}"

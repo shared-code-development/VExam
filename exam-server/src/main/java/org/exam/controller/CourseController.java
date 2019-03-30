@@ -3,6 +3,7 @@ package org.exam.controller;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import org.exam.bean.dto.RespBean;
+import org.exam.bean.entity.TCourse;
 import org.exam.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
