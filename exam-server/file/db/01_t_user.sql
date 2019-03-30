@@ -1,0 +1,26 @@
+drop table if exists t_user;
+CREATE TABLE t_user(
+    user_id bigint(20) primary key not null COMMENT '用户编号',
+    name varchar(10) COMMENT '姓名',
+    mobile_phone char(11) COMMENT '手机号码',
+    telephone varchar(16) COMMENT '住宅电话',
+    address varchar(64) COMMENT '联系地址',
+    username varchar(20) COMMENT '用户名',
+    password varchar(64) COMMENT '密码',
+    sex char(1) DEFAULT '0' NOT NULL COMMENT '性别：1-男；2-女；0-保密',
+    id_card varchar(18) COMMENT '身份证号',
+    nation_id bigint(11) DEFAULT '0' NOT NULL COMMENT '民族',
+    user_face varchar(64) comment '用户图像',
+    marital_status varchar(2) DEFAULT '' NOT NULL COMMENT '婚姻状况：1-已婚；2-未婚；3-离异',
+    native_place varchar(100) DEFAULT '' NOT NULL COMMENT '籍贯',
+    birthday bigint(16) DEFAULT '0' NOT NULL COMMENT '出生日期',
+    email varchar(50) DEFAULT '' NOT NULL COMMENT '电子邮箱',
+    enrollment_date bigint(16) DEFAULT '0' NOT NULL COMMENT '入学日期',
+    graduation_date bigint(16) DEFAULT '0' NOT NULL COMMENT '毕业日期',
+    is_del bit(1) not null default 0 comment '删除标识：0-未删除；1-已删除',
+    create_time bigint(16) DEFAULT '0' NOT NULL COMMENT '创建时间',
+    update_time bigint(16) DEFAULT '0' NOT NULL COMMENT '更新时间',
+    creator int(11) COMMENT '创建者',
+    updater int(11) COMMENT '更新者',
+    version int(11) DEFAULT '0' NOT NULL COMMENT '版本号，乐观锁专用'
+) ENGINE = INNODB default charset = utf8;

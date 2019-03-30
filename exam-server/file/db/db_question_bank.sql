@@ -10,7 +10,7 @@ create table t_question_choice(
     option_d varchar(100) comment 'D选项',
     single_answer enum('A', 'B', 'C', 'D') comment '单选答案',
     multi_answer varchar(4) comment '多选答案',
-    course_id bigint(11)
+    course_id bigint(11),
     is_del bit(1) not null default 0 comment '删除标识：0-未删除；1-已删除',
     create_time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建时间',
     update_time timestamp DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL COMMENT '更新时间',
