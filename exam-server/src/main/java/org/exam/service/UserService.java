@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class UserService {
         if (1 == tUserMapper.insertSelective(user)) {
             return true;
         }
-        throw new BusinessException(BusinessEnum.USER_ADD_FAILURE);
+        throw new BusinessException(BusinessEnum.DB_ADD_FAILURE);
     }
 
     public int delete(Long id) {
@@ -70,7 +69,7 @@ public class UserService {
             return tUserMapper.deleteByPrimaryKey(id);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new BusinessException(BusinessEnum.USER_ADD_FAILURE);
+            throw new BusinessException(BusinessEnum.DB_ADD_FAILURE);
         }
     }
 
@@ -82,7 +81,7 @@ public class UserService {
             return tUserMapper.deleteByExample(userExample);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new BusinessException(BusinessEnum.USER_ADD_FAILURE);
+            throw new BusinessException(BusinessEnum.DB_ADD_FAILURE);
         }
     }
 
@@ -91,6 +90,6 @@ public class UserService {
         if (1 == tUserMapper.updateByExampleSelective(user, userExample)) {
             return true;
         }
-        throw new BusinessException(BusinessEnum.USER_ADD_FAILURE);
+        throw new BusinessException(BusinessEnum.DB_ADD_FAILURE);
     }
 }

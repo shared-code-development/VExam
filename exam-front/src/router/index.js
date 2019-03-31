@@ -7,10 +7,16 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    {
+    /*{
       path: '/',
       name: 'Login',
       component: Login,
+      hidden: true
+    },*/
+    {
+      path: '/',
+      name: 'Home',
+      component: Home,
       hidden: true
     },
     {
@@ -18,9 +24,6 @@ export default new Router({
       name: '主页',
       component: Home,
       hidden: true,
-      meta: {
-        requireAuth: true
-      },
       /*children: [
         {
           path: '/chat',

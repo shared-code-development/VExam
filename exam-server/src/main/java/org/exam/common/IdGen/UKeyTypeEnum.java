@@ -9,7 +9,10 @@ import lombok.Getter;
  */
 public enum UKeyTypeEnum {
     //访问微信分享明细记录编码 6L
-    USER_ID(1L,"user_id","用户表主键");
+    USER_ID(1L,"user_id","用户表主键"),
+    MENU_ID(2L,"menu_id","菜单表主键")
+
+    ;
 
     @Getter
     private long bizId;

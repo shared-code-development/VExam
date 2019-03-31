@@ -35,7 +35,8 @@
                                 style="padding-left: 30px;padding-right:0px;margin-left: 0px;width: 170px;text-align: left"
                                 v-for="child in item.children"
                                 :index="child.path"
-                                :key="child.path">{{child.name}}
+                                :key="child.path">
+                      {{child.name}}
                   </el-menu-item>
                 </el-submenu>
               </template>

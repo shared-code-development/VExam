@@ -9,7 +9,6 @@ export default new Vuex.Store({
   state: {
     user: {
       name: window.localStorage.getItem('user' || '[]') == null ? '未登录' : JSON.parse(window.localStorage.getItem('user' || '[]')).name,
-      userface: window.localStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]')).userface,
       username: window.localStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]')).username,
       roles: window.localStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]')).roles
     },
@@ -47,7 +46,7 @@ export default new Vuex.Store({
     removeValueDotMap(state, key){
       state.isDotMap.delete(key);
     }
-  },
+  }/*,
   actions: {
     connect(context){
       context.state.stomp = Stomp.over(new SockJS("/ws/endpointChat"));
@@ -82,5 +81,5 @@ export default new Vuex.Store({
 
       });
     }
-  }
+  }*/
 });

@@ -20,4 +20,8 @@ public class IdKeyWorkerConfiguration {
     UKeyWorker userIdWorker() {
         return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.USER_ID);
     }
+    @Bean
+    UKeyWorker menuIdWorker() {
+        return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.MENU_ID);
+    }
 }
