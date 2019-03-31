@@ -2,12 +2,12 @@ package org.exam.controller;
 
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
-import org.exam.bean.dto.RespBean;
-import org.exam.bean.entity.TNation;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.exam.bean.dto.ResponseBean;
 import org.exam.bean.entity.TUser;
 import org.exam.common.IdGen.UKeyWorker;
 import org.exam.enums.BusinessEnum;
-import org.exam.service.NationService;
 import org.exam.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,70 +26,47 @@ import java.util.List;
  * Copyright (c) 2019 shiyuan4work@126.com All rights reserved.
  * @price ¥5    微信：hewei1109
  */
+@Slf4j
 @Api(tags = "用户相关")
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     @Autowired
-    UserService userService;
-    @Autowired
     UKeyWorker userIdWorker;
-    @Autowired
-    NationService nationService;
-
-    @GetMapping(value = "/nation/list")
-    public RespBean<List<TNation>> nationList(){
-        return RespBean.ok(BusinessEnum.SERVER_SUCCESS, nationService.nationList());
+    @GetMapping(value = "/nextUserId")
+    public ResponseBean<Long> nextUserId(){
+        long userId = userIdWorker.getId();
+        log.info("{}", userId);
+        return ResponseBean.ok(userId);
     }
+    @Autowired
+    UserService userService;
 
+    @ApiOperation(value = "用户列表", notes = "分页列表")
     @GetMapping(value = "/list")
-    public RespBean<PageInfo<List<TUser>>> list(
+    public ResponseBean<PageInfo<List<TUser>>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(defaultValue = "") String keywords,
-            @RequestParam(required = false) String beginDateScope){
-        return RespBean.ok(userService.getUserList(pageNum, pageSize, keywords, beginDateScope));
+            @RequestParam(defaultValue = "") String keywords){
+        return ResponseBean.ok(userService.list(pageNum, pageSize, keywords));
     }
 
     @PutMapping
-    public RespBean put(TUser user){
-        return RespBean.ok(userService.updateUser(user));
+    public ResponseBean put(TUser user){
+        return ResponseBean.ok(userService.update(user));
     }
     @PostMapping
-    public RespBean post(TUser user){
-        return RespBean.ok(userService.addUser(user));
+    public ResponseBean post(TUser user){
+        return ResponseBean.ok(userService.add(user));
+    }
+    @DeleteMapping(value = "/{id}")
+    public ResponseBean delete(@PathVariable("id") Long id){
+        return ResponseBean.ok(userService.delete(id));
     }
 
-
-    @DeleteMapping(value = "/{ids}")
-    public RespBean delete(@PathVariable("ids") String ids){
-        return RespBean.ok(userService.deleteUser(ids));
-    }
-
-
-    @GetMapping(value = "/nextUserId")
-    public RespBean<Long> nextUserId(){
-        return RespBean.ok(userIdWorker.getId());
-    }
-
-
-    @RequestMapping(value = "/export", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> exportEmp() {
-//        return PoiUtils.exportEmp2Excel(empService.getAllEmployees());
-        return null;
-    }
-
-    @RequestMapping(value = "/import", method = RequestMethod.POST)
-    public RespBean importEmp(MultipartFile file) {
-        /*List<Employee> emps = PoiUtils.importEmp2List(file,
-                empService.getAllNations(), empService.getAllPolitics(),
-                departmentService.getAllDeps(), positionService.getAllPos(),
-                jobLevelService.getAllJobLevels());
-        if (empService.addEmps(emps) == emps.size()) {
-            return RespBean.ok("导入成功!");
-        }
-        return RespBean.error("导入失败!");*/
-        return null;
+    @DeleteMapping(value = "/")
+    public ResponseBean delete(@RequestParam Long[] ids){
+        return ResponseBean.ok(userService.delete(ids));
     }
 }

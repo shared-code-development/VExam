@@ -3,8 +3,10 @@ package org.exam.config;
 import com.google.common.base.Predicate;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.ResponseBody;
 import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
@@ -24,35 +26,35 @@ import static com.google.common.collect.Lists.newArrayList;
 @Configuration
 @EnableSwagger2
 public class Swagger2Config {
-
     @Value("${swagger2.enable}")
     private boolean enableSwagger;
-
     @Value("${swagger2.host}")
     private String swaggerhost;
-
     @Bean
     public Docket createRestApi() {
-
         Predicate<RequestHandler> predicate = new Predicate<RequestHandler>() {
-
             @Override
             public boolean apply(RequestHandler input) {
-//                Class<?> declaringClass = input.declaringClass();
-//                if (declaringClass == BasicErrorController.class)// 排除
-//                    return false;
-//                if(declaringClass.isAnnotationPresent(ApiOperation.class)) // 被注解的类
-//                    return true;
-//                if(input.isAnnotatedWith(ResponseBody.class)) // 被注解的方法
-//                    return true;
+                Class<?> declaringClass = input.declaringClass();
+                // 排除
+                if (declaringClass == BasicErrorController.class) {
+                    return false;
+                }
+                // 被注解的类
+                if(declaringClass.isAnnotationPresent(ApiOperation.class)){
+                    return true;
+                }
+                // 被注解的方法
+                if(input.isAnnotatedWith(ResponseBody.class)) {
+                    return true;
+                }
+                //只有添加了ApiOperation注解的method才在API中显示
                 if (input.isAnnotatedWith(ApiOperation.class)){
                     return true;
-                }//只有添加了ApiOperation注解的method才在API中显示
+                }
                 return false;
             }
         };
-
-
 /*        List<Parameter> pars = new ArrayList<Parameter>();
         ParameterBuilder ticketPar = new ParameterBuilder();
         //header中的ticket参数非必填，传空也可以
