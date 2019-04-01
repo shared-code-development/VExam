@@ -49,9 +49,7 @@ public class UserController {
     UserService userService;
 
     @ApiResponses({
-        @ApiResponse(code=10000,message="请求成功"),
-        @ApiResponse(code=67700,message= "验证码输入错误"),
-        @ApiResponse(code=67400,message="更改密码失败"),
+        @ApiResponse(code=10000,message="请求成功")
     })
     @ApiOperation(value = "用户列表", notes = "分页列表")
     @GetMapping(value = "/list")
@@ -62,6 +60,11 @@ public class UserController {
         return ResponseBean.ok(userService.list(pageNum, pageSize, keywords));
     }
 
+    @ApiOperation(value = "查询当前登陆用户信息", notes = "根据header中的token识别用户信息")
+    @GetMapping
+    public ResponseBean<TUser> get(){
+        return ResponseBean.ok(userService.get(null));
+    }
     @PutMapping
     public ResponseBean put(TUser user){
         return ResponseBean.ok(userService.update(user));

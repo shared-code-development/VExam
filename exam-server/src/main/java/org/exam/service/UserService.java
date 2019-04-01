@@ -57,6 +57,11 @@ public class UserService {
         return PageUtils.nullListHandler(tUserMapper.selectByExample(userExample));
     }
 
+    public TUser get(Long userId) {
+       return tUserMapper.selectByPrimaryKey(userId);
+    }
+
+
     public Boolean add(TUser user) {
         if (1 == tUserMapper.insertSelective(user)) {
             return true;

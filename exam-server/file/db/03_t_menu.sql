@@ -11,7 +11,7 @@ CREATE TABLE v_exam.t_menu
     creator bigint(20) COMMENT '创建者',
     updater bigint(20) COMMENT '更新者',
     version int(5) DEFAULT '0' NOT NULL COMMENT '版本号，乐观锁专用',
-    is_del bit(1) DEFAULT 0 NOT NULL COMMENT '是否删除：0-启用；1-删除',
+    is_del bit(1) DEFAULT true NOT NULL COMMENT '是否删除',
     create_time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建时间',
     update_time timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL on update current_timestamp COMMENT '更新时间',
     sort tinyint(3) COMMENT '排序字段'
