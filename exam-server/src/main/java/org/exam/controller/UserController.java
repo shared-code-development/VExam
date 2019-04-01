@@ -3,6 +3,8 @@ package org.exam.controller;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.exam.bean.dto.ResponseBean;
 import org.exam.bean.entity.TUser;
@@ -35,6 +37,8 @@ public class UserController {
 
     @Autowired
     UKeyWorker userIdWorker;
+
+    @ApiOperation(value = "获取用户id", notes = "获取下一个用户id")
     @GetMapping(value = "/nextUserId")
     public ResponseBean<Long> nextUserId(){
         long userId = userIdWorker.getId();
@@ -44,6 +48,11 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @ApiResponses({
+        @ApiResponse(code=10000,message="请求成功"),
+        @ApiResponse(code=67700,message= "验证码输入错误"),
+        @ApiResponse(code=67400,message="更改密码失败"),
+    })
     @ApiOperation(value = "用户列表", notes = "分页列表")
     @GetMapping(value = "/list")
     public ResponseBean<PageInfo<List<TUser>>> list(

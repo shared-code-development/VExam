@@ -1,6 +1,8 @@
-mybatis:
-  mapper-locations: classpath:/mybatis-mapper/**Mapper.xml
-  config-location: classpath:/mybatis-config.xml
+spring:
+  jackson:
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+
 pagehelper:
   helper-dialect: mysql
   params: count=countSql

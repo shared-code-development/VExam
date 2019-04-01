@@ -3,31 +3,30 @@ package org.exam.bean.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.exam.enums.BusinessEnum;
+import org.exam.exception.BusinessException;
 
 import java.io.Serializable;
 
 /**
  * @author heshiyuan
  */
-@ApiModel(value = "RestModel")
+@ApiModel(value = "ResponseBean")
 public class ResponseBean<T> implements Serializable {
+    private static final long serialVersionUID = -1874202771241585841L;
     @ApiModelProperty(value = "status", dataType = "Integer")
     private Integer status = 200;
     @ApiModelProperty(value = "返回消息", dataType = "String")
     private String msg;
     @ApiModelProperty(value = "返回数据", dataType = "Object")
     private T obj;
-
-    private ResponseBean() {
+    private ResponseBean(Integer status, String msg) {
+        this.status = status;
+        this.msg = msg;
     }
     private ResponseBean(BusinessEnum businessEnum, T data) {
         this.status = businessEnum.getCode();
         this.msg = businessEnum.getMessage();
         this.obj = data;
-    }
-
-    public static ResponseBean build() {
-        return new ResponseBean();
     }
 
     public static <T> ResponseBean ok(String msg, T data) {
@@ -50,6 +49,13 @@ public class ResponseBean<T> implements Serializable {
         return new ResponseBean(businessEnum, null);
     }
 
+    public static ResponseBean error(BusinessException businessException) {
+        return new ResponseBean(businessException.getCode(), businessException.getMsg());
+    }
+
+    public static ResponseBean error(String msg) {
+        return new ResponseBean(50000, msg);
+    }
 
     private ResponseBean(Integer status, String msg, T data) {
         this.status = status;

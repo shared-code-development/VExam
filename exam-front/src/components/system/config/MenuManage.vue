@@ -26,26 +26,28 @@
           width="25%">
           <div>
             <span>上级菜单</span>
-            <el-select v-model="parentMenuId" style="width: 200px" placeholder="请选择" size="mini">
+            <el-select v-model="menu.parentId" style="width: 200px" placeholder="请选择" size="mini">
               <el-option
                 v-for="item in parentMenuList"
                 :key="item.menuId"
                 :label="item.name"
-                :value="item.menuId">
+                :value="item.menuId"
+                :disabled="item.isDel"
+              >
               </el-option>
             </el-select>
           </div>
           <div style="margin-top: 10px">
             <span>菜单名称</span>
-            <el-input size="mini" style="width: 200px;" v-model="currentMenu.menuName" placeholder="请输入菜单名称..."></el-input>
+            <el-input size="mini" style="width: 200px;" v-model="menu.menuName" placeholder="请输入菜单名称..."></el-input>
           </div>
           <div style="margin-top: 10px">
             <span>菜单组件名称</span>
-            <el-input size="mini" style="width: 200px;" v-model="currentMenu.component" placeholder="请输入菜单组件名称..."></el-input>
+            <el-input size="mini" style="width: 200px;" v-model="menu.component" placeholder="请输入菜单组件名称..."></el-input>
           </div>
           <div style="margin-top: 10px">
             <span>菜单访问地址</span>
-            <el-input size="mini" style="width: 200px;" v-model="currentMenu.path" placeholder="请输入菜单访问地址..."
+            <el-input size="mini" style="width: 200px;" v-model="menu.path" placeholder="请输入菜单访问地址..."
                       @keyup.enter.native="addMenu"></el-input>
           </div>
           <span slot="footer" class="dialog-footer">
@@ -66,13 +68,18 @@
         dialogVisible: false,
         parentMenuList: [],
         parentMenu: {},
-        currentMenu: {},
         parentMenuId: '',
         treeData: [],
         defaultProps: {
           label: 'name',
           isLeaf: 'leaf',
           children: 'children'
+        },
+        menu: {
+          menuName: '',
+          component: '',
+          path: '',
+          parentId: ''
         }
       }
     },
@@ -114,10 +121,7 @@
         let _this = this;
         this.dialogVisible = false;
         this.treeLoading = true;
-        this.postRequest("/system/config/menu", {
-          name: this.currentMenu.menuName,
-          parentId: this.parentMenuId
-        }).then(resp => {
+        this.postRequest("/system/config/menu", this.menu).then(resp => {
           _this.treeLoading = false;
           if (resp && resp.status == 200) {
             let respData = resp.data;
@@ -133,7 +137,6 @@
             _this.parentMenuList = resp.data.obj.list;
           }
         });
-        // this.parentMenuId = menuId;
       },
       showAddMenuView(data, event) {
         debugger
@@ -156,10 +159,9 @@
             type: 'warning'
           }).then(() => {
             _this.treeLoading = true;
-            _this.deleteRequest("/system/config/menu/" + data.id).then(resp => {
+            _this.deleteRequest("/system/config/menu/" + data.menuId).then(resp => {
               _this.treeLoading = false;
               if (resp && resp.status == 200) {
-                let respData = resp.data;
                 _this.deleteLocalMenu(_this.treeData, data);
               }
             });
@@ -175,7 +177,7 @@
       deleteLocalMenu(treeData, data) {
         for (let i = 0; i < treeData.length; i++) {
           let td = treeData[i];
-          if (td.id == data.id) {
+          if (td.menuId == data.menuId) {
             treeData.splice(i, 1);
             return;
           } else {
@@ -186,24 +188,12 @@
       renderContent(h, {node, data, store}) {
         return (<span style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
           <span><span>{node.label}</span></span>
-          <span><el-button style="font-size: 12px;" type="primary" size="mini" style="padding:3px" on-click={ () => this.showAddMenuView(data,event) }>添加菜单</el-button>
+          <span>
+            <el-button style="font-size: 12px;" type="primary" size="mini" style="padding:3px" on-click={ () => this.showAddMenuView(data,event) }>添加菜单</el-button>
             <el-button style="font-size: 12px;" type="danger" size="mini" style="padding:3px" on-click={ () => this.deleteMenu(data,event) }>删除菜单</el-button>
           </span>
         </span>);
       }
-      /*renderContent(h, {node, data, store}) {
-        return (
-          "<span style=\"flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;\">"+
-          "<span>"+
-          "<span>{node.label}</span>"+
-          "</span>"+
-          "<span>"+
-          "<el-button style=\"font-size: 12px;\" type=\"primary\" size=\"mini\" style=\"padding:3px\" on-click={() => this.showAddMenuView(data,event)}>添加菜单</el-button>"+
-          "<el-button style=\"font-size: 12px;\" type=\"danger\" size=\"mini\" style=\"padding:3px\" on-click={ () => this.deleteMenu(data,event) }>删除菜单</el-button>"+
-          "</span>"+
-          "</span>"
-        );
-      }*/
     }
   };
 </script>

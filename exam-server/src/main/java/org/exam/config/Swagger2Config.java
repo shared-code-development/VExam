@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
-@Component
 @Configuration
+@EnableSwagger2
 public class Swagger2Config {
     @Value("${swagger2.enable}")
     private boolean enableSwagger;
@@ -33,10 +33,10 @@ public class Swagger2Config {
     private String swaggerHost;
     @Bean
     public Docket createRestApi() {
-        /*Predicate<RequestHandler> predicate = new Predicate<RequestHandler>() {
+        Predicate<RequestHandler> predicate = new Predicate<RequestHandler>() {
             @Override
             public boolean apply(RequestHandler input) {
-                Class<?> declaringClass = input.declaringClass();
+                /*Class<?> declaringClass = input.declaringClass();
                 // 排除
                 if (declaringClass == BasicErrorController.class) {
                     return false;
@@ -48,14 +48,17 @@ public class Swagger2Config {
                 // 被注解的方法
                 if(input.isAnnotatedWith(ResponseBody.class)) {
                     return true;
-                }
-                //只有添加了ApiOperation注解的method才在API中显示
+                }*/
+                /**
+                 * 只有添加了ApiOperation注解的method才在API中显示
+                 */
                 if (input.isAnnotatedWith(ApiOperation.class)){
                     return true;
                 }
                 return false;
             }
         };
+        /**
         List<Parameter> pars = new ArrayList<>();
         ParameterBuilder ticketPar = new ParameterBuilder();
         //header中的ticket参数非必填，传空也可以
@@ -73,10 +76,11 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .host(swaggerHost)
                 .apiInfo(apiInfo())
+                .useDefaultResponseMessages(false)
                 .select()
                 //为当前包路径
-                .apis(RequestHandlerSelectors.basePackage("org.exam.controller"))
-//                .apis(predicate)
+//                .apis(RequestHandlerSelectors.basePackage("org.exam.controller"))
+                .apis(predicate)
                 .paths(PathSelectors.any())
                 //.paths(PathSelectors.ant("/user/**"))
                 .build()
@@ -93,29 +97,33 @@ public class Swagger2Config {
         );
     }*/
 
- /*   private List<SecurityContext> securityContexts() {
+    private List<SecurityContext> securityContexts() {
         return newArrayList(
                 SecurityContext.builder()
                         .securityReferences(defaultAuth())
                         .forPaths(PathSelectors.regex("^(?!test).*$"))
                         .build()
         );
-    }*/
+    }
 
-/*    List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+    List<SecurityReference> defaultAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope(
+                "global",
+                "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[3];
         authorizationScopes[0] = authorizationScope;
         return newArrayList(
-                new SecurityReference("access-token", authorizationScopes)
+            new SecurityReference("access-token", authorizationScopes)
         );
-    }*/
+    }
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 //页面标题
                 .title("微考试系统 restful api")
                 //创建人
-                .contact(new Contact("heshiyuan", "https://github.com/shiyuan2he", "shiyuan4work@126.com"))
+                .contact(new Contact("heshiyuan",
+                        "https://github.com/shiyuan2he",
+                        "shiyuan4work@126.com"))
                 //版本号
                 .version("2.0")
                 //描述
