@@ -1,6 +1,6 @@
 drop table if exists t_clazz;
 create table t_clazz(
-  clazz_id bigint(20) not null default 0 comment '班级编号',
+  clazz_id bigint(20) not null primary key default 0 comment '班级编号',
   class_name varchar(40) not null default '' comment '班级名称',
   major_id bigint(11) not null default 0 comment '专业id',
   creator bigint(20) COMMENT '创建者',
