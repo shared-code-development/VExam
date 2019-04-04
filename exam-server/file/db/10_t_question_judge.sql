@@ -9,5 +9,5 @@ create table t_question_judge(
                                update_time timestamp DEFAULT CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL COMMENT '更新时间',
                                creator int(20) COMMENT '创建者',
                                updater int(20) COMMENT '更新者',
-                               version int(20) DEFAULT 0 NOT NULL COMMENT '版本号，乐观锁专用'
+                               version int(5) DEFAULT 0 NOT NULL COMMENT '版本号，乐观锁专用'
 ) default charset = utf8 comment '判断题';

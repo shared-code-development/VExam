@@ -9,3 +9,6 @@ CREATE TABLE v_exam.t_dic_type
   updater bigint(20) not null COMMENT '更新者',
   version int(5) DEFAULT 0 NOT NULL COMMENT '版本号，乐观锁专用'
 );
+
+
+# question(题型)
