@@ -43,7 +43,7 @@
           </div>
           <div style="margin-top: 10px">
             <span>菜单组件名称</span>
-            <el-input size="mini" style="width: 200px;" v-model="menu.component" placeholder="请输入菜单组件名称..."></el-input>
+            <el-input size="mini" style="width: 200px;" v-model="menu.componentName" placeholder="请输入菜单组件名称..."></el-input>
           </div>
           <div style="margin-top: 10px">
             <span>菜单访问地址</span>
@@ -77,7 +77,7 @@
         },
         menu: {
           menuName: '',
-          component: '',
+          componentName: '',
           path: '',
           parentId: ''
         }

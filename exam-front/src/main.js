@@ -1,5 +1,3 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
 import router from './router'
@@ -23,27 +21,12 @@ Vue.prototype.postRequest = postRequest;
 Vue.prototype.deleteRequest = deleteRequest;
 Vue.prototype.putRequest = putRequest;
 Vue.prototype.isNotNullORBlank = isNotNullORBlank;
-
 router.beforeEach((to, from, next)=> {
-    if (to.name == 'Login') {
-      next();
-      return;
-    }
-    var name = store.state.user.name;
-    if (name == '未登录') {
-      if (to.meta.requireAuth || to.name == null) {
-        next({path: '/', query: {redirect: to.path}})
-      } else {
-        next();
-      }
-    } else {
-      initMenu(router, store);
-      /*if(to.path=='/chat')
-        store.commit("updateMsgList", []);*/
-      next();
-    }
+  console.log(to, from, next);
+  initMenu(router, store);
+  next();
   }
-)
+);
 
 new Vue({
   el: '#app',
@@ -51,4 +34,4 @@ new Vue({
   store,
   template: '<App/>',
   components: {App}
-})
+});
