@@ -2,15 +2,15 @@ import {getRequest} from './api'
 import {Message} from 'element-ui'
 
 export const isNotNullORBlank = (...args)=> {
-  for (let i = 0; i < args.length; i++) {
-    let argument = args[i];
+  for (var i = 0; i < args.length; i++) {
+    var argument = args[i];
     if (argument == null || argument == '' || argument == undefined) {
-      Message.warning({message: '数据不能为空!'});
+      Message.warning({message: '数据不能为空!'})
       return false;
     }
   }
   return true;
-};
+}
 export const initMenu = (router, store)=> {
   if (store.state.routes.length > 0) {
     return;
@@ -22,8 +22,8 @@ export const initMenu = (router, store)=> {
       store.commit('initMenu', fmtRoutes);
       store.dispatch('connect');
     }
-  });
-};
+  })
+}
 export const formatRoutes = (routes)=> {
   let fmRoutes = [];
   routes.forEach(router=> {
@@ -34,7 +34,7 @@ export const formatRoutes = (routes)=> {
       iconCls,
       children
     } = router;
-    if (null!=children && children instanceof Array && children.length > 0) {
+    if (children && children instanceof Array && children.length>0) {
       children = formatRoutes(children);
     }
     let fmRouter = {
@@ -51,6 +51,6 @@ export const formatRoutes = (routes)=> {
       }
     };
     fmRoutes.push(fmRouter);
-  });
+  })
   return fmRoutes;
-};
+}

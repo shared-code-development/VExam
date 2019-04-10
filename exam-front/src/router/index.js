@@ -10,6 +10,24 @@ export default new Router({
       name: 'Home',
       component: Home,
       hidden: true
-    }
+    },
+    {
+      path: '/home',
+      name: '主页',
+      component: Home,
+      hidden: true,
+      /*children: [
+        {
+          path: '/chat',
+          name: '消息',
+          component: Chat,
+          hidden: true,
+          meta: {
+            keepAlive: false,
+            requireAuth: true
+          }
+        }
+      ]*/
+    },
   ]
 })

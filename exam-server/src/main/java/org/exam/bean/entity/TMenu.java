@@ -53,7 +53,7 @@ public class TMenu {
      *
      * @mbg.generated Sun Mar 31 18:05:05 CST 2019
      */
-    private String component;
+    private String componentName;
 
     /**
      *
@@ -239,8 +239,8 @@ public class TMenu {
      *
      * @mbg.generated Sun Mar 31 18:05:05 CST 2019
      */
-    public String getComponent() {
-        return component;
+    public String getComponentName() {
+        return componentName;
     }
 
     /**
@@ -251,8 +251,8 @@ public class TMenu {
      *
      * @mbg.generated Sun Mar 31 18:05:05 CST 2019
      */
-    public void setComponent(String component) {
-        this.component = component == null ? null : component.trim();
+    public void setComponentName(String component) {
+        this.componentName = component == null ? null : component.trim();
     }
 
     /**
