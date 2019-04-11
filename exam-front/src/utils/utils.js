@@ -29,12 +29,12 @@ export const formatRoutes = (routes)=> {
   routes.forEach(router=> {
     let {
       path,
-      componentName,
+      component,
       name,
       iconCls,
       children
     } = router;
-    if (children && children instanceof Array && children.length>0) {
+    if (children && children instanceof Array) {
       children = formatRoutes(children);
     }
     let fmRouter = {
@@ -43,10 +43,10 @@ export const formatRoutes = (routes)=> {
       iconCls: iconCls,
       children: children,
       component(resolve){
-        if (componentName.startsWith("Home")) {
-          require(['../components/' + componentName + '.vue'], resolve)
-        } else if (componentName.startsWith("System")) {
-          require(['../components/system/' + componentName + '.vue'], resolve)
+        if (component.startsWith("Home")) {
+          require(['../components/' + component + '.vue'], resolve)
+        } else if (component.startsWith("System")) {
+          require(['../components/system/' + component + '.vue'], resolve)
         }
       }
     };

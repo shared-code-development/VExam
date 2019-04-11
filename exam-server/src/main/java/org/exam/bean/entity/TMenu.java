@@ -1,5 +1,9 @@
 package org.exam.bean.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonTypeResolver;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +30,7 @@ public class TMenu {
      *
      * @mbg.generated Sun Mar 31 18:05:05 CST 2019
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long menuId;
 
     /**
@@ -53,7 +58,7 @@ public class TMenu {
      *
      * @mbg.generated Sun Mar 31 18:05:05 CST 2019
      */
-    private String componentName;
+    private String component;
 
     /**
      *
@@ -239,8 +244,8 @@ public class TMenu {
      *
      * @mbg.generated Sun Mar 31 18:05:05 CST 2019
      */
-    public String getComponentName() {
-        return componentName;
+    public String getComponent() {
+        return component;
     }
 
     /**
@@ -251,8 +256,8 @@ public class TMenu {
      *
      * @mbg.generated Sun Mar 31 18:05:05 CST 2019
      */
-    public void setComponentName(String component) {
-        this.componentName = component == null ? null : component.trim();
+    public void setComponent(String component) {
+        this.component = component == null ? null : component.trim();
     }
 
     /**

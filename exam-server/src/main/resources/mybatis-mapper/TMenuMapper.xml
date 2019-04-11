@@ -49,7 +49,7 @@
         <id column="menu_id" jdbcType="BIGINT" property="menuId"/>
         <result column="url" jdbcType="VARCHAR" property="url"/>
         <result column="path" jdbcType="VARCHAR" property="path"/>
-        <result column="component" jdbcType="VARCHAR" property="componentName"/>
+        <result column="component" jdbcType="VARCHAR" property="component"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="icon_cls" jdbcType="VARCHAR" property="iconCls"/>
         <result column="parent_id" jdbcType="BIGINT" property="parentId"/>
@@ -63,14 +63,14 @@
         <collection property="children" ofType="org.exam.bean.entity.TMenu">
             <id column="menuId2" property="menuId"/>
             <result column="path2" property="path" jdbcType="VARCHAR"/>
-            <result column="component2" property="componentName" jdbcType="VARCHAR"/>
+            <result column="component2" property="component" jdbcType="VARCHAR"/>
             <result column="name2" property="name" jdbcType="VARCHAR"/>
             <result column="iconCls2" property="iconCls" jdbcType="VARCHAR"/>
             <result column="parentId2" jdbcType="BIGINT" property="parentId"/>
             <collection property="children" ofType="org.exam.bean.entity.TMenu">
                 <id column="menuId3" property="menuId"/>
                 <result column="path3" property="path" jdbcType="VARCHAR"/>
-                <result column="component3" property="componentName" jdbcType="VARCHAR"/>
+                <result column="component3" property="component" jdbcType="VARCHAR"/>
                 <result column="name3" property="name" jdbcType="VARCHAR"/>
                 <result column="iconCls3" property="iconCls" jdbcType="VARCHAR"/>
                 <result column="parentId3" jdbcType="BIGINT" property="parentId"/>
