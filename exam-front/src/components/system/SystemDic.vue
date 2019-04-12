@@ -10,11 +10,11 @@
             style="width: 300px;margin: 0px;padding: 0px;"
             size="mini"
             :disabled="advanceSearchViewVisible"
-            @keyup.enter.native="searchUser"
+            @keyup.enter.native="searchDict"
             prefix-icon="el-icon-search"
             v-model="keywords">
           </el-input>
-          <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchUser">搜索
+          <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchDict">搜索
           </el-button>
           <el-button slot="reference" type="primary" size="mini" style="margin-left: 5px"
                      @click="showAdvanceSearchView"><i
@@ -24,7 +24,7 @@
         </div>
         <div style="margin-left: 5px;margin-right: 20px;display: inline">
           <el-button type="primary" size="mini" icon="el-icon-plus"
-                     @click="showAddUserView">
+                     @click="showAddDictView">
             添加
           </el-button>
         </div>
@@ -51,13 +51,13 @@
                 </el-col>
                 <el-col :span="5" :offset="4">
                   <el-button size="mini" @click="cancelSearch">取消</el-button>
-                  <el-button icon="el-icon-search" type="primary" size="mini" @click="searchUser">搜索</el-button>
+                  <el-button icon="el-icon-search" type="primary" size="mini" @click="searchDict">搜索</el-button>
                 </el-col>
               </el-row>
             </div>
           </transition>
           <el-table
-            :data="users"
+            :data="dictList"
             v-loading="tableLoading"
             border
             stripe
@@ -125,18 +125,18 @@
               label="操作"
               width="195">
               <template slot-scope="scope">
-                <el-button @click="showEditUserView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <el-button @click="showEditDictView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="deleteUser(scope.row)">删除
+                           @click="deleteDict(scope.row)">删除
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
           <div style="display: flex;justify-content: space-between;margin: 2px">
-            <el-button type="danger" size="mini" v-if="users.length>0" :disabled="multipleSelection.length==0"
-                       @click="deleteManyUsers">批量删除
+            <el-button type="danger" size="mini" v-if="dicts.length>0" :disabled="multipleSelection.length==0"
+                       @click="deleteManyDicts">批量删除
             </el-button>
             <el-pagination
               background
@@ -156,7 +156,7 @@
   export default {
     data() {
       return {
-        users: [],
+        dictList: [],
         keywords: '',
         enrollmentDate: '',
         dialogTitle: '',
@@ -174,7 +174,7 @@
         advanceSearchViewVisible: false,
         showOrHidePop: false,
         showOrHidePop2: false,
-        user: {
+        dict: {
           name: '',
           sex: '',
           birthday: '',
@@ -184,73 +184,32 @@
           email: '',
           phone: '',
           address: ''
-        },
-        rules: {
-          name: [{required: true, message: '必填:姓名', trigger: 'blur'}],
-          sex: [{required: true, message: '必填:性别', trigger: 'blur'}],
-          birthday: [{required: true, message: '必填:出生日期', trigger: 'blur'}],
-          idCard: [{
-            required: true,
-            message: '必填:身份证号码',
-            trigger: 'blur'
-          }, {
-            pattern: /(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/,
-            message: '身份证号码格式不正确',
-            trigger: 'blur'
-          }],
-          nationId: [{required: true, message: '必填:民族', trigger: 'change'}],
-          nativePlace: [{required: true, message: '必填:籍贯', trigger: 'blur'}],
-          email: [{required: true, message: '必填:电子邮箱', trigger: 'blur'}, {
-            type: 'email',
-            message: '邮箱格式不正确',
-            trigger: 'blur'
-          }],
-          phone: [{required: true, message: '必填:电话号码', trigger: 'blur'}],
-          address: [{required: true, message: '必填:联系地址', trigger: 'blur'}],
         }
       };
     },
     mounted: function () {
-      this.initData();
-      this.loadUsers();
+      this.loadDicts();
     },
     methods: {
-      fileUploadSuccess(response, file, fileList) {
-        if (response) {
-          this.$message({type: response.status, message: response.msg});
-        }
-        this.loadUsers();
-        this.fileUploadBtnText = '导入数据';
-      },
-      fileUploadError(err, file, fileList) {
-        this.$message({type: 'error', message: "导入失败!"});
-        this.fileUploadBtnText = '导入数据';
-      },
-      beforeFileUpload(file) {
-        this.fileUploadBtnText = '正在导入';
-      },
-      exportUsers() {
-        window.open("/user/export", "_parent");
-      },
       cancelSearch() {
         this.advanceSearchViewVisible = false;
-        this.emptyUserData();
+        this.emptyDictData();
         this.enrollmentDate = '';
-        this.loadUsers();
+        this.loadDicts();
       },
       showAdvanceSearchView() {
         this.advanceSearchViewVisible = !this.advanceSearchViewVisible;
         this.keywords = '';
         if (!this.advanceSearchViewVisible) {
-          this.emptyUserData();
+          this.emptyDictData();
           this.enrollmentDate = '';
-          this.loadUsers();
+          this.loadDicts();
         }
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      deleteManyUsers() {
+      deleteManyDicts() {
         this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -264,7 +223,7 @@
         }).catch(() => {
         });
       },
-      deleteUser(row) {
+      deleteDict(row) {
         this.$confirm('此操作将永久删除[' + row.name + '], 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -277,67 +236,65 @@
       doDelete(ids) {
         this.tableLoading = true;
         let _this = this;
-        this.deleteRequest("/user/" + ids).then(resp => {
+        this.deleteRequest("/dict/" + ids).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
-            _this.loadUsers();
+            _this.loadDicts();
           }
         })
       },
       keywordsChange(val) {
         if (val == '') {
-          this.loadUsers();
+          this.loadDicts();
         }
       },
-      searchUser() {
-        this.loadUsers();
+      searchDict() {
+        this.loadDicts();
       },
       currentChange(currentChange) {
         this.currentPage = currentChange;
-        this.loadUsers();
+        this.loadDicts();
       },
-      loadUsers() {
+      loadDicts() {
         let _this = this;
         this.tableLoading = true;
-        this.getRequest("/user/list?pageNum=" + this.currentPage +
-          "&pageSize=10&keywords=" + this.keywords +
-          "&enrollmentDate=" + this.enrollmentDate)
+        this.getRequest("/dict/list?pageNum=" + this.currentPage + "&pageSize=10")
           .then(resp => {
             debugger
             this.tableLoading = false;
             if (resp && resp.status == 200) {
               let data = resp.data;
-              _this.users = data.obj.list;
+              _this.dictList = data.obj.list;
               _this.totalCount = data.obj.total;
-              //            _this.emptyUserData();
+              //            _this.emptyDictData();
             }
           })
       },
-      addUser(formName) {
+      addDict(formName) {
         let _this = this;
         this.$refs[formName].validate((valid) => {
           debugger
           if (valid) {
-            if (this.user.id) {
+            if (this.dict.id) {
               //更新
               this.tableLoading = true;
-              this.putRequest("/user", this.user).then(resp => {
+              this.putRequest("/dict", this.dict).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
-                  _this.emptyUserData();
-                  _this.loadUsers();
+                  _this.emptyDictData();
+                  _this.loadDicts();
                 }
               })
             } else {
               //添加
               this.tableLoading = true;
-              this.postRequest("/user", this.user).then(resp => {
+              this.postRequest("/dict", this.dict).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
-                  _this.emptyUserData();
-                  _this.loadUsers();
+                  _this.emptyDictData();
+                  _this.loadDicts();
                 }
               })
             }
@@ -348,7 +305,7 @@
       },
       cancelEidt() {
         this.dialogVisible = false;
-        this.emptyUserData();
+        this.emptyDictData();
       },
       showDepTree() {
         this.showOrHidePop = !this.showOrHidePop;
@@ -364,34 +321,25 @@
         this.showOrHidePop2 = false;
         this.depTextColor = '#606266';
       },
-      initData() {
-        let _this = this;
-        this.getRequest("/user/nation/list").then(resp => {
-          if (resp && resp.status == 200) {
-            _this.nations = resp.data.obj;
-          }
-        })
-      },
-      showEditUserView(row) {
-        console.log(row)
+      showEditDictView(row) {
         this.dialogTitle = "编辑员工";
-        this.user = row;
-        this.user.birthday = this.formatDate(row.birthday);
-        this.user.nationId = row.nation.id;
+        this.dict = row;
+        this.dict.birthday = this.formatDate(row.birthday);
+        this.dict.nationId = row.nation.id;
         this.dialogVisible = true;
       },
-      showAddUserView() {
+      showAddDictView() {
         this.dialogTitle = "添加员工";
         this.dialogVisible = true;
         let _this = this;
-        this.getRequest("/user/nextUserId").then(resp => {
+        this.getRequest("/dict/nextDictId").then(resp => {
           if (resp && resp.status == 200) {
-            _this.user.workID = resp.data.obj;
+            _this.dict.workID = resp.data.obj;
           }
         })
       },
-      emptyUserData() {
-        this.user = {
+      emptyDictData() {
+        this.dict = {
           name: '',
           sex: '',
           email: '',

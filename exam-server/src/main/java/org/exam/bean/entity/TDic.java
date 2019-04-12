@@ -1,5 +1,8 @@
 package org.exam.bean.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
 /**
@@ -10,6 +13,9 @@ import java.util.Date;
  * @mbg.generated do_not_delete_during_merge Mon Apr 01 09:36:14 CST 2019
  */
 public class TDic {
+    @Getter
+    @Setter
+    private TDicType dicType;
     /**
      * Database Column Remarks:
      *   分布式id
