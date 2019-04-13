@@ -4,11 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.exam.bean.entity.TQuestionJudge;
 import org.exam.bean.entity.TQuestionJudgeExample;
+import org.exam.common.PageUtils;
+import org.exam.enums.BusinessEnum;
+import org.exam.exception.BusinessException;
 import org.exam.mapper.TQuestionJudgeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -18,28 +21,39 @@ import java.util.List;
  */
 @Service
 public class QuestionJudgeService {
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
-    TQuestionJudgeMapper tQuestionChoiceMapper;
+    TQuestionJudgeMapper tQuestionJudgeMapper;
 
-    public PageInfo<List<TQuestionJudge>> list(Integer pageNum, Integer pageSize){
+    public PageInfo<List<TQuestionJudge>> questionJudgeList(Integer pageNum, Integer pageSize){
         PageHelper.startPage(pageNum, pageSize);
-        TQuestionJudgeExample academyExample = new TQuestionJudgeExample();
-        academyExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
-        List<TQuestionJudge> academyList = tQuestionChoiceMapper.selectByExample(academyExample);
-        if(null!=academyList&&academyList.size()>0){
-            return new PageInfo(academyList);
-        }else{
-            return new PageInfo(new ArrayList());
-        }
+        TQuestionJudgeExample questionJudgeExample = new TQuestionJudgeExample();
+        questionJudgeExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
+        List<TQuestionJudge> questionJudgeList = tQuestionJudgeMapper.selectByExample(questionJudgeExample);
+        return PageUtils.nullListHandler(questionJudgeList);
     }
 
-    public int insert(TQuestionJudge academy){
-        return tQuestionChoiceMapper.insertSelective(academy);
+    public TQuestionJudge get(Long questionJudgeId){
+        return tQuestionJudgeMapper.selectByPrimaryKey(questionJudgeId);
     }
-    public int update(TQuestionJudge academy){
-        return tQuestionChoiceMapper.updateByPrimaryKeySelective(academy);
+    public int insert(TQuestionJudge questionJudge){
+        return tQuestionJudgeMapper.insertSelective(questionJudge);
+    }
+    public int update(TQuestionJudge questionJudge){
+        return tQuestionJudgeMapper.updateByPrimaryKeySelective(questionJudge);
     }
     public int delete(Long id){
-        return tQuestionChoiceMapper.deleteByPrimaryKey(id);
+        return tQuestionJudgeMapper.deleteByPrimaryKey(id);
+    }
+    public int delete(Long[] ids) {
+        TQuestionJudgeExample questionJudgeExample = new TQuestionJudgeExample();
+        questionJudgeExample.createCriteria().andJudgeIdIn(Arrays.asList(ids))
+                .andIsDelEqualTo(Boolean.TRUE);
+        try {
+            return tQuestionJudgeMapper.deleteByExample(questionJudgeExample);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(BusinessEnum.DB_DELETE_FAILURE);
+        }
     }
 }

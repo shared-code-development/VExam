@@ -10,21 +10,16 @@
             style="width: 300px;margin: 0px;padding: 0px;"
             size="mini"
             :disabled="advanceSearchViewVisible"
-            @keyup.enter.native="searchUser"
+            @keyup.enter.native="searchAcademy"
             prefix-icon="el-icon-search"
             v-model="keywords">
           </el-input>
           <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchAcademy">搜索
           </el-button>
-          <el-button slot="reference" type="primary" size="mini" style="margin-left: 5px"
-                     @click="showAdvanceSearchView"><i
-            class="fa fa-lg" v-bind:class="[advanceSearchViewVisible ? faangledoubleup:faangledoubledown]"
-            style="margin-right: 5px"></i>高级搜索
-          </el-button>
         </div>
         <div style="margin-left: 5px;margin-right: 20px;display: inline">
           <el-button type="primary" size="mini" icon="el-icon-plus"
-                     @click="showAddUserView">
+                     @click="showAddAcademyView">
             添加
           </el-button>
         </div>
@@ -45,17 +40,10 @@
               width="30">
             </el-table-column>
             <el-table-column
-              prop="id"
-              align="left"
-              fixed
-              label="ID"
-              width="90">
-            </el-table-column>
-            <el-table-column
-              prop="academyNo"
+              prop="academyId"
               width="200"
               align="left"
-              label="学员编号">
+              label="学院编号">
             </el-table-column>
             <el-table-column
               prop="academyName"
@@ -63,25 +51,52 @@
               width="200">
             </el-table-column>
             <el-table-column
+              width="200"
+              align="center"
+              label="创建时间">
+              <template slot-scope="scope">{{ scope.row.createTime | formatDateTimeHhMmSs}}</template>
+            </el-table-column>
+            <el-table-column
+              width="100"
+              align="center"
+              prop="creator"
+              label="创建者">
+            </el-table-column>
+            <el-table-column
+              width="200"
+              align="center"
+              label="更新时间">
+              <template slot-scope="scope">{{ scope.row.updateTime | formatDateTimeHhMmSs}}</template>
+            </el-table-column>
+            <el-table-column
+              width="100"
+              align="center"
+              prop="creator"
+              label="更新者">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              width="100"
+              label="是否禁用">
+              <template slot-scope="scope">{{ scope.row.isDel | generateDisable}}</template>
+            </el-table-column>
+            <el-table-column
               fixed="right"
               label="操作"
               width="195">
               <template slot-scope="scope">
-                <el-button @click="showEditUserView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <el-button @click="showEditAcademyView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
                 </el-button>
-                <el-button style="padding: 3px 4px 3px 4px;margin: 2px" type="primary"
-                           size="mini">查看高级资料
-                </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="deleteUser(scope.row)">删除
+                           @click="deleteAcademy(scope.row)">删除
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
           <div style="display: flex;justify-content: space-between;margin: 2px">
             <el-button type="danger" size="mini" v-if="academies.length>0" :disabled="multipleSelection.length==0"
-                       @click="deleteManyUsers">批量删除
+                       @click="deleteManyAcademy">批量删除
             </el-button>
             <el-pagination
               background
@@ -95,28 +110,21 @@
         </div>
       </el-main>
     </el-container>
-    <el-form :model="academy" :rules="rules" ref="addUserForm" style="margin: 0px;padding: 0px;">
+    <el-form :model="academy" :rules="rules" ref="addAcademyForm" style="margin: 0px;padding: 0px;">
       <div style="text-align: left">
         <el-dialog
           :title="dialogTitle"
-          style="padding: 0px;"¡
+          style="padding: 0px;"
           :close-on-click-modal="false"
           :visible.sync="dialogVisible"
-          width="77%">
+          width="30%">
           <el-row>
-            <el-col :span="6">
-              <div>
-                <el-form-item label="学院编号:" prop="academyNo">
-                  <el-input prefix-icon="el-icon-edit" v-model="academy.academyNo" size="mini" style="width: 150px"
-                            placeholder="请输入学院编号"></el-input>
-                </el-form-item>
-              </div>
-            </el-col>
             <el-col :span="6">
               <div>
                 <el-form-item label="学院名称:" prop="academyName">
                   <el-input prefix-icon="el-icon-edit" v-model="academy.academyName" size="mini" style="width: 150px"
-                            placeholder="请输入学院名称"></el-input>
+                            placeholder="请输入学院名称">
+                  </el-input>
                 </el-form-item>
               </div>
             </el-col>
@@ -136,7 +144,6 @@
       return {
         academies: [],
         keywords: '',
-        enrollmentDate: '',
         faangledoubleup: 'fa-angle-double-up',
         faangledoubledown: 'fa-angle-double-down',
         dialogTitle: '',
@@ -144,43 +151,33 @@
         depTextColor: '#c0c4cc',
         totalCount: -1,
         currentPage: 1,
-        /*defaultProps: {
-          label: 'academyName',
-          isLeaf: 'leaf',
-          children: 'children'
-        },*/
         dialogVisible: false,
         tableLoading: false,
         advanceSearchViewVisible: false,
-        showOrHidePop: false,
-        showOrHidePop2: false,
         academy: {
-          id: '',
-          academyNo: '',
+          academyId: '',
           academyName: ''
         },
         rules: {
-          academyNo: [{required: true, message: '必填:学院编号', trigger: 'blur'}],
+          academyId: [{required: true, message: '必填:学院编号', trigger: 'blur'}],
           academyName: [{required: true, message: '必填:学院名称', trigger: 'blur'}]
         }
       };
     },
     mounted: function () {
-      this.initData();
       this.loadAcademies();
     },
     methods: {
       cancelSearch() {
         this.advanceSearchViewVisible = false;
-        // this.emptyUserData();
-        this.enrollmentDate = '';
+        this.emptyAcademyData();
         this.loadAcademies();
       },
       showAdvanceSearchView() {
         this.advanceSearchViewVisible = !this.advanceSearchViewVisible;
         this.keywords = '';
         if (!this.advanceSearchViewVisible) {
-          // this.emptyUserData();
+          this.emptyAcademyData();
           this.loadAcademies();
         }
       },
@@ -223,7 +220,7 @@
       },
       keywordsChange(val) {
         if (val == '') {
-          this.loadUsers();
+          this.loadAcademies();
         }
       },
       searchAcademy() {
@@ -241,7 +238,7 @@
             this.tableLoading = false;
             if (resp && resp.status == 200) {
               let data = resp.data;
-              _this.users = data.obj.list;
+              _this.academies = data.obj.list;
               _this.totalCount = data.obj.total;
             }
           })
@@ -249,27 +246,26 @@
       addAcademy(formName) {
         let _this = this;
         this.$refs[formName].validate((valid) => {
-          debugger
           if (valid) {
-            if (this.academy.id) {
+            if (this.academy.academyId) {
               //更新
               this.tableLoading = true;
               this.putRequest("/academy", this.academy).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
-                  // _this.emptyUserData();
+                  _this.emptyAcademyData();
                   _this.loadAcademies();
                 }
               })
             } else {
               //添加
               this.tableLoading = true;
-              this.postRequest("/academy", this.user).then(resp => {
+              this.postRequest("/academy", this.academy).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
-                  // _this.emptyUserData();
+                  _this.emptyAcademyData();
                   _this.loadAcademies();
                 }
               })
@@ -281,45 +277,43 @@
       },
       cancelEidt() {
         this.dialogVisible = false;
-        this.emptyUserData();
+        this.emptyAcademyData();
       },
-      showDepTree() {
-        this.showOrHidePop = !this.showOrHidePop;
-      },
-      showDepTree2() {
-        this.showOrHidePop2 = !this.showOrHidePop2;
+      deleteManyAcademy() {
+        this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let ids = '';
+          for (let i = 0; i < this.multipleSelection.length; i++) {
+            ids += this.multipleSelection[i].id + ",";
+          }
+          this.doDelete(ids);
+        }).catch(() => {
+        });
       },
       handleNodeClick(data) {
-        this.showOrHidePop = false;
         this.depTextColor = '#606266';
       },
       handleNodeClick2(data) {
-        this.showOrHidePop2 = false;
         this.depTextColor = '#606266';
       },
       showEditAcademyView(row) {
-        console.log(row)
         this.dialogTitle = "编辑学院";
-        this.user = row;
-        this.user.birthday = this.formatDate(row.birthday);
-        this.user.nationId = row.nation.id;
+        this.Academy = row;
+        this.Academy.birthday = this.formatDate(row.birthday);
+        this.Academy.nationId = row.nation.id;
         this.dialogVisible = true;
       },
       showAddAcademyView() {
         this.dialogTitle = "添加学院";
         this.dialogVisible = true;
-        let _this = this;
-        this.getRequest("/user/nextAcademyId").then(resp => {
-          if (resp && resp.status == 200) {
-            _this.academy.id = resp.data.obj;
-          }
-        })
       },
       emptyAcademyData() {
         this.academy = {
-          id: '',
-          academyName: '',
-          academyNo: ''
+          academyId: '',
+          academyName: ''
         }
       }
     }

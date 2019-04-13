@@ -1,20 +1,22 @@
 package org.exam.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.exam.bean.entity.TMenu;
 import org.exam.bean.entity.TMenuExample;
-import org.exam.bean.entity.TMenuRoleExample;
-import org.exam.common.UserUtils;
+import org.exam.bean.entity.TUserExample;
+import org.exam.common.IdGen.UKeyWorker;
+import org.exam.common.PageUtils;
+import org.exam.config.IdKeyWorkerConfiguration;
+import org.exam.enums.BusinessEnum;
+import org.exam.exception.BusinessException;
 import org.exam.mapper.TMenuMapper;
-import org.exam.mapper.TMenuRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author heshiyuan
@@ -29,53 +31,69 @@ import java.util.Map;
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 public class MenuService {
-
-
     @Autowired
     private TMenuMapper tMenuMapper;
     @Autowired
-    private TMenuRoleMapper tMenuRoleMapper;
+    UKeyWorker menuIdWorker;
 
-    public List<TMenu> getMenusByUserId(){
-        return tMenuMapper.getMenusByUserId(UserUtils.getCurrentUser().getUserId());
+    public PageInfo<List<TMenu>> list(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        TMenuExample userExample = new TMenuExample();
+        /*TMenuExample.Criteria criteria = userExample.createCriteria();
+        if(Objects.nonNull(parentId)){
+            criteria.andParentIdEqualTo(parentId);
+            criteria.andMenuIdEqualTo(parentId)
+        }*/
+        return PageUtils.nullListHandler(tMenuMapper.selectByExample(userExample));
+    }
+    public List<TMenu> tree(Long parentId) {
+        return tMenuMapper.getMenuByParentId(parentId);
     }
 
-
-    public List<TMenu> getMenuList(){
-        TMenuExample menuExample = new TMenuExample();
-        menuExample.createCriteria().andIsDelEqualTo((byte) 0);
-        return tMenuMapper.selectByExample(menuExample);
+    public List<TMenu> getMenuTreeByUserId(Long userId, Long parentId) {
+        if(null==parentId){
+            parentId = -1L;
+        }
+        return tMenuMapper.getMenuByUserIdAndParentId(null, parentId);
     }
-
-    public List<TMenu> getMenuByParentId(Integer parentId){
-      try{
-        return tMenuMapper.getMenusByParentId(parentId);
-      }catch (Exception e){
-          e.printStackTrace();
-          return new ArrayList<>();
-      }
-    }
-    @Transactional(rollbackFor = Exception.class)
-    public boolean addMenu(TMenu menu){
-        if(tMenuMapper.insertSelective(menu)==1){
+    public Boolean add(TMenu menu) {
+        TMenu parentMenu = tMenuMapper.selectByPrimaryKey(menu.getParentId());
+        menu.setMenuId(menuIdWorker.getId());
+        menu.setUrl(parentMenu.getUrl());
+        menu.setIconCls(parentMenu.getIconCls());
+        menu.setIsDel(true);
+        if (1 == tMenuMapper.insertSelective(menu)) {
             return true;
         }
-        return false;
+        throw new BusinessException(BusinessEnum.DB_ADD_FAILURE);
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public boolean deleteMenu(Integer id){
-        tMenuMapper.deleteByPrimaryKey(id);
-        return true;
+    public int delete(Long id) {
+        try {
+            return tMenuMapper.deleteByPrimaryKey(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(BusinessEnum.DB_DELETE_FAILURE);
+        }
     }
 
-    public Map<String, Object> getMenuTreeByRoleId(Integer parentId, Integer roleId){
-        Map<String, Object> returnMap = new HashMap<>(4);
-        returnMap.put("menuTrees", tMenuMapper.getMenusByParentId(parentId));
+    public int delete(Long[] ids) {
+        TMenuExample userExample = new TMenuExample();
+        userExample.createCriteria().andMenuIdIn(Arrays.asList(ids))
+                .andIsDelEqualTo(Boolean.TRUE);
+        try {
+            return tMenuMapper.deleteByExample(userExample);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(BusinessEnum.DB_DELETE_FAILURE);
+        }
+    }
 
-        TMenuRoleExample menuRoleExample = new TMenuRoleExample();
-        menuRoleExample.createCriteria().andRoleIdEqualTo(roleId);
-        returnMap.put("menuIds", tMenuRoleMapper.selectByExample(menuRoleExample).stream().map(entity -> entity.getMenuId()));
-        return returnMap;
+    public Boolean update(TMenu menu) {
+        TMenuExample userExample = new TMenuExample();
+        if (1 == tMenuMapper.updateByExampleSelective(menu, userExample)) {
+            return true;
+        }
+        throw new BusinessException(BusinessEnum.DB_UPDATE_FAILURE);
     }
 }

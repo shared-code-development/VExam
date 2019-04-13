@@ -2,62 +2,81 @@ package org.exam.common.IdGen;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-
-
 /**
  * timestamp + bizId + workId + sequence
- *
+ * @author heshiyuan
  */
 @Slf4j
 public class UKeyWorker{
-	private final static long twepoch = 1404878190828L;
-	
-	//机器标识位数（每种业务支持多少worker-thread）
+    private final static long twepoch = 1404878190828L;
+    /**
+     * 机器标识位数（每种业务支持多少worker-thread）
+     */
 	private final static long workerIdBits = 5L;
-	//业务标识位数（预留）
+    /**
+     * 业务标识位数（预留）
+     */
 	private final static long bizIdBits = 6L;
 
-	//机器标识最大值
+    /**
+     * 机器标识最大值
+     */
 	private final static long maxWorkerId = -1L ^ -1L << UKeyWorker.workerIdBits;
-	//业务标识最大值
+    /**
+     * 业务标识最大值
+     */
 	private final static long maxBizId = -1L ^ -1L << UKeyWorker.bizIdBits;
 
-	//毫秒内自增位数
+    /**
+     * 毫秒内自增位数
+     */
 	private final static long sequenceBits = 12L;
-	
-	// 机器标识偏左移
+
+    /**
+     * 机器标识偏左移
+     */
 	private final static long workerIdShift = UKeyWorker.sequenceBits;
-	// 业务标识偏左移
-	private final static long bizIdShift = UKeyWorker.sequenceBits
-			+ UKeyWorker.workerIdBits;
-	// 时间毫秒偏左移
+    /**
+     * 业务标识偏左移
+     */
+	private final static long bizIdShift = UKeyWorker.sequenceBits + UKeyWorker.workerIdBits;
+    /**
+     * 时间毫秒偏左移
+     */
 	private final static long timestampShift = UKeyWorker.sequenceBits
 			+ UKeyWorker.workerIdBits + UKeyWorker.bizIdBits;
 
-	//序列号Mask
+    /**
+     * 序列号Mask
+     */
 	private final static long sequenceMask = -1L ^ -1L << UKeyWorker.sequenceBits;
-	//机器标识Mask
+    /**
+     * 机器标识Mask
+     */
 	private final static long workerIdMask = UKeyWorker.maxWorkerId << UKeyWorker.workerIdShift;
-	//业务标识Mask
+    /**
+     * 业务标识Mask
+     */
 	private final static long bizIdMask = UKeyWorker.maxBizId << UKeyWorker.bizIdShift;
-	//时间戳Mask
+    /**
+     * 时间戳Mask
+     */
 	private final static long timestampMask = Long.MAX_VALUE
 			^ (UKeyWorker.sequenceMask | UKeyWorker.workerIdMask | UKeyWorker.bizIdMask);
 
-	//最后的时间戳
+    /**
+     * 最后的时间戳
+     */
 	private long lastTimestamp = -1L;
 
-	@Value("${UKeyWorker.workid}")
-	private  long workerId;
+	private long workerId = 1L;
 
-//	@Value("${UKeyWorker.bizid}")
-	private  long bizId;
+	private long bizId = 2L;
 
 	private long sequence = 0L;
 
 	
 	public UKeyWorker(long bizId) {
-
 		super();
 		if (workerId > UKeyWorker.maxWorkerId || workerId < 0) {
 			throw new IllegalArgumentException(String.format(
@@ -80,8 +99,7 @@ public class UKeyWorker{
 	}
 
 
-	public UKeyWorker(long workerId,long bizId) {
-
+	public UKeyWorker(long workerId, long bizId) {
 		super();
 		if (workerId > UKeyWorker.maxWorkerId || workerId < 0) {
 			throw new IllegalArgumentException(String.format(
@@ -110,13 +128,10 @@ public class UKeyWorker{
 
 	public synchronized long nextId() {
 		long timestamp = this.timeGen();
-		
 		// 时间发生错误
 		if (timestamp < this.lastTimestamp) {
 			throw new RuntimeException(
-					String
-							.format(
-									"Clock moved backwards.  Refusing to generate id for %d milliseconds",
+					String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds",
 									this.lastTimestamp - timestamp));
 		}
 
@@ -129,7 +144,6 @@ public class UKeyWorker{
 		} else {
 			this.sequence = 0;
 		}
-
 		this.lastTimestamp = timestamp;
 
 		//计算

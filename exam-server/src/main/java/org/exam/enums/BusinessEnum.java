@@ -28,7 +28,9 @@ public enum BusinessEnum {
     BUSINESS_HANDLE_EXCEPTION(50000, "业务处理异常"),
 
 
-    USER_ADD_FAILURE(60000, "用户添加失败"),
+    DB_ADD_FAILURE(60000, "添加数据失败"),
+    DB_DELETE_FAILURE(60001, "删除数据失败"),
+    DB_UPDATE_FAILURE(60002, "更新数据失败"),
     ;
 
     private Integer code ;

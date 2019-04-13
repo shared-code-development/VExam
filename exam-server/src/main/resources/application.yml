@@ -1,15 +1,17 @@
 spring:
-  profiles:
-    active: company
+  jackson:
+    time-zone: GMT+8
+    default-property-inclusion: non_null
 
-mybatis:
-  mapper-locations: classpath:/mybatis-mapper/**Mapper.xml
-  config-location: classpath:/mybatis-config.xml
+# 此部分也可以配置在 logback-spring.xml中，pagehelper采用的是数据库分页，
+# 因为使用的是拦截器com.github.pagehelper.PageHelper,所以看起来像是内存分页
 pagehelper:
   helper-dialect: mysql
   params: count=countSql
+  # 启用合理化时，如果pageNum<1会查询第一页，如果pageNum>pages会查询最后一页
+  # 禁用合理化时，如果pageNum<1或pageNum>pages会返回空数据
   reasonable: true
   supportMethodsArguments: true
 swagger2:
-  host: localhost
+  host: localhost:${server.port}
   enable: true

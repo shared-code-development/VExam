@@ -2,7 +2,7 @@ package org.exam.controller;
 
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
-import org.exam.bean.dto.RespBean;
+import org.exam.bean.dto.ResponseBean;
 import org.exam.bean.entity.TClazz;
 import org.exam.service.ClazzService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,32 +15,31 @@ import java.util.List;
  *
  * @author heshiyuan
  */
-@Api(tags = "班级相关")
+@Api(tags = "学院相关")
 @RestController
 @RequestMapping("/clazz")
 public class ClazzController {
+
     @Autowired
     ClazzService clazzService;
     @GetMapping(value = "/list")
-    public RespBean<PageInfo<List<TClazz>>> list(
+    public ResponseBean<PageInfo<List<TClazz>>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize){
-        return RespBean.ok(clazzService.list(pageNum, pageSize));
+        return ResponseBean.ok(clazzService.clazzList(pageNum, pageSize));
     }
 
     @PutMapping
-    public RespBean<Integer> put(TClazz academy){
-        return RespBean.ok(clazzService.update(academy));
+    public ResponseBean<Integer> put(TClazz clazz){
+        return ResponseBean.ok(clazzService.update(clazz));
     }
     @PostMapping
-    public RespBean post(TClazz academy){
-        return RespBean.ok(clazzService.insert(academy));
+    public ResponseBean post(TClazz clazz){
+        return ResponseBean.ok(clazzService.insert(clazz));
     }
-
 
     @DeleteMapping(value = "/{id}")
-    public RespBean delete(@PathVariable("id") Long id){
-        return RespBean.ok(clazzService.delete(id));
+    public ResponseBean delete(@PathVariable("id") Long id){
+        return ResponseBean.ok(clazzService.delete(id));
     }
-
 }

@@ -1,11 +1,7 @@
 package org.exam.common.IdGen;
 
 /**
- * Created with IntelliJ IDEA.
- * User: changjiang
- * Date: 2019/3/1
- * Time: 15:34
- * To change this template use File | Settings | File Templates.
+ * @author heshiyuan
  */
 public class UKeyWorkerFactory {
 

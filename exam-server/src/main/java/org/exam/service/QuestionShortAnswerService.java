@@ -4,11 +4,14 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.exam.bean.entity.TQuestionShortAnswer;
 import org.exam.bean.entity.TQuestionShortAnswerExample;
+import org.exam.common.PageUtils;
+import org.exam.enums.BusinessEnum;
+import org.exam.exception.BusinessException;
 import org.exam.mapper.TQuestionShortAnswerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -18,29 +21,39 @@ import java.util.List;
  */
 @Service
 public class QuestionShortAnswerService {
-
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     TQuestionShortAnswerMapper tQuestionShortAnswerMapper;
 
-    public PageInfo<List<TQuestionShortAnswer>> list(Integer pageNum, Integer pageSize){
+    public PageInfo<List<TQuestionShortAnswer>> questionShortAnswerList(Integer pageNum, Integer pageSize){
         PageHelper.startPage(pageNum, pageSize);
-        TQuestionShortAnswerExample academyExample = new TQuestionShortAnswerExample();
-        academyExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
-        List<TQuestionShortAnswer> academyList = tQuestionShortAnswerMapper.selectByExample(academyExample);
-        if(null!=academyList&&academyList.size()>0){
-            return new PageInfo(academyList);
-        }else{
-            return new PageInfo(new ArrayList());
-        }
+        TQuestionShortAnswerExample questionShortAnswerExample = new TQuestionShortAnswerExample();
+        questionShortAnswerExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
+        List<TQuestionShortAnswer> questionShortAnswerList = tQuestionShortAnswerMapper.selectByExample(questionShortAnswerExample);
+        return PageUtils.nullListHandler(questionShortAnswerList);
     }
 
-    public int insert(TQuestionShortAnswer academy){
-        return tQuestionShortAnswerMapper.insertSelective(academy);
+    public TQuestionShortAnswer get(Long questionShortAnswerId){
+        return tQuestionShortAnswerMapper.selectByPrimaryKey(questionShortAnswerId);
     }
-    public int update(TQuestionShortAnswer academy){
-        return tQuestionShortAnswerMapper.updateByPrimaryKeySelective(academy);
+    public int insert(TQuestionShortAnswer questionShortAnswer){
+        return tQuestionShortAnswerMapper.insertSelective(questionShortAnswer);
+    }
+    public int update(TQuestionShortAnswer questionShortAnswer){
+        return tQuestionShortAnswerMapper.updateByPrimaryKeySelective(questionShortAnswer);
     }
     public int delete(Long id){
         return tQuestionShortAnswerMapper.deleteByPrimaryKey(id);
+    }
+    public int delete(Long[] ids) {
+        TQuestionShortAnswerExample questionShortAnswerExample = new TQuestionShortAnswerExample();
+        questionShortAnswerExample.createCriteria().andShortAnswerIdIn(Arrays.asList(ids))
+                .andIsDelEqualTo(Boolean.TRUE);
+        try {
+            return tQuestionShortAnswerMapper.deleteByExample(questionShortAnswerExample);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BusinessException(BusinessEnum.DB_DELETE_FAILURE);
+        }
     }
 }
