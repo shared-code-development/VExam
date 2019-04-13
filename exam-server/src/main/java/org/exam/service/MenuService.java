@@ -60,7 +60,6 @@ public class MenuService {
         TMenu parentMenu = tMenuMapper.selectByPrimaryKey(menu.getParentId());
         menu.setMenuId(menuIdWorker.getId());
         menu.setUrl(parentMenu.getUrl());
-        menu.setPath(parentMenu.getPath());
         menu.setIconCls(parentMenu.getIconCls());
         menu.setIsDel(true);
         if (1 == tMenuMapper.insertSelective(menu)) {

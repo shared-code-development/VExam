@@ -1,5 +1,8 @@
 package org.exam.bean.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.util.Date;
 
 /**
@@ -19,6 +22,7 @@ public class TDicType {
      *
      * @mbg.generated Mon Apr 01 09:36:14 CST 2019
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long dicTypeId;
 
     /**

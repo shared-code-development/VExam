@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import org.exam.bean.entity.TDic;
 import org.exam.bean.entity.TDicType;
 import org.exam.bean.entity.TDicTypeExample;
+import org.exam.common.IdGen.UKeyWorker;
 import org.exam.common.PageUtils;
 import org.exam.enums.BusinessEnum;
 import org.exam.exception.BusinessException;
@@ -31,7 +32,8 @@ import java.util.List;
 public class DicTypeService {
     @Autowired
     TDicTypeMapper tDicTypeMapper;
-
+    @Autowired
+    UKeyWorker dicTypeIdWorker;
     public TDicType get(Long dicTypeId){
         return tDicTypeMapper.selectByPrimaryKey(dicTypeId);
     }
@@ -43,6 +45,9 @@ public class DicTypeService {
     }
 
     public Boolean add(TDicType dicType) {
+        dicType.setDicTypeId(dicTypeIdWorker.getId());
+        dicType.setCreator(1L);
+        dicType.setUpdater(1L);
         if (1 == tDicTypeMapper.insertSelective(dicType)) {
             return true;
         }

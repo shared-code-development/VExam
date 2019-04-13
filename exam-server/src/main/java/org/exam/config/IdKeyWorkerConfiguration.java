@@ -24,4 +24,17 @@ public class IdKeyWorkerConfiguration {
     UKeyWorker menuIdWorker() {
         return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.MENU_ID);
     }
+    @Bean
+    UKeyWorker dicTypeIdWorker() {
+        return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.DIC_TYPE_ID);
+    }
+
+    @Bean
+    UKeyWorker dicIdWorker() {
+        return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.DIC_ID);
+    }
+    @Bean
+    UKeyWorker academyIdWorker() {
+        return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.ACADEMY_ID);
+    }
 }

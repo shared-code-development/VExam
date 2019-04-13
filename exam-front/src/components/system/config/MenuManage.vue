@@ -32,7 +32,7 @@
                 :key="item.menuId"
                 :label="item.name"
                 :value="item.menuId"
-                :disabled="item.isDel"
+                :disabled="!item.isDel"
               >
               </el-option>
             </el-select>

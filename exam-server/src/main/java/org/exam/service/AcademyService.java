@@ -4,11 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.exam.bean.entity.TAcademy;
 import org.exam.bean.entity.TAcademyExample;
+import org.exam.common.IdGen.UKeyWorker;
 import org.exam.enums.BusinessEnum;
 import org.exam.exception.BusinessException;
 import org.exam.mapper.TAcademyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,11 +22,13 @@ import java.util.List;
  * @author heshiyuan
  */
 @Service
+@Transactional
 public class AcademyService {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     TAcademyMapper tAcademyMapper;
-
+    @Autowired
+    UKeyWorker academyIdWorker;
     public PageInfo<List<TAcademy>> academyList(Integer pageNum, Integer pageSize){
         PageHelper.startPage(pageNum, pageSize);
         TAcademyExample academyExample = new TAcademyExample();
@@ -41,6 +45,9 @@ public class AcademyService {
         return tAcademyMapper.selectByPrimaryKey(academyId);
     }
     public int insert(TAcademy academy){
+        academy.setAcademyId(academyIdWorker.getId());
+        academy.setCreator(1L);
+        academy.setUpdater(1L);
         return tAcademyMapper.insertSelective(academy);
     }
     public int update(TAcademy academy){

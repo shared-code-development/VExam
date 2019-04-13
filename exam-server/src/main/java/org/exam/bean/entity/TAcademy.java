@@ -1,5 +1,8 @@
 package org.exam.bean.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.util.Date;
 
 /**
@@ -21,6 +24,7 @@ public class TAcademy {
      *
      * @mbg.generated Tue Apr 02 14:50:37 CST 2019
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long academyId;
 
     /**
