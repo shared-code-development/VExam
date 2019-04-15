@@ -2,8 +2,11 @@ package org.exam.bean.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -13,6 +16,9 @@ import java.util.Date;
  * @mbg.generated do_not_delete_during_merge Mon Apr 01 09:36:14 CST 2019
  */
 public class TDicType {
+    @Setter
+    @Getter
+    private List<TDic> children;
     /**
      * Database Column Remarks:
      *   分布式id

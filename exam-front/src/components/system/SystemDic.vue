@@ -4,9 +4,9 @@
       <el-tab-pane label="字典类型" name="dicType">
         <dic-type-manage></dic-type-manage>
       </el-tab-pane>
-     <!-- <el-tab-pane label="字典" name="dic">
+      <el-tab-pane label="字典键值" name="dic">
         <dic-manage></dic-manage>
-      </el-tab-pane>-->
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -21,7 +21,7 @@
     },
     methods: {},
     components: {
-      /*'dic-manage': Dic,*/
+      'dic-manage': Dic,
       'dic-type-manage': DicType
     }
   };

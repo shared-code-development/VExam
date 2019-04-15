@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.exam.bean.dto.DicTreeNode;
 import org.exam.bean.entity.TDicType;
 import org.exam.bean.entity.TDicTypeExample;
 
@@ -131,4 +132,7 @@ public interface TDicTypeMapper {
         "where dic_type_id = #{dicTypeId,jdbcType=BIGINT}"
     })
     int updateByPrimaryKey(TDicType record);
+
+    List<TDicType> getDicTypeTreeList(Long parentId);
+    List<DicTreeNode> getDicTypeTreeNode(Long parentId);
 }

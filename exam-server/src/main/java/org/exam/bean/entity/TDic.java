@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -16,6 +17,9 @@ public class TDic {
     @Getter
     @Setter
     private TDicType dicType;
+    @Getter
+    @Setter
+    private List<TDic> children;
     /**
      * Database Column Remarks:
      *   分布式id
@@ -59,6 +63,10 @@ public class TDic {
      * @mbg.generated Mon Apr 01 09:36:14 CST 2019
      */
     private String dicTypeId;
+
+    @Setter
+    @Getter
+    private Long parentDicId;
 
     /**
      * Database Column Remarks:

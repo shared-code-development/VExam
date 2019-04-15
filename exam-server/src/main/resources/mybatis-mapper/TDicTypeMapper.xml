@@ -16,6 +16,49 @@
     <result column="updater" jdbcType="BIGINT" property="updater" />
     <result column="version" jdbcType="INTEGER" property="version" />
   </resultMap>
+    <resultMap id="TreeResultMap" type="org.exam.bean.entity.TDicType">
+        <id column="dic_type_id" jdbcType="BIGINT" property="dicTypeId" />
+        <result column="dic_type_name" jdbcType="VARCHAR" property="dicTypeName" />
+        <result column="is_del" jdbcType="BIT" property="isDel" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="creator" jdbcType="BIGINT" property="creator" />
+        <result column="updater" jdbcType="BIGINT" property="updater" />
+        <result column="version" jdbcType="INTEGER" property="version" />
+        <collection property="children" ofType="org.exam.bean.entity.TDic">
+            <id column="dic_id" jdbcType="BIGINT" property="dicId" />
+            <result column="dic_key" jdbcType="VARCHAR" property="dicKey" />
+            <result column="dic_value" jdbcType="VARCHAR" property="dicValue" />
+            <result column="dic_type_id" jdbcType="VARCHAR" property="dicTypeId" />
+            <result column="parent_dic_id" jdbcType="BIGINT" property="parentDicId" />
+            <result column="is_del" jdbcType="BIT" property="isDel" />
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+            <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+            <result column="creator" jdbcType="BIGINT" property="creator" />
+            <result column="updater" jdbcType="BIGINT" property="updater" />
+            <result column="version" jdbcType="INTEGER" property="version" />
+            <collection property="children" ofType="org.exam.bean.entity.TDic">
+                <id property="dicId" column="dic_id2"></id>
+                <result property="dicKey" column="dic_key2"></result>
+                <result property="dicValue" column="dic_value2"></result>
+                <result property="dicTypeId" column="dic_type_id2"></result>
+                <result property="parentDicId" column="parent_dic_id2"></result>
+                <result property="isDel" column="is_del2"></result>
+            </collection>
+        </collection>
+    </resultMap>
+    <resultMap id="TreeNode" type="org.exam.bean.dto.DicTreeNode">
+        <id column="dicId" jdbcType="BIGINT" property="dicId" />
+        <result column="dicName" jdbcType="VARCHAR" property="dicName" />
+        <collection property="children" ofType="org.exam.bean.dto.DicTreeNode">
+            <id column="dicId2" jdbcType="BIGINT" property="dicId" />
+            <result column="dicName2" jdbcType="VARCHAR" property="dicName" />
+            <collection property="children" ofType="org.exam.bean.dto.DicTreeNode">
+                <id column="dicId3" jdbcType="BIGINT" property="dicId" />
+                <result column="dicName3" jdbcType="VARCHAR" property="dicName" />
+            </collection>
+        </collection>
+    </resultMap>
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbg.generated
@@ -281,4 +324,50 @@
     </set>
     where dic_type_id = #{dicTypeId,jdbcType=BIGINT}
   </update>
+
+    <select id="getDicTypeTreeList" resultMap="TreeResultMap">
+        select
+        aa.dic_type_id,
+        aa.dic_type_name,
+        bb.dic_id,
+        bb.dic_type_id,
+        bb.dic_key,
+        bb.dic_value,
+        bb.is_del,
+        cc.dic_id    as dic_id2,
+        cc.dic_type_id  as dic_type_id2,
+        cc.dic_key   as dic_key2,
+        cc.dic_value as dic_value2,
+        cc.is_del    as is_del2
+        from
+        t_dic_type aa ,
+        t_dic bb left join t_dic cc on bb.dic_id = cc.parent_dic_id
+        where aa.dic_type_id = bb.dic_type_id
+        <where>
+            <if test="null!=parentId">
+                and aa.parent_dic_id = #{parentId}
+            </if>
+        </where>
+        ;
+    </select>
+
+    <select id="getDicTypeTreeNode" resultMap="TreeNode">
+        select
+        aa.dic_type_id as dicId,
+        aa.dic_type_name as dicName,
+        bb.dic_id as dicId2,
+        bb.dic_value as dicName2,
+        cc.dic_id    as dicId3,
+        cc.dic_type_id  as dicName3
+        from
+        t_dic_type aa ,
+        t_dic bb left join t_dic cc on bb.dic_id = cc.parent_dic_id
+        where aa.dic_type_id = bb.dic_type_id
+        <where>
+            <if test="null!=parentId">
+                and aa.parent_dic_id = #{parentId}
+            </if>
+        </where>
+        ;
+    </select>
 </mapper>

@@ -32,7 +32,8 @@ import java.util.List;
 public class DicService {
     @Autowired
     TDicMapper tDicMapper;
-    
+    @Autowired
+    UKeyWorker dicIdWorker;
     public TDic get(Long dicId){
         return tDicMapper.selectByPrimaryKey(dicId);
     }
@@ -43,8 +44,15 @@ public class DicService {
         return PageUtils.nullListHandler(tDicMapper.selectByExample(userExample));
     }
 
-    public Boolean add(TDic dicType) {
-        if (1 == tDicMapper.insertSelective(dicType)) {
+    public PageInfo<List<TDic>> treeList(Long parentId) {
+        return PageUtils.nullListHandler(tDicMapper.getDicTreeList(parentId));
+    }
+
+    public Boolean add(TDic dic) {
+        dic.setDicId(dicIdWorker.getId());
+        dic.setCreator(1L);
+        dic.setUpdater(1L);
+        if (1 == tDicMapper.insertSelective(dic)) {
             return true;
         }
         throw new BusinessException(BusinessEnum.DB_ADD_FAILURE);

@@ -74,28 +74,32 @@ public class DicController {
         return ResponseBean.ok(dicService.list(pageNum, pageSize));
     }
 
-
     @GetMapping(value = "/{dicId}")
     public ResponseBean<TDic> get(@PathVariable("dicId") Long dicId){
         return ResponseBean.ok(dicService.get(dicId));
     }
 
     @PutMapping
-    public ResponseBean put(TDic dic){
+    public ResponseBean<Boolean> put(TDic dic){
         return ResponseBean.ok(dicService.update(dic));
     }
     @PostMapping
-    public ResponseBean post(TDic dic){
+    public ResponseBean<Boolean> post(TDic dic){
         return ResponseBean.ok(dicService.add(dic));
     }
 
     @DeleteMapping(value = "/{dicId}")
-    public ResponseBean delete(@PathVariable("dicId") Long dicId){
+    public ResponseBean<Integer> delete(@PathVariable("dicId") Long dicId){
         return ResponseBean.ok(dicService.delete(dicId));
     }
 
     @DeleteMapping
-    public ResponseBean delete(@RequestParam Long[] ids){
+    public ResponseBean<Integer> delete(@RequestParam Long[] ids){
         return ResponseBean.ok(dicTypeService.delete(ids));
+    }
+    @ApiOperation(value = "字典树列表", notes = "字典树")
+    @GetMapping(value = "/type/tree")
+    public ResponseBean getDicTreeList(@RequestParam(required = false) Long parentId){
+        return ResponseBean.ok(dicTypeService.treeList(parentId));
     }
 }

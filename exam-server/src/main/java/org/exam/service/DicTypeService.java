@@ -2,6 +2,7 @@ package org.exam.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.exam.bean.dto.DicTreeNode;
 import org.exam.bean.entity.TDic;
 import org.exam.bean.entity.TDicType;
 import org.exam.bean.entity.TDicTypeExample;
@@ -42,6 +43,10 @@ public class DicTypeService {
         PageHelper.startPage(pageNum, pageSize);
         TDicTypeExample userExample = new TDicTypeExample();
         return PageUtils.nullListHandler(tDicTypeMapper.selectByExample(userExample));
+    }
+
+    public List<DicTreeNode> treeList(Long parentId) {
+        return tDicTypeMapper.getDicTypeTreeNode(parentId);
     }
 
     public Boolean add(TDicType dicType) {

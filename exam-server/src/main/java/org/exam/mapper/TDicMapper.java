@@ -135,4 +135,6 @@ public interface TDicMapper {
         "where dic_id = #{dicId,jdbcType=BIGINT}"
     })
     int updateByPrimaryKey(TDic record);
+
+    List<TDic> getDicTreeList(Long dicParentId);
 }
