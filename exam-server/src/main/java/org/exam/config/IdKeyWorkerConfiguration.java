@@ -37,4 +37,14 @@ public class IdKeyWorkerConfiguration {
     UKeyWorker academyIdWorker() {
         return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.ACADEMY_ID);
     }
+
+    @Bean
+    UKeyWorker majorIdWorker() {
+        return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.MAJOR_ID);
+    }
+
+    @Bean
+    UKeyWorker clazzIdWorker() {
+        return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.CLAZZ_ID);
+    }
 }

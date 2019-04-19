@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author heshiyuan
  */
-@Api(tags = "学院相关")
+@Api(tags = "Major")
 @RestController
 @RequestMapping("/major")
 public class MajorController {
@@ -25,8 +25,9 @@ public class MajorController {
     @GetMapping(value = "/list")
     public ResponseBean<PageInfo<List<TMajor>>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
-            @RequestParam(defaultValue = "10") Integer pageSize){
-        return ResponseBean.ok(majorService.majorList(pageNum, pageSize));
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(required = false) String keyWords){
+        return ResponseBean.ok(majorService.majorList(pageNum, pageSize, keyWords));
     }
 
     @PutMapping
@@ -41,5 +42,9 @@ public class MajorController {
     @DeleteMapping(value = "/{id}")
     public ResponseBean delete(@PathVariable("id") Long id){
         return ResponseBean.ok(majorService.delete(id));
+    }
+    @DeleteMapping(value = "/{ids}")
+    public ResponseBean<Integer> deleteMany(@PathVariable("ids") Long[] ids){
+        return ResponseBean.ok(majorService.delete(ids));
     }
 }

@@ -1,5 +1,8 @@
 package org.exam.bean.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
 /**
@@ -12,6 +15,9 @@ import java.util.Date;
  * @mbg.generated do_not_delete_during_merge Wed Apr 03 11:42:34 CST 2019
  */
 public class TMajor {
+    @Getter
+    @Setter
+    private TAcademy academy;
     /**
      * Database Column Remarks:
      *   专业编号

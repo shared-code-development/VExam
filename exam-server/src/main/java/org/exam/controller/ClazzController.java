@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author heshiyuan
  */
-@Api(tags = "学院相关")
+@Api(tags = "Clazz")
 @RestController
 @RequestMapping("/clazz")
 public class ClazzController {
@@ -25,8 +25,9 @@ public class ClazzController {
     @GetMapping(value = "/list")
     public ResponseBean<PageInfo<List<TClazz>>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
-            @RequestParam(defaultValue = "10") Integer pageSize){
-        return ResponseBean.ok(clazzService.clazzList(pageNum, pageSize));
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(required = false) String keyWords){
+        return ResponseBean.ok(clazzService.clazzList(pageNum, pageSize, keyWords));
     }
 
     @PutMapping
@@ -41,5 +42,10 @@ public class ClazzController {
     @DeleteMapping(value = "/{id}")
     public ResponseBean delete(@PathVariable("id") Long id){
         return ResponseBean.ok(clazzService.delete(id));
+    }
+
+    @DeleteMapping(value = "/{ids}")
+    public ResponseBean deleteMany(@PathVariable("ids") Long ids){
+        return ResponseBean.ok(clazzService.delete(ids));
     }
 }

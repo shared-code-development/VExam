@@ -2,9 +2,11 @@ package org.exam.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.exam.bean.entity.TAcademy;
 import org.exam.bean.entity.TAcademyExample;
 import org.exam.common.IdGen.UKeyWorker;
+import org.exam.common.PageUtils;
 import org.exam.enums.BusinessEnum;
 import org.exam.exception.BusinessException;
 import org.exam.mapper.TAcademyMapper;
@@ -29,16 +31,15 @@ public class AcademyService {
     TAcademyMapper tAcademyMapper;
     @Autowired
     UKeyWorker academyIdWorker;
-    public PageInfo<List<TAcademy>> academyList(Integer pageNum, Integer pageSize){
+    public PageInfo<List<TAcademy>> academyList(Integer pageNum, Integer pageSize, String keyWords){
         PageHelper.startPage(pageNum, pageSize);
         TAcademyExample academyExample = new TAcademyExample();
-        academyExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
-        List<TAcademy> academyList = tAcademyMapper.selectByExample(academyExample);
-        if(null!=academyList&&academyList.size()>0){
-            return new PageInfo(academyList);
-        }else{
-            return new PageInfo(new ArrayList());
+        TAcademyExample.Criteria criteria = academyExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
+        if(StringUtils.isNotBlank(keyWords)){
+            criteria.andAcademyNameLike("%"+keyWords+"%");
         }
+        List<TAcademy> academyList = tAcademyMapper.selectByExample(academyExample);
+        return PageUtils.nullListHandler(academyList);
     }
 
     public TAcademy get(Long academyId){

@@ -26,6 +26,7 @@ public class GlobalExceptionHandler {
         log.error("异常类型：{}", e.getClass().getName());
         log.error("异常信息：{}", e.getMessage());
         log.error("异常地址：{}", e.getStackTrace());
+        e.printStackTrace();
         // service 层业务异常
         if (e instanceof BusinessException) {
             return ResponseBean.error((BusinessException) e);

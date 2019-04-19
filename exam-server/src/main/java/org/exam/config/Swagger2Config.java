@@ -52,10 +52,10 @@ public class Swagger2Config {
                 /**
                  * 只有添加了ApiOperation注解的method才在API中显示
                  */
-                if (input.isAnnotatedWith(ApiOperation.class)){
+                /*if (input.isAnnotatedWith(ApiOperation.class)){
                     return true;
-                }
-                return false;
+                }*/
+                return true;
             }
         };
         /**

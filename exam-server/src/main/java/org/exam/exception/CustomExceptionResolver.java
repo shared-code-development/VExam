@@ -14,15 +14,15 @@ import java.util.Map;
 /**
  * @author heshiyuan
  */
-@Component
-public class CustomExceptionResolver implements HandlerExceptionResolver {
-    @Override
-    public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse response, Object o, Exception e) {
-        ModelAndView mv = new ModelAndView(new MappingJackson2JsonView());
-        Map<String, Object> map = new HashMap<>(3);
-        map.put("status", BusinessEnum.SERVER_ERROR_EXCEPTION.getCode());
-        map.put("msg", BusinessEnum.SERVER_ERROR_EXCEPTION.getMessage());
-        mv.addAllObjects(map);
-        return mv;
-    }
-}
+//@Component
+//public class CustomExceptionResolver implements HandlerExceptionResolver {
+//    @Override
+//    public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse response, Object o, Exception e) {
+//        ModelAndView mv = new ModelAndView(new MappingJackson2JsonView());
+//        Map<String, Object> map = new HashMap<>(3);
+//        map.put("status", BusinessEnum.SERVER_ERROR_EXCEPTION.getCode());
+//        map.put("msg", BusinessEnum.SERVER_ERROR_EXCEPTION.getMessage());
+//        mv.addAllObjects(map);
+//        return mv;
+//    }
+//}
