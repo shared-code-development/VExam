@@ -1,5 +1,8 @@
 package org.exam.bean.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +30,7 @@ public class TMajor {
      *
      * @mbg.generated Wed Apr 03 11:42:34 CST 2019
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long majorId;
 
     /**
@@ -49,6 +53,7 @@ public class TMajor {
      *
      * @mbg.generated Wed Apr 03 11:42:34 CST 2019
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long academyId;
 
     /**

@@ -447,7 +447,6 @@
           "&pageSize=10&keywords=" + this.keywords +
           "&enrollmentDate=" + this.enrollmentDate)
           .then(resp => {
-            debugger
             this.tableLoading = false;
             if (resp && resp.status == 200) {
               let data = resp.data;
@@ -460,7 +459,6 @@
       addUser(formName) {
         let _this = this;
         this.$refs[formName].validate((valid) => {
-          debugger
           if (valid) {
             if (this.user.id) {
               //更新

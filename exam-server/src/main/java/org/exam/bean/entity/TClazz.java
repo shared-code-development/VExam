@@ -1,5 +1,10 @@
 package org.exam.bean.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
 /**
@@ -12,6 +17,9 @@ import java.util.Date;
  * @mbg.generated do_not_delete_during_merge Wed Apr 03 11:50:58 CST 2019
  */
 public class TClazz {
+    @Getter
+    @Setter
+    private TMajor major;
     /**
      * Database Column Remarks:
      *   班级编号
@@ -21,6 +29,7 @@ public class TClazz {
      *
      * @mbg.generated Wed Apr 03 11:50:58 CST 2019
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long clazzId;
 
     /**
@@ -43,6 +52,7 @@ public class TClazz {
      *
      * @mbg.generated Wed Apr 03 11:50:58 CST 2019
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long majorId;
 
     /**

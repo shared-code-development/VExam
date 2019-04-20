@@ -132,14 +132,12 @@
       loadParentMenu(menuId) {
         let _this = this;
         _this.getRequest("/system/config/menu/list?pageSize=20").then(resp => {
-          debugger
           if (resp && resp.status == 200) {
             _this.parentMenuList = resp.data.obj.list;
           }
         });
       },
       showAddMenuView(data, event) {
-        debugger
         this.parentMenu = data
         this.loadParentMenu(data.parentId);
         this.dialogVisible = true;

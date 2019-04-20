@@ -250,7 +250,6 @@
       addCourse(formName) {
         let _this = this;
         this.$refs[formName].validate((valid) => {
-          debugger
           if (valid) {
             if (this.course.id) {
               //更新

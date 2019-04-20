@@ -153,7 +153,6 @@
       loadParentDic(DicId) {
         let _this = this;
         _this.getRequest("/dic/list?pageSize=20").then(resp => {
-          debugger
           if (resp && resp.status == 200) {
             _this.parentDicList = resp.data.obj.list;
           }

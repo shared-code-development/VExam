@@ -5,11 +5,13 @@ import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.exam.bean.entity.TMajor;
 import org.exam.bean.entity.TMajorExample;
+import org.exam.bean.vo.MajorVo;
 import org.exam.common.IdGen.UKeyWorker;
 import org.exam.common.PageUtils;
 import org.exam.enums.BusinessEnum;
 import org.exam.exception.BusinessException;
 import org.exam.mapper.TMajorMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,8 +50,10 @@ public class MajorService {
         major.setUpdater(1L);
         return tMajorMapper.insertSelective(major);
     }
-    public int update(TMajor major){
-        return tMajorMapper.updateByPrimaryKeySelective(major);
+    public int update(MajorVo major){
+        TMajor newMajor = new TMajor();
+        BeanUtils.copyProperties(major, newMajor);
+        return tMajorMapper.updateByPrimaryKeySelective(newMajor);
     }
     public int delete(Long id){
         return tMajorMapper.deleteByPrimaryKey(id);

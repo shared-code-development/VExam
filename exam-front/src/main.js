@@ -9,6 +9,7 @@ import store from './store'
 import {getRequest} from './utils/api'
 import {postRequest} from './utils/api'
 import {deleteRequest} from './utils/api'
+import {deleteManyRequest} from './utils/api'
 import {putRequest} from './utils/api'
 import {initMenu} from './utils/utils'
 import {isNotNullORBlank} from './utils/utils'
@@ -21,6 +22,7 @@ Vue.use(ElementUI)
 Vue.prototype.getRequest = getRequest;
 Vue.prototype.postRequest = postRequest;
 Vue.prototype.deleteRequest = deleteRequest;
+Vue.prototype.deleteManyRequest = deleteManyRequest;
 Vue.prototype.putRequest = putRequest;
 Vue.prototype.isNotNullORBlank = isNotNullORBlank;
 

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import org.exam.bean.dto.ResponseBean;
 import org.exam.bean.entity.TMajor;
+import org.exam.bean.vo.MajorVo;
 import org.exam.service.MajorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class MajorController {
     }
 
     @PutMapping
-    public ResponseBean<Integer> put(TMajor major){
+    public ResponseBean<Integer> put(MajorVo major){
         return ResponseBean.ok(majorService.update(major));
     }
     @PostMapping
@@ -40,11 +41,11 @@ public class MajorController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseBean delete(@PathVariable("id") Long id){
+    public ResponseBean<Integer> delete(@PathVariable("id") Long id){
         return ResponseBean.ok(majorService.delete(id));
     }
-    @DeleteMapping(value = "/{ids}")
-    public ResponseBean<Integer> deleteMany(@PathVariable("ids") Long[] ids){
+    @DeleteMapping
+    public ResponseBean<Integer> deleteMany(@RequestParam("ids") Long[] ids){
         return ResponseBean.ok(majorService.delete(ids));
     }
 }

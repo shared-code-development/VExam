@@ -83,7 +83,18 @@ export const deleteRequest = (url) => {
     method: 'delete',
     url: `${base}${url}`
   });
+};
+export const deleteManyRequest = (url, param) => {
+  return axios({
+    method: 'delete',
+    url: `${base}${url}`,
+    data: param,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
 }
+
 export const getRequest = (url) => {
   return axios({
     method: 'get',

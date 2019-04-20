@@ -88,7 +88,7 @@ public interface TMajorMapper {
         "from t_major",
         "where major_id = #{majorId,jdbcType=BIGINT}"
     })
-    @ResultMap("org.exam.mapper.TMajorMapper.BaseResultMap")
+    @ResultMap("org.exam.mapper.TMajorMapper.TreeResultMap")
     TMajor selectByPrimaryKey(Long majorId);
 
     /**

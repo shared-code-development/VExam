@@ -6,13 +6,13 @@
           <el-input
             placeholder="通过学院名称搜索学院,记得回车哦..."
             clearable
-            @change="keywordsChange"
+            @change="keyWordsChange"
             style="width: 300px;margin: 0px;padding: 0px;"
             size="mini"
             :disabled="advanceSearchViewVisible"
             @keyup.enter.native="searchAcademy"
             prefix-icon="el-icon-search"
-            v-model="keywords">
+            v-model="keyWords">
           </el-input>
           <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchAcademy">搜索
           </el-button>
@@ -51,7 +51,7 @@
               width="200">
             </el-table-column>
             <el-table-column
-              width="200"
+              width="180"
               align="center"
               label="创建时间">
               <template slot-scope="scope">{{ scope.row.createTime | formatDateTimeHhMmSs}}</template>
@@ -63,7 +63,7 @@
               label="创建者">
             </el-table-column>
             <el-table-column
-              width="200"
+              width="180"
               align="center"
               label="更新时间">
               <template slot-scope="scope">{{ scope.row.updateTime | formatDateTimeHhMmSs}}</template>
@@ -143,9 +143,7 @@
     data() {
       return {
         academies: [],
-        keywords: '',
-        faangledoubleup: 'fa-angle-double-up',
-        faangledoubledown: 'fa-angle-double-down',
+        keyWords: '',
         dialogTitle: '',
         multipleSelection: [],
         depTextColor: '#c0c4cc',
@@ -168,57 +166,30 @@
       this.loadAcademies();
     },
     methods: {
-      cancelSearch() {
-        this.advanceSearchViewVisible = false;
-        this.emptyAcademyData();
-        this.loadAcademies();
-      },
-      showAdvanceSearchView() {
-        this.advanceSearchViewVisible = !this.advanceSearchViewVisible;
-        this.keywords = '';
-        if (!this.advanceSearchViewVisible) {
-          this.emptyAcademyData();
-          this.loadAcademies();
-        }
-      },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      deleteManyAcademies() {
-        this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let ids = '';
-          for (let i = 0; i < this.multipleSelection.length; i++) {
-            ids += this.multipleSelection[i].id + ",";
-          }
-          this.doDelete(ids);
-        }).catch(() => {
-        });
-      },
       deleteAcademy(row) {
-        this.$confirm('此操作将永久删除[' + row.name + '], 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除[' + row.academyName + '], 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.doDelete(row.id);
+          this.doDelete(row.academyId);
         }).catch(() => {
         });
       },
-      doDelete(ids) {
+      doDelete(id) {
         this.tableLoading = true;
         let _this = this;
-        this.deleteRequest("/academy/" + ids).then(resp => {
+        this.deleteRequest("/academy/" + id).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
             _this.loadAcademies();
           }
         })
       },
-      keywordsChange(val) {
+      keyWordsChange(val) {
         if (val == '') {
           this.loadAcademies();
         }
@@ -233,7 +204,7 @@
       loadAcademies() {
         let _this = this;
         this.tableLoading = true;
-        this.getRequest("/academy/list?pageNum=" + this.currentPage + "&pageSize=10")
+        this.getRequest("/academy/list?pageNum=" + this.currentPage + "&pageSize=10&keyWords="+this.keyWords)
           .then(resp => {
             this.tableLoading = false;
             if (resp && resp.status == 200) {
@@ -285,11 +256,11 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let ids = '';
+          let idArray = [];
           for (let i = 0; i < this.multipleSelection.length; i++) {
-            ids += this.multipleSelection[i].id + ",";
+            idArray.push(this.multipleSelection[i].academyId);
           }
-          this.doDelete(ids);
+          this.doDelete(idArray);
         }).catch(() => {
         });
       },
@@ -301,9 +272,7 @@
       },
       showEditAcademyView(row) {
         this.dialogTitle = "编辑学院";
-        this.Academy = row;
-        this.Academy.birthday = this.formatDate(row.birthday);
-        this.Academy.nationId = row.nation.id;
+        this.academy = row;
         this.dialogVisible = true;
       },
       showAddAcademyView() {
