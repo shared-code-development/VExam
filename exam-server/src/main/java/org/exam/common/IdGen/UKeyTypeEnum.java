@@ -18,6 +18,10 @@ public enum UKeyTypeEnum {
     ACADEMY_ID(5L,"academy_id","学院表主键"),
     MAJOR_ID(6L,"major_id","专业表主键"),
     CLAZZ_ID(7L,"academy_id","班级表主键"),
+    COURSE_ID(8L,"course_id","课程表主键"),
+    CHOICE_ID(9L,"choice_id","选择题表主键"),
+    JUDGE_ID(10L,"judge_id","判断题表主键"),
+    SAMPLE_ANSWER_ID(11L,"sample_answer_id","简答题表主键"),
     ;
 
     @Getter

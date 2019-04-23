@@ -47,4 +47,24 @@ public class IdKeyWorkerConfiguration {
     UKeyWorker clazzIdWorker() {
         return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.CLAZZ_ID);
     }
+
+    @Bean
+    UKeyWorker courseIdWorker() {
+        return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.COURSE_ID);
+    }
+
+    @Bean
+    UKeyWorker choiceIdWorker() {
+        return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.CHOICE_ID);
+    }
+
+    @Bean
+    UKeyWorker judgeIdWorker() {
+        return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.JUDGE_ID);
+    }
+
+    @Bean
+    UKeyWorker sampleAnswerIdWorker() {
+        return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.SAMPLE_ANSWER_ID);
+    }
 }

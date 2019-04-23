@@ -6,20 +6,15 @@
           <el-input
             placeholder="通过课程名称搜索课程,记得回车哦..."
             clearable
-            @change="keywordsChange"
+            @change="keyWordsChange"
             style="width: 300px;margin: 0px;padding: 0px;"
             size="mini"
             :disabled="advanceSearchViewVisible"
             @keyup.enter.native="searchCourse"
             prefix-icon="el-icon-search"
-            v-model="keywords">
+            v-model="keyWords">
           </el-input>
           <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchCourse">搜索
-          </el-button>
-          <el-button slot="reference" type="primary" size="mini" style="margin-left: 5px"
-                     @click="showAdvanceSearchView"><i
-            class="fa fa-lg" v-bind:class="[advanceSearchViewVisible ? faangledoubleup:faangledoubledown]"
-            style="margin-right: 5px"></i>高级搜索
           </el-button>
         </div>
         <div style="margin-left: 5px;margin-right: 20px;display: inline">
@@ -32,7 +27,7 @@
       <el-main style="padding-left: 0px;padding-top: 0px">
         <div>
           <el-table
-            :data="course"
+            :data="courseList"
             v-loading="tableLoading"
             border
             stripe
@@ -45,14 +40,7 @@
               width="30">
             </el-table-column>
             <el-table-column
-              prop="id"
-              align="left"
-              fixed
-              label="ID"
-              width="90">
-            </el-table-column>
-            <el-table-column
-              prop="courseNo"
+              prop="courseId"
               width="200"
               align="left"
               label="课程编号">
@@ -63,15 +51,47 @@
               width="200">
             </el-table-column>
             <el-table-column
+              prop="major.majorName"
+              label="所属专业"
+              width="150">
+            </el-table-column>
+            <el-table-column
+              width="180"
+              align="center"
+              label="创建时间">
+              <template slot-scope="scope">{{ scope.row.createTime | formatDateTimeHhMmSs}}</template>
+            </el-table-column>
+            <el-table-column
+              width="100"
+              align="center"
+              prop="creator"
+              label="创建者">
+            </el-table-column>
+            <el-table-column
+              width="180"
+              align="center"
+              label="更新时间">
+              <template slot-scope="scope">{{ scope.row.updateTime | formatDateTimeHhMmSs}}</template>
+            </el-table-column>
+            <el-table-column
+              width="100"
+              align="center"
+              prop="creator"
+              label="更新者">
+            </el-table-column>
+            <el-table-column
+              align="center"
+              width="100"
+              label="是否禁用">
+              <template slot-scope="scope">{{ scope.row.isDel | generateDisable}}</template>
+            </el-table-column>
+            <el-table-column
               fixed="right"
               label="操作"
               width="195">
               <template slot-scope="scope">
-                <el-button @click="showEditUserView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <el-button @click="showEditCourseView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
-                </el-button>
-                <el-button style="padding: 3px 4px 3px 4px;margin: 2px" type="primary"
-                           size="mini">查看高级资料
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
                            @click="deleteCourse(scope.row)">删除
@@ -80,8 +100,8 @@
             </el-table-column>
           </el-table>
           <div style="display: flex;justify-content: space-between;margin: 2px">
-            <el-button type="danger" size="mini" v-if="course.length>0" :disabled="multipleSelection.length==0"
-                       @click="deleteManyCourses">批量删除
+            <el-button type="danger" size="mini" v-if="courseList.length>0" :disabled="multipleSelection.length==0"
+                       @click="deleteManyCourse">批量删除
             </el-button>
             <el-pagination
               background
@@ -99,24 +119,33 @@
       <div style="text-align: left">
         <el-dialog
           :title="dialogTitle"
-          style="padding: 0px;"¡
+          style="padding: 0px;"
           :close-on-click-modal="false"
           :visible.sync="dialogVisible"
-          width="77%">
+          width="30%">
           <el-row>
             <el-col :span="6">
               <div>
-                <el-form-item label="课程编号:" prop="courseNo">
-                  <el-input prefix-icon="el-icon-edit" v-model="course.courseNo" size="mini" style="width: 150px"
-                            placeholder="请输入课程编号"></el-input>
-                </el-form-item>
+                <span>所属专业</span>
+                <el-select v-model="course.majorId" style="width: 200px" placeholder="请选择" size="mini">
+                  <el-option
+                    v-for="item in majorList"
+                    :key="item.majorId"
+                    :label="item.majorName"
+                    :value="item.majorId"
+                    :disabled="!item.isDel">
+                  </el-option>
+                </el-select>
               </div>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="6">
               <div>
                 <el-form-item label="课程名称:" prop="courseName">
                   <el-input prefix-icon="el-icon-edit" v-model="course.courseName" size="mini" style="width: 150px"
-                            placeholder="请输入课程名称"></el-input>
+                            placeholder="请输入课程名称">
+                  </el-input>
                 </el-form-item>
               </div>
             </el-col>
@@ -134,97 +163,69 @@
   export default {
     data() {
       return {
-        course: [],
-        keywords: '',
-        enrollmentDate: '',
-        faangledoubleup: 'fa-angle-double-up',
-        faangledoubledown: 'fa-angle-double-down',
+        courseList: [],
+        majorList: [],
+        keyWords: '',
         dialogTitle: '',
         multipleSelection: [],
         depTextColor: '#c0c4cc',
         totalCount: -1,
         currentPage: 1,
-        /*defaultProps: {
-          label: 'courseName',
-          isLeaf: 'leaf',
-          children: 'children'
-        },*/
         dialogVisible: false,
         tableLoading: false,
         advanceSearchViewVisible: false,
-        showOrHidePop: false,
-        showOrHidePop2: false,
         course: {
-          id: '',
-          courseNo: '',
+          courseId: '',
           courseName: '',
-          courseId: ''
+          majorId:''
         },
         rules: {
-          courseNo: [{required: true, message: '必填:课程编号', trigger: 'blur'}],
+          courseId: [{required: true, message: '必填:课程编号', trigger: 'blur'}],
           courseName: [{required: true, message: '必填:课程名称', trigger: 'blur'}]
         }
       };
     },
     mounted: function () {
-      this.initData();
       this.loadCourses();
+      this.initData();
     },
     methods: {
-      cancelSearch() {
-        this.advanceSearchViewVisible = false;
-        this.emptyCourseData();
-        this.enrollmentDate = '';
-        this.loadCourses();
-      },
-      showAdvanceSearchView() {
-        this.advanceSearchViewVisible = !this.advanceSearchViewVisible;
-        this.keywords = '';
-        if (!this.advanceSearchViewVisible) {
-          this.emptyCourseData();
-          this.loadCourses();
-        }
+      initData(){
+        let _this = this;
+        this.getRequest("/major/list?pageNum=1&pageSize=1000")
+          .then(resp => {
+            if (resp && resp.status == 200) {
+              let data = resp.data;
+              _this.majorList = data.obj.list;
+            }
+          });
       },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      deleteManyCourses() {
-        this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let ids = '';
-          for (let i = 0; i < this.multipleSelection.length; i++) {
-            ids += this.multipleSelection[i].id + ",";
-          }
-          this.doDelete(ids);
-        }).catch(() => {
-        });
-      },
       deleteCourse(row) {
-        this.$confirm('此操作将永久删除[' + row.name + '], 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除[' + row.courseName + '], 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.doDelete(row.id);
+          this.doDelete(row.courseId);
         }).catch(() => {
         });
       },
-      doDelete(ids) {
+      doDelete(id) {
         this.tableLoading = true;
         let _this = this;
-        this.deleteRequest("/course/" + ids).then(resp => {
+        this.deleteRequest("/course/" + id).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
             _this.loadCourses();
           }
         })
       },
-      keywordsChange(val) {
+      keyWordsChange(val) {
         if (val == '') {
-          this.loadUsers();
+          this.loadCourses();
         }
       },
       searchCourse() {
@@ -237,12 +238,12 @@
       loadCourses() {
         let _this = this;
         this.tableLoading = true;
-        this.getRequest("/course/list?pageNum=" + this.currentPage + "&pageSize=10")
+        this.getRequest("/course/list?pageNum=" + this.currentPage + "&pageSize=10&keyWords="+this.keyWords)
           .then(resp => {
             this.tableLoading = false;
             if (resp && resp.status == 200) {
               let data = resp.data;
-              _this.course = data.obj.list;
+              _this.courseList = data.obj.list;
               _this.totalCount = data.obj.total;
             }
           })
@@ -251,7 +252,7 @@
         let _this = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if (this.course.id) {
+            if (this.course.courseId) {
               //更新
               this.tableLoading = true;
               this.putRequest("/course", this.course).then(resp => {
@@ -265,7 +266,7 @@
             } else {
               //添加
               this.tableLoading = true;
-              this.postRequest("/course", this.user).then(resp => {
+              this.postRequest("/course", this.course).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
@@ -283,41 +284,39 @@
         this.dialogVisible = false;
         this.emptyCourseData();
       },
-      showCourseTree() {
-        this.showOrHidePop = !this.showOrHidePop;
-      },
-      showDepTree2() {
-        this.showOrHidePop2 = !this.showOrHidePop2;
+      deleteManyCourse() {
+        this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let idArray = [];
+          for (let i = 0; i < this.multipleSelection.length; i++) {
+            idArray.push(this.multipleSelection[i].courseId);
+          }
+          this.doDelete(idArray);
+        }).catch(() => {
+        });
       },
       handleNodeClick(data) {
-        this.showOrHidePop = false;
         this.depTextColor = '#606266';
       },
       handleNodeClick2(data) {
-        this.showOrHidePop2 = false;
         this.depTextColor = '#606266';
       },
       showEditCourseView(row) {
-        console.log(row)
         this.dialogTitle = "编辑课程";
-        this.user = row;
+        this.course = row;
         this.dialogVisible = true;
       },
       showAddCourseView() {
         this.dialogTitle = "添加课程";
         this.dialogVisible = true;
-        let _this = this;
-        this.getRequest("/user/nextCourseId").then(resp => {
-          if (resp && resp.status == 200) {
-            _this.course.id = resp.data.obj;
-          }
-        })
       },
       emptyCourseData() {
-        this.Course = {
-          id: '',
-          courseName: '',
-          courseNo: ''
+        this.course = {
+          courseId: '',
+          courseName: ''
         }
       }
     }
