@@ -49,6 +49,8 @@ export const formatRoutes = (routes)=> {
           require(['../components/system/' + component + '.vue'], resolve)
         } else if (component.startsWith("Course")) {
           require(['../components/course/' + component + '.vue'], resolve)
+        } else if (component.startsWith("Question")) {
+          require(['../components/question/' + component + '.vue'], resolve)
         }
       }
     };
