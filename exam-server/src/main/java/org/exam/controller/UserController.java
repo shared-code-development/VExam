@@ -30,7 +30,7 @@ import java.util.List;
  * @price ¥5    微信：hewei1109
  */
 @Slf4j
-@Api(tags = "用户相关")
+@Api(tags = "User")
 @RestController
 @RequestMapping("/user")
 public class UserController {

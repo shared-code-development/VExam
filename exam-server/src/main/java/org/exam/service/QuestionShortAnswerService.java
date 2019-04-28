@@ -2,8 +2,10 @@ package org.exam.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.exam.bean.entity.TQuestionShortAnswer;
 import org.exam.bean.entity.TQuestionShortAnswerExample;
+import org.exam.common.IdGen.UKeyWorker;
 import org.exam.common.PageUtils;
 import org.exam.enums.BusinessEnum;
 import org.exam.exception.BusinessException;
@@ -24,11 +26,16 @@ public class QuestionShortAnswerService {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     TQuestionShortAnswerMapper tQuestionShortAnswerMapper;
+    @Autowired
+    UKeyWorker sampleAnswerIdWorker;
 
-    public PageInfo<List<TQuestionShortAnswer>> questionShortAnswerList(Integer pageNum, Integer pageSize){
+    public PageInfo<List<TQuestionShortAnswer>> questionShortAnswerList(Integer pageNum, Integer pageSize, String keyWords){
         PageHelper.startPage(pageNum, pageSize);
         TQuestionShortAnswerExample questionShortAnswerExample = new TQuestionShortAnswerExample();
-        questionShortAnswerExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
+        TQuestionShortAnswerExample.Criteria criteria = questionShortAnswerExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
+        if(StringUtils.isNotBlank(keyWords)){
+            criteria.andShortAnswerNameLike("%"+keyWords+"%");
+        }
         List<TQuestionShortAnswer> questionShortAnswerList = tQuestionShortAnswerMapper.selectByExample(questionShortAnswerExample);
         return PageUtils.nullListHandler(questionShortAnswerList);
     }
@@ -37,6 +44,9 @@ public class QuestionShortAnswerService {
         return tQuestionShortAnswerMapper.selectByPrimaryKey(questionShortAnswerId);
     }
     public int insert(TQuestionShortAnswer questionShortAnswer){
+        questionShortAnswer.setShortAnswerId(sampleAnswerIdWorker.getId());
+        questionShortAnswer.setCreator(0L);
+        questionShortAnswer.setUpdater(0L);
         return tQuestionShortAnswerMapper.insertSelective(questionShortAnswer);
     }
     public int update(TQuestionShortAnswer questionShortAnswer){

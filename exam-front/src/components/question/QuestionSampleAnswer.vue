@@ -10,16 +10,16 @@
             style="width: 300px;margin: 0px;padding: 0px;"
             size="mini"
             :disabled="advanceSearchViewVisible"
-            @keyup.enter.native="searchChoice"
+            @keyup.enter.native="searchShortAnswer"
             prefix-icon="el-icon-search"
             v-model="keyWords">
           </el-input>
-          <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchChoice">搜索
+          <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchShortAnswer">搜索
           </el-button>
         </div>
         <div style="margin-left: 5px;margin-right: 20px;display: inline">
           <el-button type="primary" size="mini" icon="el-icon-plus"
-                     @click="showAddChoiceView">
+                     @click="showAddShortAnswerView">
             添加
           </el-button>
         </div>
@@ -27,7 +27,7 @@
       <el-main style="padding-left: 0px;padding-top: 0px">
         <div>
           <el-table
-            :data="choiceList"
+            :data="shortAnswerList"
             v-loading="tableLoading"
             border
             stripe
@@ -40,18 +40,18 @@
               width="30">
             </el-table-column>
             <el-table-column
-              prop="choiceId"
+              prop="shortAnswerId"
               width="200"
               align="left"
               label="题目编号">
             </el-table-column>
             <el-table-column
-              prop="choiceName"
+              prop="shortAnswerName"
               label="题目"
               width="200">
             </el-table-column>
             <el-table-column
-              prop="choiceType"
+              prop="shortAnswerType"
               label="题目类型"
               width="200">
             </el-table-column>
@@ -95,21 +95,21 @@
               label="操作"
               width="195">
               <template slot-scope="scope">
-                <el-button @click="showEditChoiceView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <el-button @click="showEditShortAnswerView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
                 </el-button>
-                <el-button @click="showEditChoiceView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <el-button @click="showEditShortAnswerView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">详情
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="deleteChoice(scope.row)">删除
+                           @click="deleteShortAnswer(scope.row)">删除
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
           <div style="display: flex;justify-content: space-between;margin: 2px">
-            <el-button type="danger" size="mini" v-if="choiceList.length>0" :disabled="multipleSelection.length==0"
-                       @click="deleteManyChoice">批量删除
+            <el-button type="danger" size="mini" v-if="shortAnswerList.length>0" :disabled="multipleSelection.length==0"
+                       @click="deleteManyShortAnswer">批量删除
             </el-button>
             <el-pagination
               background
@@ -123,7 +123,7 @@
         </div>
       </el-main>
     </el-container>
-    <el-form :model="choice" :rules="rules" ref="addChoiceForm" style="margin: 0px;padding: 0px;">
+    <el-form :model="shortAnswer" :rules="rules" ref="addShortAnswerForm" style="margin: 0px;padding: 0px;">
       <div style="text-align: left">
         <el-dialog
           :title="dialogTitle"
@@ -135,7 +135,7 @@
             <el-col :span="6">
               <div>
                 <span>所属科目</span>
-                <el-select v-model="choice.courseId" style="width: 200px" placeholder="请选择" size="mini">
+                <el-select v-model="shortAnswer.courseId" style="width: 200px" placeholder="请选择" size="mini">
                   <el-option
                     v-for="item in courseList"
                     :key="item.courseId"
@@ -150,8 +150,8 @@
           <el-row>
             <el-col :span="6">
               <div>
-                <el-form-item label="题目名称:" prop="choiceName">
-                  <el-input prefix-icon="el-icon-edit" v-model="choice.choiceName" size="mini" style="width: 150px"
+                <el-form-item label="题目名称:" prop="shortAnswerName">
+                  <el-input prefix-icon="el-icon-edit" v-model="shortAnswer.shortAnswerName" size="mini" style="width: 150px"
                             placeholder="请输入题目名称">
                   </el-input>
                 </el-form-item>
@@ -160,7 +160,7 @@
           </el-row>
           <span slot="footer" class="dialog-footer">
             <el-button size="mini" @click="cancelEidt">取 消</el-button>
-            <el-button size="mini" type="primary" @click="addChoice('addChoiceForm')">确 定</el-button>
+            <el-button size="mini" type="primary" @click="addShortAnswer('addShortAnswerForm')">确 定</el-button>
           </span>
         </el-dialog>
       </div>
@@ -171,7 +171,7 @@
   export default {
     data() {
       return {
-        choiceList: [],
+        shortAnswerList: [],
         courseList: [],
         course: {
           courseId: '',
@@ -186,14 +186,14 @@
         dialogVisible: false,
         tableLoading: false,
         advanceSearchViewVisible: false,
-        choice: {
-          choiceId: '',
-          choiceName: '',
+        shortAnswer: {
+          shortAnswerId: '',
+          shortAnswerName: '',
           courseId: ''
         },
         rules: {
-          choiceId: [{required: true, message: '必填:题目编号', trigger: 'blur'}],
-          choiceName: [{required: true, message: '必填:题目名称', trigger: 'blur'}]
+          shortAnswerId: [{required: true, message: '必填:题目编号', trigger: 'blur'}],
+          shortAnswerName: [{required: true, message: '必填:题目名称', trigger: 'blur'}]
         }
       };
     },
@@ -215,20 +215,20 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      deleteChoice(row) {
-        this.$confirm('此操作将永久删除[' + row.choiceName + '], 是否继续?', '提示', {
+      deleteShortAnswer(row) {
+        this.$confirm('此操作将永久删除[' + row.shortAnswerName + '], 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.doDelete(row.choiceId);
+          this.doDelete(row.shortAnswerId);
         }).catch(() => {
         });
       },
       doDelete(id) {
         this.tableLoading = true;
         let _this = this;
-        this.deleteRequest("/choice/" + id).then(resp => {
+        this.deleteRequest("/shortAnswer/" + id).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
             _this.loadMajoies();
@@ -240,7 +240,7 @@
           this.loadMajoies();
         }
       },
-      searchChoice() {
+      searchShortAnswer() {
         this.loadMajoies();
       },
       currentChange(currentChange) {
@@ -250,39 +250,39 @@
       loadMajoies() {
         let _this = this;
         this.tableLoading = true;
-        this.getRequest("/choice/list?pageNum=" + this.currentPage + "&pageSize=10&keyWords="+this.keyWords)
+        this.getRequest("/shortAnswer/list?pageNum=" + this.currentPage + "&pageSize=10&keyWords="+this.keyWords)
           .then(resp => {
             this.tableLoading = false;
             if (resp && resp.status == 200) {
               let data = resp.data;
-              _this.choiceList = data.obj.list;
+              _this.shortAnswerList = data.obj.list;
               _this.totalCount = data.obj.total;
             }
           })
       },
-      addChoice(formName) {
+      addShortAnswer(formName) {
         let _this = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if (this.choice.choiceId) {
+            if (this.shortAnswer.shortAnswerId) {
               //更新
               this.tableLoading = true;
-              this.putRequest("/choice", this.choice).then(resp => {
+              this.putRequest("/shortAnswer", this.shortAnswer).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
-                  _this.emptyChoiceData();
+                  _this.emptyShortAnswerData();
                   _this.loadMajoies();
                 }
               })
             } else {
               //添加
               this.tableLoading = true;
-              this.postRequest("/choice", this.choice).then(resp => {
+              this.postRequest("/shortAnswer", this.shortAnswer).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
-                  _this.emptyChoiceData();
+                  _this.emptyShortAnswerData();
                   _this.loadMajoies();
                 }
               })
@@ -294,9 +294,9 @@
       },
       cancelEidt() {
         this.dialogVisible = false;
-        this.emptyChoiceData();
+        this.emptyShortAnswerData();
       },
-      deleteManyChoice() {
+      deleteManyShortAnswer() {
         this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -304,11 +304,11 @@
         }).then(() => {
           let idArray = [];
           for (let i = 0; i < this.multipleSelection.length; i++) {
-            idArray.push(this.multipleSelection[i].choiceId);
+            idArray.push(this.multipleSelection[i].shortAnswerId);
           }
           this.tableLoading = true;
           let _this = this;
-          this.deleteManyRequest("/choice", {"ids": idArray}).then(resp => {
+          this.deleteManyRequest("/shortAnswer", {"ids": idArray}).then(resp => {
             _this.tableLoading = false;
             if (resp && resp.status == 200) {
               _this.loadMajoies();
@@ -323,19 +323,19 @@
       handleNodeClick2(data) {
         this.depTextColor = '#606266';
       },
-      showEditChoiceView(row) {
+      showEditShortAnswerView(row) {
         this.dialogTitle = "编辑题目";
-        this.choice = row;
+        this.shortAnswer = row;
         this.dialogVisible = true;
       },
-      showAddChoiceView() {
+      showAddShortAnswerView() {
         this.dialogTitle = "添加题目";
         this.dialogVisible = true;
       },
-      emptyChoiceData() {
-        this.choice = {
-          choiceId: '',
-          choiceName: ''
+      emptyShortAnswerData() {
+        this.shortAnswer = {
+          shortAnswerId: '',
+          shortAnswerName: ''
         }
       }
     }

@@ -2,8 +2,10 @@ package org.exam.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.exam.bean.entity.TQuestionChoice;
 import org.exam.bean.entity.TQuestionChoiceExample;
+import org.exam.common.IdGen.UKeyWorker;
 import org.exam.common.PageUtils;
 import org.exam.enums.BusinessEnum;
 import org.exam.exception.BusinessException;
@@ -25,11 +27,15 @@ public class QuestionChoiceService {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     TQuestionChoiceMapper tQuestionChoiceMapper;
-
-    public PageInfo<List<TQuestionChoice>> questionChoiceList(Integer pageNum, Integer pageSize){
+    @Autowired
+    UKeyWorker choiceIdWorker;
+    public PageInfo<List<TQuestionChoice>> questionChoiceList(Integer pageNum, Integer pageSize, String keyWords){
         PageHelper.startPage(pageNum, pageSize);
         TQuestionChoiceExample questionChoiceExample = new TQuestionChoiceExample();
-        questionChoiceExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
+        TQuestionChoiceExample.Criteria criteria = questionChoiceExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
+        if(StringUtils.isNotBlank(keyWords)){
+            criteria.andChoiceNameLike("%"+keyWords+"%");
+        }
         List<TQuestionChoice> questionChoiceList = tQuestionChoiceMapper.selectByExample(questionChoiceExample);
         return PageUtils.nullListHandler(questionChoiceList);
     }
@@ -38,6 +44,9 @@ public class QuestionChoiceService {
         return tQuestionChoiceMapper.selectByPrimaryKey(questionChoiceId);
     }
     public int insert(TQuestionChoice questionChoice){
+        questionChoice.setChoiceId(choiceIdWorker.getId());
+        questionChoice.setCreator(0L);
+        questionChoice.setUpdater(0L);
         return tQuestionChoiceMapper.insertSelective(questionChoice);
     }
     public int update(TQuestionChoice questionChoice){

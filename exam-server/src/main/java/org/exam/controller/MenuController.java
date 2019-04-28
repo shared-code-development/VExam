@@ -23,7 +23,7 @@ import java.util.List;
  * Copyright (c) 2019 shiyuan4work@126.com All rights reserved.
  * @price ¥5    微信：hewei1109
  */
-@Api(tags = "微考试系统-菜单配置接口")
+@Api(tags = "Menu")
 @RestController
 @RequestMapping("/system/config/menu")
 public class MenuController {

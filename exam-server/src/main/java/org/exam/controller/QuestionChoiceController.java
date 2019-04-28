@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author heshiyuan
  */
-@Api(tags = "学院相关")
+@Api(tags = "QuestionChoice")
 @RestController
 @RequestMapping("/questionChoice")
 public class QuestionChoiceController {
@@ -25,8 +25,9 @@ public class QuestionChoiceController {
     @GetMapping(value = "/list")
     public ResponseBean<PageInfo<List<TQuestionChoice>>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
-            @RequestParam(defaultValue = "10") Integer pageSize){
-        return ResponseBean.ok(questionChoiceService.questionChoiceList(pageNum, pageSize));
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(required = false) String keyWords){
+        return ResponseBean.ok(questionChoiceService.questionChoiceList(pageNum, pageSize, keyWords));
     }
 
     @PutMapping
@@ -41,5 +42,10 @@ public class QuestionChoiceController {
     @DeleteMapping(value = "/{id}")
     public ResponseBean delete(@PathVariable("id") Long id){
         return ResponseBean.ok(questionChoiceService.delete(id));
+    }
+
+    @DeleteMapping
+    public ResponseBean deleteMany(@RequestParam("ids") Long[] ids){
+        return ResponseBean.ok(questionChoiceService.delete(ids));
     }
 }

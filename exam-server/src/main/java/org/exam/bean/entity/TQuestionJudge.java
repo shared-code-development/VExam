@@ -96,7 +96,7 @@ public class TQuestionJudge {
      *
      * @mbg.generated Thu Apr 04 09:19:16 CST 2019
      */
-    private Integer creator;
+    private Long creator;
 
     /**
      * Database Column Remarks:
@@ -107,7 +107,7 @@ public class TQuestionJudge {
      *
      * @mbg.generated Thu Apr 04 09:19:16 CST 2019
      */
-    private Integer updater;
+    private Long updater;
 
     /**
      * Database Column Remarks:
@@ -296,7 +296,7 @@ public class TQuestionJudge {
      *
      * @mbg.generated Thu Apr 04 09:19:16 CST 2019
      */
-    public Integer getCreator() {
+    public Long getCreator() {
         return creator;
     }
 
@@ -308,7 +308,7 @@ public class TQuestionJudge {
      *
      * @mbg.generated Thu Apr 04 09:19:16 CST 2019
      */
-    public void setCreator(Integer creator) {
+    public void setCreator(Long creator) {
         this.creator = creator;
     }
 
@@ -320,7 +320,7 @@ public class TQuestionJudge {
      *
      * @mbg.generated Thu Apr 04 09:19:16 CST 2019
      */
-    public Integer getUpdater() {
+    public Long getUpdater() {
         return updater;
     }
 
@@ -332,7 +332,7 @@ public class TQuestionJudge {
      *
      * @mbg.generated Thu Apr 04 09:19:16 CST 2019
      */
-    public void setUpdater(Integer updater) {
+    public void setUpdater(Long updater) {
         this.updater = updater;
     }
 

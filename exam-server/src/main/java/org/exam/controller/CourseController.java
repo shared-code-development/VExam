@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author heshiyuan
  */
-@Api(tags = "学院相关")
+@Api(tags = "Course")
 @RestController
 @RequestMapping("/course")
 public class CourseController {

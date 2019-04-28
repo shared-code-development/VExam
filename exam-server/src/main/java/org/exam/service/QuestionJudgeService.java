@@ -2,8 +2,10 @@ package org.exam.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.exam.bean.entity.TQuestionJudge;
 import org.exam.bean.entity.TQuestionJudgeExample;
+import org.exam.common.IdGen.UKeyWorker;
 import org.exam.common.PageUtils;
 import org.exam.enums.BusinessEnum;
 import org.exam.exception.BusinessException;
@@ -24,11 +26,16 @@ public class QuestionJudgeService {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     TQuestionJudgeMapper tQuestionJudgeMapper;
+    @Autowired
+    UKeyWorker judgeIdWorker;
 
-    public PageInfo<List<TQuestionJudge>> questionJudgeList(Integer pageNum, Integer pageSize){
+    public PageInfo<List<TQuestionJudge>> questionJudgeList(Integer pageNum, Integer pageSize, String keyWords){
         PageHelper.startPage(pageNum, pageSize);
         TQuestionJudgeExample questionJudgeExample = new TQuestionJudgeExample();
-        questionJudgeExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
+        TQuestionJudgeExample.Criteria criteria = questionJudgeExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
+        if(StringUtils.isNotBlank(keyWords)){
+            criteria.andJudgeNameLike("%"+keyWords+"%");
+        }
         List<TQuestionJudge> questionJudgeList = tQuestionJudgeMapper.selectByExample(questionJudgeExample);
         return PageUtils.nullListHandler(questionJudgeList);
     }
@@ -37,6 +44,9 @@ public class QuestionJudgeService {
         return tQuestionJudgeMapper.selectByPrimaryKey(questionJudgeId);
     }
     public int insert(TQuestionJudge questionJudge){
+        questionJudge.setJudgeId(judgeIdWorker.getId());
+        questionJudge.setCreator(0L);
+        questionJudge.setUpdater(0L);
         return tQuestionJudgeMapper.insertSelective(questionJudge);
     }
     public int update(TQuestionJudge questionJudge){
