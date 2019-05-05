@@ -1,5 +1,10 @@
 package org.exam.bean.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
 /**
@@ -12,6 +17,9 @@ import java.util.Date;
  * @mbg.generated do_not_delete_during_merge Mon Apr 29 20:14:43 CST 2019
  */
 public class TExamPaper {
+    @Getter
+    @Setter
+    private TCourse course;
     /**
      * Database Column Remarks:
      *   试卷id
@@ -21,6 +29,7 @@ public class TExamPaper {
      *
      * @mbg.generated Mon Apr 29 20:14:43 CST 2019
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long paperId;
 
     /**
@@ -41,6 +50,7 @@ public class TExamPaper {
      *
      * @mbg.generated Mon Apr 29 20:14:43 CST 2019
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long courseId;
 
     /**

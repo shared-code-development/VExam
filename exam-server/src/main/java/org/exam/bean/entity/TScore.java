@@ -1,5 +1,8 @@
 package org.exam.bean.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.util.Date;
 
 /**
@@ -21,6 +24,7 @@ public class TScore {
      *
      * @mbg.generated Mon Apr 29 20:18:37 CST 2019
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long scoreId;
 
     /**
@@ -43,6 +47,7 @@ public class TScore {
      *
      * @mbg.generated Mon Apr 29 20:18:37 CST 2019
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long paperId;
 
     /**
@@ -54,6 +59,7 @@ public class TScore {
      *
      * @mbg.generated Mon Apr 29 20:18:37 CST 2019
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
     /**

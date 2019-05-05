@@ -67,4 +67,8 @@ public class IdKeyWorkerConfiguration {
     UKeyWorker sampleAnswerIdWorker() {
         return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.SAMPLE_ANSWER_ID);
     }
+    @Bean
+    UKeyWorker examPaperIdWorker() {
+        return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.EXAM_PAPER_ID);
+    }
 }

@@ -4,30 +4,30 @@
       <el-header style="padding: 0px;display:flex;justify-content:space-between;align-items: center">
         <div style="display: inline">
           <el-input
-            placeholder="通过题目名称搜索题目,记得回车哦..."
+            placeholder="通过试卷名称搜索试卷,记得回车哦..."
             clearable
             @change="keyWordsChange"
             style="width: 300px;margin: 0px;padding: 0px;"
             size="mini"
             :disabled="advanceSearchViewVisible"
-            @keyup.enter.native="searchChoice"
+            @keyup.enter.native="searchExamPaper"
             prefix-icon="el-icon-search"
             v-model="keyWords">
           </el-input>
-          <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchChoice">搜索
+          <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchExamPaper">搜索
           </el-button>
         </div>
         <div style="margin-left: 5px;margin-right: 20px;display: inline">
           <el-button type="primary" size="mini" icon="el-icon-plus"
-                     @click="showAddChoiceView">
-            录题
+                     @click="showAddExamPaperView">
+            添加
           </el-button>
         </div>
       </el-header>
       <el-main style="padding-left: 0px;padding-top: 0px">
         <div>
           <el-table
-            :data="choiceList"
+            :data="examPaperList"
             v-loading="tableLoading"
             border
             stripe
@@ -40,21 +40,15 @@
               width="30">
             </el-table-column>
             <el-table-column
-              prop="choiceId"
+              prop="paperId"
               width="200"
               align="left"
-              label="题目编号">
+              label="试卷编号">
             </el-table-column>
             <el-table-column
-              prop="choiceName"
-              label="题目"
+              prop="paperName"
+              label="试卷名称"
               width="200">
-            </el-table-column>
-            <el-table-column
-              prop="choiceType"
-              label="题目类型"
-              width="80">
-              <template slot-scope="scope">{{ scope.row.choiceType | generateQuestionType}}</template>
             </el-table-column>
             <el-table-column
               prop="course.courseName"
@@ -93,24 +87,31 @@
             </el-table-column>
             <el-table-column
               fixed="right"
+              align="center"
               label="操作"
-              width="195">
+              width="280">
               <template slot-scope="scope">
-                <el-button @click="showEditChoiceView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <el-button @click="showEditExamPaperView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
                 </el-button>
-                <el-button @click="showEditChoiceView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <el-button @click="showEditExamPaperView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">详情
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="deleteChoice(scope.row)">删除
+                           @click="deleteExamPaper(scope.row)">删除
+                </el-button>
+                <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
+                           @click="deleteExamPaper(scope.row)">组卷
+                </el-button>
+                <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
+                           @click="deleteExamPaper(scope.row)">自动组卷
                 </el-button>
               </template>
             </el-table-column>
           </el-table>
           <div style="display: flex;justify-content: space-between;margin: 2px">
-            <el-button type="danger" size="mini" v-if="choiceList.length>0" :disabled="multipleSelection.length==0"
-                       @click="deleteManyChoice">批量删除
+            <el-button type="danger" size="mini" v-if="examPaperList.length>0" :disabled="multipleSelection.length==0"
+                       @click="deleteManyExamPaper">批量删除
             </el-button>
             <el-pagination
               background
@@ -124,23 +125,19 @@
         </div>
       </el-main>
     </el-container>
-    <el-form :model="choice" :rules="rules" ref="addChoiceForm" style="margin: 0px;padding: 0px;">
-      <div style="text-align: center">
+    <el-form :model="examPaper" :rules="rules" ref="addExamPaperForm" style="margin: 0px;padding: 0px;">
+      <div style="text-align: left">
         <el-dialog
           :title="dialogTitle"
           style="padding: 0px;"
           :close-on-click-modal="false"
           :visible.sync="dialogVisible"
-          width="50%">
-          <el-row style="padding: 4px">
-            <el-col :span="2">
+          width="30%">
+          <el-row>
+            <el-col :span="6">
               <div>
                 <span>所属科目</span>
-              </div>
-            </el-col>
-            <el-col :span="10">
-              <div>
-                <el-select v-model="choice.courseId" style="width: 400px" placeholder="请选择" size="mini">
+                <el-select v-model="examPaper.courseId" style="width: 200px" placeholder="请选择" size="mini">
                   <el-option
                     v-for="item in courseList"
                     :key="item.courseId"
@@ -152,106 +149,20 @@
               </div>
             </el-col>
           </el-row>
-          <el-row style="padding: 4px">
-            <el-col :span="2">
+          <el-row>
+            <el-col :span="6">
               <div>
-                <span>题目名称</span>
-              </div>
-            </el-col>
-            <el-col :span="10">
-              <div>
-                  <el-input prefix-icon="el-icon-edit" v-model="choice.choiceName" size="mini" style="width: 500px"
-                            placeholder="请输入题目名称">
+                <el-form-item label="试卷名称:" prop="paperName">
+                  <el-input prefix-icon="el-icon-edit" v-model="examPaper.paperName" size="mini" style="width: 150px"
+                            placeholder="请输入试卷名称">
                   </el-input>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row style="padding: 4px">
-            <el-col :span="2">
-              <div>
-                <span>题目类型</span>
-              </div>
-            </el-col>
-            <el-col :span="10">
-              <div>
-                <el-radio v-model="choice.choiceType" label="true" size="small">单选</el-radio>
-                <el-radio v-model="choice.choiceType" label="false" size="small">多选</el-radio>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row style="padding: 4px">
-            <el-col :span="2">
-              <div>
-                <span>选项A</span>
-              </div>
-            </el-col>
-            <el-col :span="10">
-              <div>
-                  <el-input prefix-icon="el-icon-edit" v-model="choice.optionA" size="mini" style="width: 500px"
-                            placeholder="请输入选项A">
-                  </el-input>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row style="padding: 4px">
-            <el-col :span="2">
-              <div>
-                <span>选项B</span>
-              </div>
-            </el-col>
-            <el-col :span="10">
-              <div>
-                  <el-input prefix-icon="el-icon-edit" v-model="choice.optionB" size="mini" style="width: 500px"
-                            placeholder="请输入选项B">
-                  </el-input>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row style="padding: 4px">
-            <el-col :span="2">
-              <div>
-                <span>选项C</span>
-              </div>
-            </el-col>
-            <el-col :span="10">
-              <div>
-                <el-input prefix-icon="el-icon-edit" v-model="choice.optionC" size="mini" style="width: 500px"
-                          placeholder="请输入选项C">
-                </el-input>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row style="padding: 4px">
-            <el-col :span="2">
-              <div>
-                <span>选项D</span>
-              </div>
-            </el-col>
-            <el-col :span="10">
-              <div>
-                <el-input prefix-icon="el-icon-edit" v-model="choice.optionD" size="mini" style="width: 500px"
-                          placeholder="请输入选项D">
-                </el-input>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row style="padding: 4px">
-            <el-col :span="2">
-              <div>
-                <span>答案</span>
-              </div>
-            </el-col>
-            <el-col :span="10">
-              <div>
-                <el-input prefix-icon="el-icon-edit" v-model="choice.answer" size="mini" style="width: 500px"
-                          placeholder="请输入答案">
-                </el-input>
+                </el-form-item>
               </div>
             </el-col>
           </el-row>
           <span slot="footer" class="dialog-footer">
             <el-button size="mini" @click="cancelEidt">取 消</el-button>
-            <el-button size="mini" type="primary" @click="addChoice('addChoiceForm')">确 定</el-button>
+            <el-button size="mini" type="primary" @click="addExamPaper('addExamPaperForm')">确 定</el-button>
           </span>
         </el-dialog>
       </div>
@@ -262,7 +173,7 @@
   export default {
     data() {
       return {
-        choiceList: [],
+        examPaperList: [],
         courseList: [],
         course: {
           courseId: '',
@@ -277,27 +188,19 @@
         dialogVisible: false,
         tableLoading: false,
         advanceSearchViewVisible: false,
-        choice: {
-          choiceId: '',
-          choiceName: '',
-          courseId: '',
-          choiceType: '',
-          optionA: '',
-          optionB: '',
-          optionC: '',
-          optionD: '',
-          answer: ''
+        examPaper: {
+          paperId: '',
+          paperName: '',
+          courseId: ''
         },
         rules: {
-          choiceId: [{required: true, message: '必填:题目编号', trigger: 'blur'}],
-          choiceName: [{required: true, message: '必填:题目名称', trigger: 'blur'}],
-          optionA: [{required: true, message: '必填:A选项', trigger: 'blur'}],
-          optionB: [{required: true, message: '必填:B选项', trigger: 'blur'}]
+          paperId: [{required: true, message: '必填:试卷编号', trigger: 'blur'}],
+          paperName: [{required: true, message: '必填:试卷名称', trigger: 'blur'}]
         }
       };
     },
     mounted: function () {
-      this.loadChoiceList();
+      this.loadPaperList();
       this.initData();
     },
     methods: {
@@ -314,75 +217,75 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      deleteChoice(row) {
-        this.$confirm('此操作将永久删除[' + row.choiceName + '], 是否继续?', '提示', {
+      deleteExamPaper(row) {
+        this.$confirm('此操作将永久删除[' + row.paperName + '], 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.doDelete(row.choiceId);
+          this.doDelete(row.paperId);
         }).catch(() => {
         });
       },
       doDelete(id) {
         this.tableLoading = true;
         let _this = this;
-        this.deleteRequest("/choice/" + id).then(resp => {
+        this.deleteRequest("/examPaper/" + id).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
-            _this.loadChoiceList();
+            _this.loadPaperList();
           }
         })
       },
       keyWordsChange(val) {
         if (val == '') {
-          this.loadChoiceList();
+          this.loadPaperList();
         }
       },
-      searchChoice() {
-        this.loadChoiceList();
+      searchExamPaper() {
+        this.loadPaperList();
       },
       currentChange(currentChange) {
         this.currentPage = currentChange;
-        this.loadChoiceList();
+        this.loadPaperList();
       },
-      loadChoiceList() {
+      loadPaperList() {
         let _this = this;
         this.tableLoading = true;
-        this.getRequest("/choice/list?pageNum=" + this.currentPage + "&pageSize=10&keyWords="+this.keyWords)
+        this.getRequest("/examPaper/list?pageNum=" + this.currentPage + "&pageSize=10&keyWords="+this.keyWords)
           .then(resp => {
             this.tableLoading = false;
             if (resp && resp.status == 200) {
               let data = resp.data;
-              _this.choiceList = data.obj.list;
+              _this.examPaperList = data.obj.list;
               _this.totalCount = data.obj.total;
             }
           })
       },
-      addChoice(formName) {
+      addExamPaper(formName) {
         let _this = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if (this.choice.choiceId) {
+            if (this.examPaper.paperId) {
               //更新
               this.tableLoading = true;
-              this.putRequest("/choice", this.choice).then(resp => {
+              this.putRequest("/examPaper", this.examPaper).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
-                  _this.emptyChoiceData();
-                  _this.loadChoiceList();
+                  _this.emptyExamPaperData();
+                  _this.loadPaperList();
                 }
               })
             } else {
               //添加
               this.tableLoading = true;
-              this.postRequest("/choice", this.choice).then(resp => {
+              this.postRequest("/examPaper", this.examPaper).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
-                  _this.emptyChoiceData();
-                  _this.loadChoiceList();
+                  _this.emptyExamPaperData();
+                  _this.loadPaperList();
                 }
               })
             }
@@ -393,9 +296,9 @@
       },
       cancelEidt() {
         this.dialogVisible = false;
-        this.emptyChoiceData();
+        this.emptyExamPaperData();
       },
-      deleteManyChoice() {
+      deleteManyExamPaper() {
         this.$confirm('此操作将删除[' + this.multipleSelection.length + ']条数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -403,14 +306,14 @@
         }).then(() => {
           let idArray = [];
           for (let i = 0; i < this.multipleSelection.length; i++) {
-            idArray.push(this.multipleSelection[i].choiceId);
+            idArray.push(this.multipleSelection[i].paperId);
           }
           this.tableLoading = true;
           let _this = this;
-          this.deleteManyRequest("/choice", {"ids": idArray}).then(resp => {
+          this.deleteManyRequest("/examPaper", {"ids": idArray}).then(resp => {
             _this.tableLoading = false;
             if (resp && resp.status == 200) {
-              _this.loadChoiceList();
+              _this.loadPaperList();
             }
           });
         }).catch(() => {
@@ -422,33 +325,21 @@
       handleNodeClick2(data) {
         this.depTextColor = '#606266';
       },
-      showEditChoiceView(row) {
-        this.dialogTitle = "编辑选择题";
-        this.choice = row;
+      showEditExamPaperView(row) {
+        this.dialogTitle = "编辑试卷";
+        this.examPaper = row;
         this.dialogVisible = true;
       },
-      showAddChoiceView() {
-        this.dialogTitle = "添加选择题";
+      showAddExamPaperView() {
+        this.dialogTitle = "添加试卷";
         this.dialogVisible = true;
       },
-      emptyChoiceData() {
-        this.choice = {
-          choiceId: '',
-          choiceName: '',
-          courseId: '',
-          choiceType: '',
-          optionA: '',
-          optionB: '',
-          optionC: '',
-          optionD: '',
-          answer: ''
+      emptyExamPaperData() {
+        this.examPaper = {
+          paperId: '',
+          paperName: ''
         }
       }
     }
   };
 </script>
-<style>
-  el-dialog el-row{
-    padding: 4px
-  }
-</style>

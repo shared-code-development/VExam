@@ -52,3 +52,8 @@ Vue.filter("generateDisable", function(isDel) {
   return '禁用';
 });
 
+Vue.filter("generateQuestionType", function(choiceType) {
+  if(choiceType) return '单选题';
+  return '多选题';
+});
+

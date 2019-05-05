@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Api(tags = "QuestionChoice")
 @RestController
-@RequestMapping("/questionChoice")
+@RequestMapping("/choice")
 public class QuestionChoiceController {
 
     @Autowired

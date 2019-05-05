@@ -22,6 +22,7 @@ public enum UKeyTypeEnum {
     CHOICE_ID(9L,"choice_id","选择题表主键"),
     JUDGE_ID(10L,"judge_id","判断题表主键"),
     SAMPLE_ANSWER_ID(11L,"sample_answer_id","简答题表主键"),
+    EXAM_PAPER_ID(12L,"exam_paper_id","试卷表主键"),
     ;
 
     @Getter
