@@ -99,7 +99,7 @@
                 <el-button @click="showEditChoiceView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
                 </el-button>
-                <el-button @click="showEditChoiceView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <el-button @click="showDetailChoiceView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">详情
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
@@ -424,6 +424,11 @@
       },
       showEditChoiceView(row) {
         this.dialogTitle = "编辑选择题";
+        this.choice = row;
+        this.dialogVisible = true;
+      },
+      showDetailChoiceView(row) {
+        this.dialogTitle = "查看选择题";
         this.choice = row;
         this.dialogVisible = true;
       },

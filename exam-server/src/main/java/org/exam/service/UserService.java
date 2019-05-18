@@ -47,7 +47,7 @@ public class UserService {
     return null;
     }*/
 
-    public PageInfo<List<TUser>> list(Integer pageNum, Integer pageSize, String keywords) {
+    public PageInfo<TUser> list(Integer pageNum, Integer pageSize, String keywords) {
         PageHelper.startPage(pageNum, pageSize);
         TUserExample userExample = new TUserExample();
         TUserExample.Criteria criteria = userExample.createCriteria();

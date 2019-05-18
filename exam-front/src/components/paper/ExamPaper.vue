@@ -14,7 +14,8 @@
             prefix-icon="el-icon-search"
             v-model="keyWords">
           </el-input>
-          <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchExamPaper">搜索
+          <el-button type="primary" size="mini" style="margin-left: 5px" icon="el-icon-search" @click="searchExamPaper">
+            搜索
           </el-button>
         </div>
         <div style="margin-left: 5px;margin-right: 20px;display: inline">
@@ -101,10 +102,13 @@
                            @click="deleteExamPaper(scope.row)">删除
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="deleteExamPaper(scope.row)">组卷
+                           @click="showGroupExamPaper(scope.row)">组卷
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
-                           @click="deleteExamPaper(scope.row)">自动组卷
+                           @click="showAutoGroupExamPaper(scope.row)">自动组卷
+                </el-button>
+                <el-button type="success" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
+                           @click="showExamPaper(scope.row)">查看试卷
                 </el-button>
               </template>
             </el-table-column>
@@ -125,7 +129,7 @@
         </div>
       </el-main>
     </el-container>
-    <el-form :model="examPaper" :rules="rules" ref="addExamPaperForm" style="margin: 0px;padding: 0px;">
+    <el-form :model="handlingExamPaper" :rules="rules" ref="addExamPaperForm" style="margin: 0px;padding: 0px;">
       <div style="text-align: left">
         <el-dialog
           :title="dialogTitle"
@@ -137,7 +141,7 @@
             <el-col :span="6">
               <div>
                 <span>所属科目</span>
-                <el-select v-model="examPaper.courseId" style="width: 200px" placeholder="请选择" size="mini">
+                <el-select v-model="handlingExamPaper.courseId" style="width: 200px" placeholder="请选择" size="mini">
                   <el-option
                     v-for="item in courseList"
                     :key="item.courseId"
@@ -153,7 +157,7 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="试卷名称:" prop="paperName">
-                  <el-input prefix-icon="el-icon-edit" v-model="examPaper.paperName" size="mini" style="width: 150px"
+                  <el-input prefix-icon="el-icon-edit" v-model="handlingExamPaper.paperName" size="mini" style="width: 150px"
                             placeholder="请输入试卷名称">
                   </el-input>
                 </el-form-item>
@@ -167,14 +171,92 @@
         </el-dialog>
       </div>
     </el-form>
+    <el-form :model="groupExamPaperForm" ref="groupExamPaperForm" style="margin: 0px;padding: 0px;">
+        <el-dialog
+          :title="groupExamPaperDialogTitle"
+          style="padding: 0px;"
+          :close-on-click-modal="false"
+          :visible.sync="groupExamPaperDialogVisible"
+          width="80%" :fullscreen="true">
+            <el-tabs :tab-position="tabPosition" style="height: 100%;">
+              <el-tab-pane label="选择题">
+                <div style="text-align: center">
+                  <el-transfer
+                    style="text-align: left; display: inline-block"
+                    v-model="checkedChoiceList"
+                    filterable
+                    :titles="['题库', '已出题目']"
+                    :button-texts="['撤题', '出题']"
+                    :format="{
+                      noChecked: '${total}',
+                      hasChecked: '${checked}/${total}'
+                    }"
+                    @change="groupExamPaper"
+                    :data="choiceList"
+                  >
+                    <el-button class="transfer-footer" slot="right-footer" size="small" @click="addChoiceToExamPaper">添加到试卷</el-button>
+                  </el-transfer>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="判断题">
+                <div style="text-align: center">
+                  <el-transfer
+                    style="text-align: left; display: inline-block"
+                    v-model="checkedJudgeList"
+                    filterable
+                    :titles="['题库', '已出题目']"
+                    :button-texts="['撤题', '出题']"
+                    :format="{
+                      noChecked: '${total}',
+                      hasChecked: '${checked}/${total}'
+                    }"
+                    @change="groupExamPaper"
+                    :data="judgeList"
+                  >
+                    <el-button class="transfer-footer" slot="right-footer" size="small" @click="addJudgeToExamPaper">添加到试卷</el-button>
+                  </el-transfer>
+                </div>
+              </el-tab-pane>
+              <el-tab-pane label="简答题">
+                <div style="text-align: center">
+                  <el-transfer
+                    style="text-align: left; display: inline-block"
+                    v-model="checkSampleAnswerList"
+                    filterable
+                    :titles="['题库', '已出题目']"
+                    :button-texts="['撤题', '出题']"
+                    :format="{
+                      noChecked: '${total}',
+                      hasChecked: '${checked}/${total}'
+                    }"
+                    @change="groupExamPaper"
+                    :data="sampleAnswerList"
+                  >
+                    <el-button class="transfer-footer" slot="right-footer" size="small" @click="addSampleAnswerToExamPaper">添加到试卷</el-button>
+                  </el-transfer>
+                </div>
+              </el-tab-pane>
+            </el-tabs>
+        </el-dialog>
+    </el-form>
   </div>
 </template>
 <script>
   export default {
     data() {
       return {
+        tabPosition: 'right',
+        groupExamPaperForm: {},
+        groupExamPaperDialogTitle: '',
+        groupExamPaperDialogVisible: false,
         examPaperList: [],
         courseList: [],
+        choiceList: [],
+        judgeList: [],
+        checkedChoiceList: [],
+        checkedJudgeList: [],
+        sampleAnswerList: [],
+        checkSampleAnswerList: [],
         course: {
           courseId: '',
           courseName: ''
@@ -188,7 +270,7 @@
         dialogVisible: false,
         tableLoading: false,
         advanceSearchViewVisible: false,
-        examPaper: {
+        handlingExamPaper: {
           paperId: '',
           paperName: '',
           courseId: ''
@@ -204,7 +286,7 @@
       this.initData();
     },
     methods: {
-      initData(){
+      initData() {
         let _this = this;
         this.getRequest("/course/list?pageNum=1&pageSize=1000")
           .then(resp => {
@@ -252,7 +334,7 @@
       loadPaperList() {
         let _this = this;
         this.tableLoading = true;
-        this.getRequest("/examPaper/list?pageNum=" + this.currentPage + "&pageSize=10&keyWords="+this.keyWords)
+        this.getRequest("/examPaper/list?pageNum=" + this.currentPage + "&pageSize=10&keyWords=" + this.keyWords)
           .then(resp => {
             this.tableLoading = false;
             if (resp && resp.status == 200) {
@@ -334,11 +416,98 @@
         this.dialogTitle = "添加试卷";
         this.dialogVisible = true;
       },
+      showGroupExamPaper(row) {
+        this.handlingExamPaper = row;
+        this.groupExamPaperDialogTitle = "组卷中...";
+        this.groupExamPaperDialogVisible = true;
+        this.choiceList = [];
+        this.judgeList = [];
+        this.sampleAnswerList = [];
+        this.getRequest("/choice/list?pageNum=1&pageSize=1000&courseId=" + row.courseId)
+          .then(resp => {
+            if (resp && resp.status == 200) {
+              let data = resp.data.obj.list;
+              for (let i = 0; i < data.length; i++) {
+                this.choiceList.push({
+                  key: data[i].choiceId,
+                  label: data[i].choiceName,
+                  disabled: !data[i].isDel
+                });
+              }
+            }
+          });
+        this.getRequest("/questionShortAnswer/list?pageNum=1&pageSize=1000&courseId=" + row.courseId)
+          .then(resp => {
+            if (resp && resp.status == 200) {
+              let data = resp.data.obj.list;
+              for (let i = 0; i < data.length; i++) {
+                this.sampleAnswerList.push({
+                  key: data[i].shortAnswerId,
+                  label: data[i].shortAnswerName,
+                  disabled: !data[i].isDel
+                });
+              }
+            }
+          });
+        this.getRequest("/questionJudge/list?pageNum=1&pageSize=1000&courseId=" + row.courseId)
+          .then(resp => {
+            if (resp && resp.status == 200) {
+              let data = resp.data.obj.list;
+              for (let i = 0; i < data.length; i++) {
+                this.judgeList.push({
+                  key: data[i].judgeId,
+                  label: data[i].judgeName,
+                  disabled: !data[i].isDel
+                });
+              }
+            }
+          });
+      },
+      showAutoGroupExamPaper(row) {
+
+      },
+      groupExamPaper(value, direction, movedKeys) {
+        console.log(value, direction, movedKeys);
+        console.log(this.checkedChoiceList);
+      },
+      autoGroupExamPaper() {
+
+      },
       emptyExamPaperData() {
         this.examPaper = {
           paperId: '',
           paperName: ''
         }
+      },
+      addChoiceToExamPaper(){
+        this.postJsonRequest("/examPaper/handleGroupExamPaper",
+          {"paperId":this.handlingExamPaper.paperId,"questionType":"choice","questionIds":this.checkedChoiceList})
+          .then(resp => {
+            if (resp && resp.status == 200) {
+              this.$message('成功添加'+resp.data.obj+'道题');
+            }
+          });
+      },
+      addJudgeToExamPaper(){
+        this.postJsonRequest("/examPaper/handleGroupExamPaper",
+          {"paperId":this.handlingExamPaper.paperId,"questionType":"judge","questionIds":this.checkedJudgeList})
+          .then(resp => {
+            if (resp && resp.status == 200) {
+              this.$message('成功添加'+resp.data.obj+'道题');
+            }
+          });
+      },
+      addSampleAnswerToExamPaper(){
+        this.postJsonRequest("/examPaper/handleGroupExamPaper",
+          {"paperId":this.handlingExamPaper.paperId,"questionType":"sampleAnswer","questionIds":this.checkSampleAnswerList})
+          .then(resp => {
+            if (resp && resp.status == 200) {
+              this.$message('成功添加'+resp.data.obj+'道题');
+            }
+          });
+      },
+      showExamPaper(){
+
       }
     }
   };

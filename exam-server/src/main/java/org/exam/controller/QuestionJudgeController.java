@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import org.exam.bean.dto.ResponseBean;
 import org.exam.bean.entity.TQuestionJudge;
+import org.exam.bean.vo.QuestionJudgeVo;
 import org.exam.service.QuestionJudgeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,20 +24,21 @@ public class QuestionJudgeController {
     @Autowired
     QuestionJudgeService questionJudgeService;
     @GetMapping(value = "/list")
-    public ResponseBean<PageInfo<List<TQuestionJudge>>> list(
+    public ResponseBean<PageInfo<TQuestionJudge>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(required = false) String keyWords){
-        return ResponseBean.ok(questionJudgeService.questionJudgeList(pageNum, pageSize, keyWords));
+            @RequestParam(required = false) String keyWords,
+            @RequestParam(required = false) Long courseId){
+        return ResponseBean.ok(questionJudgeService.questionJudgeList(pageNum, pageSize, keyWords, courseId));
     }
 
     @PutMapping
-    public ResponseBean<Integer> put(TQuestionJudge questionJudge){
-        return ResponseBean.ok(questionJudgeService.update(questionJudge));
+    public ResponseBean<Integer> put(QuestionJudgeVo questionJudgeVo){
+        return ResponseBean.ok(questionJudgeService.update(questionJudgeVo));
     }
     @PostMapping
-    public ResponseBean post(TQuestionJudge questionJudge){
-        return ResponseBean.ok(questionJudgeService.insert(questionJudge));
+    public ResponseBean post(QuestionJudgeVo questionJudgeVo){
+        return ResponseBean.ok(questionJudgeService.insert(questionJudgeVo));
     }
 
     @DeleteMapping(value = "/{id}")

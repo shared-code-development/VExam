@@ -2,6 +2,8 @@ package org.exam.bean.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
@@ -15,6 +17,9 @@ import java.util.Date;
  * @mbg.generated do_not_delete_during_merge Thu Apr 04 09:19:16 CST 2019
  */
 public class TQuestionJudge {
+    @Getter
+    @Setter
+    private TCourse course;
     /**
      * Database Column Remarks:
      *   编号

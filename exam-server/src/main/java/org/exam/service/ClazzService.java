@@ -29,7 +29,7 @@ public class ClazzService {
     TClazzMapper tClazzMapper;
     @Autowired
     UKeyWorker clazzIdWorker;
-    public PageInfo<List<TClazz>> clazzList(Integer pageNum, Integer pageSize, String keyWords){
+    public PageInfo<TClazz> clazzList(Integer pageNum, Integer pageSize, String keyWords){
         PageHelper.startPage(pageNum, pageSize);
         TClazzExample clazzExample = new TClazzExample();
         TClazzExample.Criteria criteria = clazzExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);

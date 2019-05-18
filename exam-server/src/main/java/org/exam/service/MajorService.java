@@ -31,7 +31,7 @@ public class MajorService {
     TMajorMapper tMajorMapper;
     @Autowired
     UKeyWorker majorIdWorker;
-    public PageInfo<List<TMajor>> majorList(Integer pageNum, Integer pageSize, String keyWords){
+    public PageInfo<TMajor> majorList(Integer pageNum, Integer pageSize, String keyWords){
         PageHelper.startPage(pageNum, pageSize);
         TMajorExample majorExample = new TMajorExample();
         TMajorExample.Criteria criteria = majorExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);

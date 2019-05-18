@@ -53,7 +53,7 @@ public class UserController {
     })
     @ApiOperation(value = "用户列表", notes = "分页列表")
     @GetMapping(value = "/list")
-    public ResponseBean<PageInfo<List<TUser>>> list(
+    public ResponseBean<PageInfo<TUser>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "") String keywords){

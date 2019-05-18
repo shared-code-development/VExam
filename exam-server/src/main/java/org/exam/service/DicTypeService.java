@@ -39,7 +39,7 @@ public class DicTypeService {
         return tDicTypeMapper.selectByPrimaryKey(dicTypeId);
     }
 
-    public PageInfo<List<TDicType>> list(Integer pageNum, Integer pageSize) {
+    public PageInfo<TDicType> list(Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         TDicTypeExample userExample = new TDicTypeExample();
         return PageUtils.nullListHandler(tDicTypeMapper.selectByExample(userExample));

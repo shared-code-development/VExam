@@ -38,13 +38,13 @@ public class DicService {
         return tDicMapper.selectByPrimaryKey(dicId);
     }
 
-    public PageInfo<List<TDic>> list(Integer pageNum, Integer pageSize) {
+    public PageInfo<TDic> list(Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         TDicExample userExample = new TDicExample();
         return PageUtils.nullListHandler(tDicMapper.selectByExample(userExample));
     }
 
-    public PageInfo<List<TDic>> treeList(Long parentId) {
+    public PageInfo<TDic> treeList(Long parentId) {
         return PageUtils.nullListHandler(tDicMapper.getDicTreeList(parentId));
     }
 

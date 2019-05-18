@@ -36,7 +36,7 @@ public class DicController {
 
     @ApiOperation(value = "用户列表", notes = "分页列表")
     @GetMapping(value = "/type/list")
-    public ResponseBean<PageInfo<List<TDicType>>> dicTypeList(
+    public ResponseBean<PageInfo<TDicType>> dicTypeList(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize){
         return ResponseBean.ok(dicTypeService.list(pageNum, pageSize));
@@ -68,7 +68,7 @@ public class DicController {
 
     @ApiOperation(value = "字典列表", notes = "分页列表")
     @GetMapping(value = "/list")
-    public ResponseBean<PageInfo<List<TDic>>> list(
+    public ResponseBean<PageInfo<TDic>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize){
         return ResponseBean.ok(dicService.list(pageNum, pageSize));

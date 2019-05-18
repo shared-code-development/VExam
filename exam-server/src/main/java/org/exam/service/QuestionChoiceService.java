@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * exam-server/org.exam.service
@@ -29,12 +30,15 @@ public class QuestionChoiceService {
     TQuestionChoiceMapper tQuestionChoiceMapper;
     @Autowired
     UKeyWorker choiceIdWorker;
-    public PageInfo<List<TQuestionChoice>> questionChoiceList(Integer pageNum, Integer pageSize, String keyWords){
+    public PageInfo<TQuestionChoice> questionChoiceList(Integer pageNum, Integer pageSize, String keyWords, Long courseId){
         PageHelper.startPage(pageNum, pageSize);
         TQuestionChoiceExample questionChoiceExample = new TQuestionChoiceExample();
         TQuestionChoiceExample.Criteria criteria = questionChoiceExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
         if(StringUtils.isNotBlank(keyWords)){
             criteria.andChoiceNameLike("%"+keyWords+"%");
+        }
+        if(Objects.nonNull(courseId)){
+            criteria.andCourseIdEqualTo(courseId);
         }
         List<TQuestionChoice> questionChoiceList = tQuestionChoiceMapper.selectByExample(questionChoiceExample);
         return PageUtils.nullListHandler(questionChoiceList);

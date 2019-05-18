@@ -34,7 +34,7 @@ public class MenuController {
 
     @ApiOperation(value = "用户列表", notes = "分页列表")
     @GetMapping(value = "/list")
-    public ResponseBean<PageInfo<List<TMenu>>> list(
+    public ResponseBean<PageInfo<TMenu>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize){
         return ResponseBean.ok(menuService.list(pageNum, pageSize));

@@ -20,7 +20,7 @@
         <div style="margin-left: 5px;margin-right: 20px;display: inline">
           <el-button type="primary" size="mini" icon="el-icon-plus"
                      @click="showAddShortAnswerView">
-            添加
+            录题
           </el-button>
         </div>
       </el-header>
@@ -47,12 +47,7 @@
             </el-table-column>
             <el-table-column
               prop="shortAnswerName"
-              label="题目"
-              width="200">
-            </el-table-column>
-            <el-table-column
-              prop="shortAnswerType"
-              label="题目类型"
+              label="题目简称"
               width="200">
             </el-table-column>
             <el-table-column
@@ -98,7 +93,7 @@
                 <el-button @click="showEditShortAnswerView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
                 </el-button>
-                <el-button @click="showEditShortAnswerView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <el-button @click="showDetailShortAnswerView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">详情
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
@@ -124,18 +119,22 @@
       </el-main>
     </el-container>
     <el-form :model="shortAnswer" :rules="rules" ref="addShortAnswerForm" style="margin: 0px;padding: 0px;">
-      <div style="text-align: left">
+      <div style="text-align: center">
         <el-dialog
           :title="dialogTitle"
           style="padding: 0px;"
           :close-on-click-modal="false"
           :visible.sync="dialogVisible"
-          width="30%">
-          <el-row>
-            <el-col :span="6">
+          width="50%">
+          <el-row style="padding: 4px">
+            <el-col :span="2">
               <div>
                 <span>所属科目</span>
-                <el-select v-model="shortAnswer.courseId" style="width: 200px" placeholder="请选择" size="mini">
+              </div>
+            </el-col>
+            <el-col :span="10">
+              <div>
+                <el-select v-model="shortAnswer.courseId" style="width: 400px" placeholder="请选择" size="mini">
                   <el-option
                     v-for="item in courseList"
                     :key="item.courseId"
@@ -147,14 +146,34 @@
               </div>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col :span="6">
+          <el-row style="padding: 4px">
+            <el-col :span="2">
               <div>
-                <el-form-item label="题目名称:" prop="shortAnswerName">
-                  <el-input prefix-icon="el-icon-edit" v-model="shortAnswer.shortAnswerName" size="mini" style="width: 150px"
-                            placeholder="请输入题目名称">
-                  </el-input>
-                </el-form-item>
+                <span>题目名称</span>
+              </div>
+            </el-col>
+            <el-col :span="10">
+              <div>
+                <el-input prefix-icon="el-icon-edit" v-model="shortAnswer.shortAnswerName" size="mini" style="width: 500px"
+                          placeholder="请输入题目名称">
+                </el-input>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row style="padding: 4px">
+            <el-col :span="2">
+              <div>
+                <span>答案</span>
+              </div>
+            </el-col>
+            <el-col :span="10">
+              <div>
+                <el-input
+                  type="textarea"
+                  :rows="5"
+                  placeholder="请输入内容"
+                  v-model="shortAnswer.answer">
+                </el-input>
               </div>
             </el-col>
           </el-row>
@@ -189,16 +208,16 @@
         shortAnswer: {
           shortAnswerId: '',
           shortAnswerName: '',
-          courseId: ''
+          answer: ''
         },
         rules: {
-          shortAnswerId: [{required: true, message: '必填:题目编号', trigger: 'blur'}],
+          answer: [{required: true, message: '必填:题目名称', trigger: 'blur'}],
           shortAnswerName: [{required: true, message: '必填:题目名称', trigger: 'blur'}]
         }
       };
     },
     mounted: function () {
-      this.loadMajoies();
+      this.loadShortAnswerList();
       this.initData();
     },
     methods: {
@@ -228,29 +247,29 @@
       doDelete(id) {
         this.tableLoading = true;
         let _this = this;
-        this.deleteRequest("/shortAnswer/" + id).then(resp => {
+        this.deleteRequest("/questionShortAnswer/" + id).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
-            _this.loadMajoies();
+            _this.loadShortAnswerList();
           }
         })
       },
       keyWordsChange(val) {
         if (val == '') {
-          this.loadMajoies();
+          this.loadShortAnswerList();
         }
       },
       searchShortAnswer() {
-        this.loadMajoies();
+        this.loadShortAnswerList();
       },
       currentChange(currentChange) {
         this.currentPage = currentChange;
-        this.loadMajoies();
+        this.loadShortAnswerList();
       },
-      loadMajoies() {
+      loadShortAnswerList() {
         let _this = this;
         this.tableLoading = true;
-        this.getRequest("/shortAnswer/list?pageNum=" + this.currentPage + "&pageSize=10&keyWords="+this.keyWords)
+        this.getRequest("/questionShortAnswer/list?pageNum=" + this.currentPage + "&pageSize=10&keyWords="+this.keyWords)
           .then(resp => {
             this.tableLoading = false;
             if (resp && resp.status == 200) {
@@ -267,23 +286,23 @@
             if (this.shortAnswer.shortAnswerId) {
               //更新
               this.tableLoading = true;
-              this.putRequest("/shortAnswer", this.shortAnswer).then(resp => {
+              this.putRequest("/questionShortAnswer", this.shortAnswer).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
                   _this.emptyShortAnswerData();
-                  _this.loadMajoies();
+                  _this.loadShortAnswerList();
                 }
               })
             } else {
               //添加
               this.tableLoading = true;
-              this.postRequest("/shortAnswer", this.shortAnswer).then(resp => {
+              this.postRequest("/questionShortAnswer", this.shortAnswer).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
                   _this.emptyShortAnswerData();
-                  _this.loadMajoies();
+                  _this.loadShortAnswerList();
                 }
               })
             }
@@ -308,10 +327,10 @@
           }
           this.tableLoading = true;
           let _this = this;
-          this.deleteManyRequest("/shortAnswer", {"ids": idArray}).then(resp => {
+          this.deleteManyRequest("/questionShortAnswer", {"ids": idArray}).then(resp => {
             _this.tableLoading = false;
             if (resp && resp.status == 200) {
-              _this.loadMajoies();
+              _this.loadShortAnswerList();
             }
           });
         }).catch(() => {
@@ -324,20 +343,32 @@
         this.depTextColor = '#606266';
       },
       showEditShortAnswerView(row) {
-        this.dialogTitle = "编辑题目";
+        this.dialogTitle = "编辑选择题";
+        this.shortAnswer = row;
+        this.dialogVisible = true;
+      },
+      showDetailShortAnswerView(row) {
+        this.dialogTitle = "查看选择题";
         this.shortAnswer = row;
         this.dialogVisible = true;
       },
       showAddShortAnswerView() {
-        this.dialogTitle = "添加题目";
+        this.dialogTitle = "添加选择题";
         this.dialogVisible = true;
       },
       emptyShortAnswerData() {
         this.shortAnswer = {
           shortAnswerId: '',
-          shortAnswerName: ''
+          shortAnswerName: '',
+          courseId: '',
+          answer: ''
         }
       }
     }
   };
 </script>
+<style>
+  el-dialog el-row{
+    padding: 4px
+  }
+</style>

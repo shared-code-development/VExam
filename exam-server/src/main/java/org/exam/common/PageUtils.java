@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class PageUtils {
 
-    public static <T> PageInfo<List<T>> nullListHandler(List<T> list){
+    public static <T> PageInfo<T> nullListHandler(List<T> list){
         if(null!=list&&list.size()>0){
             return new PageInfo(list);
         }else{

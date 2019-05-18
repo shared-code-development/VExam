@@ -24,7 +24,7 @@ public class AcademyController {
     @Autowired
     AcademyService academyService;
     @GetMapping(value = "/list")
-    public ResponseBean<PageInfo<List<TAcademy>>> list(
+    public ResponseBean<PageInfo<TAcademy>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(required = false) String keyWords){

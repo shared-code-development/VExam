@@ -4,11 +4,12 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import org.exam.bean.dto.ResponseBean;
 import org.exam.bean.entity.TExamPaper;
+import org.exam.bean.vo.HandleGourpExamPaperVo;
 import org.exam.service.ExamPaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
 
 /**
  * exam-server/org.exam.controller
@@ -23,12 +24,12 @@ public class ExamPaperController {
     @Autowired
     ExamPaperService examPaperService;
     @GetMapping(value = "/list")
-    public ResponseBean<PageInfo<List<TExamPaper>>> list(
+    public ResponseBean<PageInfo<TExamPaper>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(required = false) String keyWords
             ){
-        return ResponseBean.ok(examPaperService.questionShortAnswerList(pageNum, pageSize, keyWords));
+        return ResponseBean.ok(examPaperService.list(pageNum, pageSize, keyWords));
     }
 
     @PutMapping
@@ -47,5 +48,11 @@ public class ExamPaperController {
     @DeleteMapping
     public ResponseBean deleteMany(@RequestParam("ids") Long[] ids){
         return ResponseBean.ok(examPaperService.delete(ids));
+    }
+
+    @PostMapping(value = "/handleGroupExamPaper")
+    public ResponseBean<Integer> handleGroupExamPaper(
+            @Valid @RequestBody HandleGourpExamPaperVo handleGourpExamPaperVo){
+        return ResponseBean.ok(examPaperService.groupExamPaper(handleGourpExamPaperVo));
     }
 }

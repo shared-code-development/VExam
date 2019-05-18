@@ -17,18 +17,19 @@ import java.util.List;
  */
 @Api(tags = "QuestionShortAnswer")
 @RestController
-@RequestMapping("/shortAnswer")
+@RequestMapping("/questionShortAnswer")
 public class QuestionShortAnswerController {
 
     @Autowired
     QuestionShortAnswerService questionShortAnswerService;
     @GetMapping(value = "/list")
-    public ResponseBean<PageInfo<List<TQuestionShortAnswer>>> list(
+    public ResponseBean<PageInfo<TQuestionShortAnswer>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(required = false) String keyWords
+            @RequestParam(required = false) String keyWords,
+            @RequestParam(required = false) Long courseId
             ){
-        return ResponseBean.ok(questionShortAnswerService.questionShortAnswerList(pageNum, pageSize, keyWords));
+        return ResponseBean.ok(questionShortAnswerService.questionShortAnswerList(pageNum, pageSize, keyWords, courseId));
     }
 
     @PutMapping

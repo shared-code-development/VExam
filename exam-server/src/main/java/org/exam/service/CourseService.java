@@ -33,7 +33,7 @@ public class CourseService {
     @Autowired
     UKeyWorker courseIdWorker;
 
-    public PageInfo<List<TCourse>> courseList(Integer pageNum, Integer pageSize, String keyWords){
+    public PageInfo<TCourse> courseList(Integer pageNum, Integer pageSize, String keyWords){
         PageHelper.startPage(pageNum, pageSize);
         TCourseExample courseExample = new TCourseExample();
         TCourseExample.Criteria criteria = courseExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);

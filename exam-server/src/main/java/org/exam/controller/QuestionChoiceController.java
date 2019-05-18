@@ -23,11 +23,12 @@ public class QuestionChoiceController {
     @Autowired
     QuestionChoiceService questionChoiceService;
     @GetMapping(value = "/list")
-    public ResponseBean<PageInfo<List<TQuestionChoice>>> list(
+    public ResponseBean<PageInfo<TQuestionChoice>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(required = false) String keyWords){
-        return ResponseBean.ok(questionChoiceService.questionChoiceList(pageNum, pageSize, keyWords));
+            @RequestParam(required = false) String keyWords,
+            @RequestParam(required = false) Long courseId){
+        return ResponseBean.ok(questionChoiceService.questionChoiceList(pageNum, pageSize, keyWords, courseId));
     }
 
     @PutMapping

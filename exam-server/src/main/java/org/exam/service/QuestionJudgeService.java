@@ -5,16 +5,19 @@ import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.exam.bean.entity.TQuestionJudge;
 import org.exam.bean.entity.TQuestionJudgeExample;
+import org.exam.bean.vo.QuestionJudgeVo;
 import org.exam.common.IdGen.UKeyWorker;
 import org.exam.common.PageUtils;
 import org.exam.enums.BusinessEnum;
 import org.exam.exception.BusinessException;
 import org.exam.mapper.TQuestionJudgeMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * exam-server/org.exam.service
@@ -29,12 +32,15 @@ public class QuestionJudgeService {
     @Autowired
     UKeyWorker judgeIdWorker;
 
-    public PageInfo<List<TQuestionJudge>> questionJudgeList(Integer pageNum, Integer pageSize, String keyWords){
+    public PageInfo<TQuestionJudge> questionJudgeList(Integer pageNum, Integer pageSize, String keyWords, Long courseId){
         PageHelper.startPage(pageNum, pageSize);
         TQuestionJudgeExample questionJudgeExample = new TQuestionJudgeExample();
         TQuestionJudgeExample.Criteria criteria = questionJudgeExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
         if(StringUtils.isNotBlank(keyWords)){
             criteria.andJudgeNameLike("%"+keyWords+"%");
+        }
+        if(Objects.nonNull(courseId)){
+            criteria.andCourseIdEqualTo(courseId);
         }
         List<TQuestionJudge> questionJudgeList = tQuestionJudgeMapper.selectByExample(questionJudgeExample);
         return PageUtils.nullListHandler(questionJudgeList);
@@ -43,13 +49,16 @@ public class QuestionJudgeService {
     public TQuestionJudge get(Long questionJudgeId){
         return tQuestionJudgeMapper.selectByPrimaryKey(questionJudgeId);
     }
-    public int insert(TQuestionJudge questionJudge){
+    public int insert(QuestionJudgeVo questionJudgeVo){
+        TQuestionJudge questionJudge = new TQuestionJudge();
         questionJudge.setJudgeId(judgeIdWorker.getId());
         questionJudge.setCreator(0L);
         questionJudge.setUpdater(0L);
         return tQuestionJudgeMapper.insertSelective(questionJudge);
     }
-    public int update(TQuestionJudge questionJudge){
+    public int update(QuestionJudgeVo questionJudgeVo){
+        TQuestionJudge questionJudge = new TQuestionJudge();
+        BeanUtils.copyProperties(questionJudgeVo, questionJudge);
         return tQuestionJudgeMapper.updateByPrimaryKeySelective(questionJudge);
     }
     public int delete(Long id){

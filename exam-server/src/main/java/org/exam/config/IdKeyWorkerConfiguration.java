@@ -71,4 +71,8 @@ public class IdKeyWorkerConfiguration {
     UKeyWorker examPaperIdWorker() {
         return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.EXAM_PAPER_ID);
     }
+    @Bean
+    UKeyWorker paperQuestionIdWorker() {
+        return UKeyWorkerFactory.createUKeyWorker(UKeyTypeEnum.PAPER_QUESTION_ID);
+    }
 }

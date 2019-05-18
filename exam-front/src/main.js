@@ -7,6 +7,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import store from './store'
 import {getRequest} from './utils/api'
+import {postJsonRequest} from './utils/api'
 import {postRequest} from './utils/api'
 import {deleteRequest} from './utils/api'
 import {deleteManyRequest} from './utils/api'
@@ -21,6 +22,7 @@ Vue.use(ElementUI)
 
 Vue.prototype.getRequest = getRequest;
 Vue.prototype.postRequest = postRequest;
+Vue.prototype.postJsonRequest = postJsonRequest;
 Vue.prototype.deleteRequest = deleteRequest;
 Vue.prototype.deleteManyRequest = deleteManyRequest;
 Vue.prototype.putRequest = putRequest;

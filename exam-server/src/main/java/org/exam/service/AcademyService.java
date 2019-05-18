@@ -31,7 +31,7 @@ public class AcademyService {
     TAcademyMapper tAcademyMapper;
     @Autowired
     UKeyWorker academyIdWorker;
-    public PageInfo<List<TAcademy>> academyList(Integer pageNum, Integer pageSize, String keyWords){
+    public PageInfo<TAcademy> academyList(Integer pageNum, Integer pageSize, String keyWords){
         PageHelper.startPage(pageNum, pageSize);
         TAcademyExample academyExample = new TAcademyExample();
         TAcademyExample.Criteria criteria = academyExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);

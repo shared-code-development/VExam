@@ -36,7 +36,7 @@ public class MenuService {
     @Autowired
     UKeyWorker menuIdWorker;
 
-    public PageInfo<List<TMenu>> list(Integer pageNum, Integer pageSize) {
+    public PageInfo<TMenu> list(Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         TMenuExample userExample = new TMenuExample();
         /*TMenuExample.Criteria criteria = userExample.createCriteria();

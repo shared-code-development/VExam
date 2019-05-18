@@ -1,6 +1,7 @@
 drop table if exists t_paper_question;
 create table t_paper_question(
     id bigint(20) not null primary key comment '主键',
+    paper_id bigint(20) comment '试卷id',
     question_id bigint(20) comment '题库id，可能是选择题，判断题，简答题任意表中的主键',
     dic_type_id bigint(20) comment '题型：选择题，判断题，简答题',
     sort int(4) not null comment '序号',

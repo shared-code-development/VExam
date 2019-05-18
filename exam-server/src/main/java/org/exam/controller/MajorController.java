@@ -24,7 +24,7 @@ public class MajorController {
     @Autowired
     MajorService majorService;
     @GetMapping(value = "/list")
-    public ResponseBean<PageInfo<List<TMajor>>> list(
+    public ResponseBean<PageInfo<TMajor>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(required = false) String keyWords){

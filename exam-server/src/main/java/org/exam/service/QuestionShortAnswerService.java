@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * exam-server/org.exam.service
@@ -29,12 +30,15 @@ public class QuestionShortAnswerService {
     @Autowired
     UKeyWorker sampleAnswerIdWorker;
 
-    public PageInfo<List<TQuestionShortAnswer>> questionShortAnswerList(Integer pageNum, Integer pageSize, String keyWords){
+    public PageInfo<TQuestionShortAnswer> questionShortAnswerList(Integer pageNum, Integer pageSize, String keyWords, Long courseId){
         PageHelper.startPage(pageNum, pageSize);
         TQuestionShortAnswerExample questionShortAnswerExample = new TQuestionShortAnswerExample();
         TQuestionShortAnswerExample.Criteria criteria = questionShortAnswerExample.createCriteria().andIsDelEqualTo(Boolean.TRUE);
         if(StringUtils.isNotBlank(keyWords)){
             criteria.andShortAnswerNameLike("%"+keyWords+"%");
+        }
+        if(Objects.nonNull(courseId)){
+            criteria.andCourseIdEqualTo(courseId);
         }
         List<TQuestionShortAnswer> questionShortAnswerList = tQuestionShortAnswerMapper.selectByExample(questionShortAnswerExample);
         return PageUtils.nullListHandler(questionShortAnswerList);

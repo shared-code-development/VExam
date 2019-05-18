@@ -20,7 +20,7 @@
         <div style="margin-left: 5px;margin-right: 20px;display: inline">
           <el-button type="primary" size="mini" icon="el-icon-plus"
                      @click="showAddJudgeView">
-            添加
+            录题
           </el-button>
         </div>
       </el-header>
@@ -47,12 +47,7 @@
             </el-table-column>
             <el-table-column
               prop="judgeName"
-              label="题目"
-              width="200">
-            </el-table-column>
-            <el-table-column
-              prop="judgeType"
-              label="题目类型"
+              label="题目简称"
               width="200">
             </el-table-column>
             <el-table-column
@@ -98,7 +93,7 @@
                 <el-button @click="showEditJudgeView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">编辑
                 </el-button>
-                <el-button @click="showEditJudgeView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
+                <el-button @click="showDetailJudgeView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px"
                            size="mini">详情
                 </el-button>
                 <el-button type="danger" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini"
@@ -124,18 +119,22 @@
       </el-main>
     </el-container>
     <el-form :model="judge" :rules="rules" ref="addJudgeForm" style="margin: 0px;padding: 0px;">
-      <div style="text-align: left">
+      <div style="text-align: center">
         <el-dialog
           :title="dialogTitle"
           style="padding: 0px;"
           :close-on-click-modal="false"
           :visible.sync="dialogVisible"
-          width="30%">
-          <el-row>
-            <el-col :span="6">
+          width="50%">
+          <el-row style="padding: 4px">
+            <el-col :span="2">
               <div>
                 <span>所属科目</span>
-                <el-select v-model="judge.courseId" style="width: 200px" placeholder="请选择" size="mini">
+              </div>
+            </el-col>
+            <el-col :span="10">
+              <div>
+                <el-select v-model="judge.courseId" style="width: 400px" placeholder="请选择" size="mini">
                   <el-option
                     v-for="item in courseList"
                     :key="item.courseId"
@@ -147,14 +146,30 @@
               </div>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col :span="6">
+          <el-row style="padding: 4px">
+            <el-col :span="2">
               <div>
-                <el-form-item label="题目名称:" prop="judgeName">
-                  <el-input prefix-icon="el-icon-edit" v-model="judge.judgeName" size="mini" style="width: 150px"
-                            placeholder="请输入题目名称">
-                  </el-input>
-                </el-form-item>
+                <span>题目名称</span>
+              </div>
+            </el-col>
+            <el-col :span="10">
+              <div>
+                <el-input prefix-icon="el-icon-edit" v-model="judge.judgeName" size="mini" style="width: 500px"
+                          placeholder="请输入题目名称">
+                </el-input>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row style="padding: 4px">
+            <el-col :span="2">
+              <div>
+                <span>答案</span>
+              </div>
+            </el-col>
+            <el-col :span="10">
+              <div>
+                <el-radio v-model="judge.answer" label=true size="small">正确</el-radio>
+                <el-radio v-model="judge.answer" label=false size="small">错误</el-radio>
               </div>
             </el-col>
           </el-row>
@@ -189,16 +204,16 @@
         judge: {
           judgeId: '',
           judgeName: '',
-          courseId: ''
+          answer: ''
         },
         rules: {
-          judgeId: [{required: true, message: '必填:题目编号', trigger: 'blur'}],
+          answer: [{required: true, message: '必填:题目名称', trigger: 'blur'}],
           judgeName: [{required: true, message: '必填:题目名称', trigger: 'blur'}]
         }
       };
     },
     mounted: function () {
-      this.loadMajoies();
+      this.loadJudgeList();
       this.initData();
     },
     methods: {
@@ -228,29 +243,29 @@
       doDelete(id) {
         this.tableLoading = true;
         let _this = this;
-        this.deleteRequest("/judge/" + id).then(resp => {
+        this.deleteRequest("/questionJudge/" + id).then(resp => {
           _this.tableLoading = false;
           if (resp && resp.status == 200) {
-            _this.loadMajoies();
+            _this.loadJudgeList();
           }
         })
       },
       keyWordsChange(val) {
         if (val == '') {
-          this.loadMajoies();
+          this.loadJudgeList();
         }
       },
       searchJudge() {
-        this.loadMajoies();
+        this.loadJudgeList();
       },
       currentChange(currentChange) {
         this.currentPage = currentChange;
-        this.loadMajoies();
+        this.loadJudgeList();
       },
-      loadMajoies() {
+      loadJudgeList() {
         let _this = this;
         this.tableLoading = true;
-        this.getRequest("/judge/list?pageNum=" + this.currentPage + "&pageSize=10&keyWords="+this.keyWords)
+        this.getRequest("/questionJudge/list?pageNum=" + this.currentPage + "&pageSize=10&keyWords="+this.keyWords)
           .then(resp => {
             this.tableLoading = false;
             if (resp && resp.status == 200) {
@@ -267,23 +282,23 @@
             if (this.judge.judgeId) {
               //更新
               this.tableLoading = true;
-              this.putRequest("/judge", this.judge).then(resp => {
+              this.putRequest("/questionJudge", this.judge).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
                   _this.emptyJudgeData();
-                  _this.loadMajoies();
+                  _this.loadJudgeList();
                 }
               })
             } else {
               //添加
               this.tableLoading = true;
-              this.postRequest("/judge", this.judge).then(resp => {
+              this.postRequest("/questionJudge", this.judge).then(resp => {
                 _this.tableLoading = false;
                 if (resp && resp.status == 200) {
                   _this.dialogVisible = false;
                   _this.emptyJudgeData();
-                  _this.loadMajoies();
+                  _this.loadJudgeList();
                 }
               })
             }
@@ -308,10 +323,10 @@
           }
           this.tableLoading = true;
           let _this = this;
-          this.deleteManyRequest("/judge", {"ids": idArray}).then(resp => {
+          this.deleteManyRequest("/questionJudge", {"ids": idArray}).then(resp => {
             _this.tableLoading = false;
             if (resp && resp.status == 200) {
-              _this.loadMajoies();
+              _this.loadJudgeList();
             }
           });
         }).catch(() => {
@@ -324,20 +339,32 @@
         this.depTextColor = '#606266';
       },
       showEditJudgeView(row) {
-        this.dialogTitle = "编辑题目";
+        this.dialogTitle = "编辑判断题";
+        this.judge = row;
+        this.dialogVisible = true;
+      },
+      showDetailJudgeView(row) {
+        this.dialogTitle = "查看判断题";
         this.judge = row;
         this.dialogVisible = true;
       },
       showAddJudgeView() {
-        this.dialogTitle = "添加题目";
+        this.dialogTitle = "添加判断题";
         this.dialogVisible = true;
       },
       emptyJudgeData() {
         this.judge = {
           judgeId: '',
-          judgeName: ''
+          judgeName: '',
+          courseId: '',
+          answer: ''
         }
       }
     }
   };
 </script>
+<style>
+  el-dialog el-row{
+    padding: 4px
+  }
+</style>

@@ -24,7 +24,7 @@ public class CourseController {
     @Autowired
     CourseService courseService;
     @GetMapping(value = "/list")
-    public ResponseBean<PageInfo<List<TCourse>>> list(
+    public ResponseBean<PageInfo<TCourse>> list(
             @RequestParam(defaultValue = "1") Integer pageNum,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(required = false) String keyWords
