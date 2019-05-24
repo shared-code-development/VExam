@@ -157,7 +157,8 @@
             <el-col :span="6">
               <div>
                 <el-form-item label="试卷名称:" prop="paperName">
-                  <el-input prefix-icon="el-icon-edit" v-model="handlingExamPaper.paperName" size="mini" style="width: 150px"
+                  <el-input prefix-icon="el-icon-edit" v-model="handlingExamPaper.paperName" size="mini"
+                            style="width: 150px"
                             placeholder="请输入试卷名称">
                   </el-input>
                 </el-form-item>
@@ -172,72 +173,128 @@
       </div>
     </el-form>
     <el-form :model="groupExamPaperForm" ref="groupExamPaperForm" style="margin: 0px;padding: 0px;">
-        <el-dialog
-          :title="groupExamPaperDialogTitle"
-          style="padding: 0px;"
-          :close-on-click-modal="false"
-          :visible.sync="groupExamPaperDialogVisible"
-          width="80%" :fullscreen="true">
-            <el-tabs :tab-position="tabPosition" style="height: 100%;">
-              <el-tab-pane label="选择题">
-                <div style="text-align: center">
-                  <el-transfer
-                    style="text-align: left; display: inline-block"
-                    v-model="checkedChoiceList"
-                    filterable
-                    :titles="['题库', '已出题目']"
-                    :button-texts="['撤题', '出题']"
-                    :format="{
+      <el-dialog
+        :title="groupExamPaperDialogTitle"
+        style="padding: 0px;"
+        :close-on-click-modal="false"
+        :visible.sync="groupExamPaperDialogVisible"
+        width="80%" :fullscreen="true">
+        <el-tabs :tab-position="tabPosition" style="height: 100%;">
+          <el-tab-pane label="选择题">
+            <div style="text-align: center">
+              <el-transfer
+                style="text-align: left; display: inline-block"
+                v-model="checkedChoiceList"
+                filterable
+                :titles="['题库', '已出题目']"
+                :button-texts="['撤题', '出题']"
+                :format="{
                       noChecked: '${total}',
                       hasChecked: '${checked}/${total}'
                     }"
-                    @change="groupExamPaper"
-                    :data="choiceList"
-                  >
-                    <el-button class="transfer-footer" slot="right-footer" size="small" @click="addChoiceToExamPaper">添加到试卷</el-button>
-                  </el-transfer>
-                </div>
-              </el-tab-pane>
-              <el-tab-pane label="判断题">
-                <div style="text-align: center">
-                  <el-transfer
-                    style="text-align: left; display: inline-block"
-                    v-model="checkedJudgeList"
-                    filterable
-                    :titles="['题库', '已出题目']"
-                    :button-texts="['撤题', '出题']"
-                    :format="{
+                @change="groupExamPaper"
+                :data="choiceList"
+              >
+                <el-button class="transfer-footer" slot="right-footer" size="small" @click="addChoiceToExamPaper">
+                  添加到试卷
+                </el-button>
+              </el-transfer>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="判断题">
+            <div style="text-align: center">
+              <el-transfer
+                style="text-align: left; display: inline-block"
+                v-model="checkedJudgeList"
+                filterable
+                :titles="['题库', '已出题目']"
+                :button-texts="['撤题', '出题']"
+                :format="{
                       noChecked: '${total}',
                       hasChecked: '${checked}/${total}'
                     }"
-                    @change="groupExamPaper"
-                    :data="judgeList"
-                  >
-                    <el-button class="transfer-footer" slot="right-footer" size="small" @click="addJudgeToExamPaper">添加到试卷</el-button>
-                  </el-transfer>
-                </div>
-              </el-tab-pane>
-              <el-tab-pane label="简答题">
-                <div style="text-align: center">
-                  <el-transfer
-                    style="text-align: left; display: inline-block"
-                    v-model="checkSampleAnswerList"
-                    filterable
-                    :titles="['题库', '已出题目']"
-                    :button-texts="['撤题', '出题']"
-                    :format="{
+                @change="groupExamPaper"
+                :data="judgeList"
+              >
+                <el-button class="transfer-footer" slot="right-footer" size="small" @click="addJudgeToExamPaper">添加到试卷
+                </el-button>
+              </el-transfer>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="简答题">
+            <div style="text-align: center">
+              <el-transfer
+                style="text-align: left; display: inline-block"
+                v-model="checkSampleAnswerList"
+                filterable
+                :titles="['题库', '已出题目']"
+                :button-texts="['撤题', '出题']"
+                :format="{
                       noChecked: '${total}',
                       hasChecked: '${checked}/${total}'
                     }"
-                    @change="groupExamPaper"
-                    :data="sampleAnswerList"
-                  >
-                    <el-button class="transfer-footer" slot="right-footer" size="small" @click="addSampleAnswerToExamPaper">添加到试卷</el-button>
-                  </el-transfer>
-                </div>
-              </el-tab-pane>
-            </el-tabs>
-        </el-dialog>
+                @change="groupExamPaper"
+                :data="sampleAnswerList"
+              >
+                <el-button class="transfer-footer" slot="right-footer" size="small" @click="addSampleAnswerToExamPaper">
+                  添加到试卷
+                </el-button>
+              </el-transfer>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </el-dialog>
+    </el-form>
+    <el-form ref="questionSubmitForm" :model="questionSubmitForm" label-width="80%">
+      <el-dialog
+        :title="examPaperDetailDialogTitle"
+        style="padding: 0px;"
+        :close-on-click-modal="true"
+        :visible.sync="examPaperDetailDialogVisible"
+        width="100%" :fullscreen="true">
+        <template v-for="submitChoice in this.submitChoiceList">
+          <el-row style="text-align: left;padding: 10px">
+            <el-col :span="4" style="font-size:16px;font-weight:bold;">{{submitChoice.serialNumber}} {{submitChoice.choiceName}}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="4" style="width: 80%;text-align: left">
+              <el-radio-group v-model="questionSubmitForm.answer">
+                <el-radio label="A">A. {{submitChoice.optionA}}</el-radio>
+                <el-radio label="B">B. {{submitChoice.optionB}}</el-radio>
+                <el-radio label="C">C. {{submitChoice.optionC}}</el-radio>
+                <el-radio label="D">D. {{submitChoice.optionD}}</el-radio>
+              </el-radio-group>
+            </el-col>
+          </el-row>
+        </template>
+        <template v-for="submitJudge in this.submitJudgeList">
+          <el-row style="text-align: left">
+            <el-col :span="4" style="font-size:16px;font-weight:bold;">{{submitJudge.serialNumber}}  {{submitJudge.judgeName}}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="2" style="width: 22%">
+              <el-radio v-model="questionSubmitForm.judgeAnswer" label="true">对</el-radio>
+            </el-col>
+            <el-col :span="2" style="width: 22%">
+              <el-radio v-model="questionSubmitForm.judgeAnswer" label="false">错</el-radio>
+            </el-col>
+          </el-row>
+        </template>
+        <template v-for="submitShortAnswer in this.submitShortAnswerList">
+          <el-row style="text-align: left">
+            <el-col :span="4" style="font-size:16px;font-weight:bold;">{{submitShortAnswer.serialNumber}}  {{submitShortAnswer.shortAnswerName}}</el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="4" style="width: 22%">
+              <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 4}" placeholder="请输入答案" v-model="questionSubmitForm.showAnswer"></el-input>
+            </el-col>
+          </el-row>
+        </template>
+        <el-form-item style="text-align: left">
+          <el-button type="primary">立即创建</el-button>
+          <el-button>取消</el-button>
+        </el-form-item>
+      </el-dialog>
     </el-form>
   </div>
 </template>
@@ -245,10 +302,17 @@
   export default {
     data() {
       return {
+        questionSubmitForm: {
+          answer: '',
+          judgeAnswer: false,
+          showAnswer:''
+        },
         tabPosition: 'right',
         groupExamPaperForm: {},
         groupExamPaperDialogTitle: '',
         groupExamPaperDialogVisible: false,
+        examPaperDetailDialogTitle: '',
+        examPaperDetailDialogVisible: false,
         examPaperList: [],
         courseList: [],
         choiceList: [],
@@ -278,7 +342,10 @@
         rules: {
           paperId: [{required: true, message: '必填:试卷编号', trigger: 'blur'}],
           paperName: [{required: true, message: '必填:试卷名称', trigger: 'blur'}]
-        }
+        },
+        submitChoiceList: [],
+        submitJudgeList: [],
+        submitShortAnswerList: []
       };
     },
     mounted: function () {
@@ -479,35 +546,49 @@
           paperName: ''
         }
       },
-      addChoiceToExamPaper(){
+      addChoiceToExamPaper() {
         this.postJsonRequest("/examPaper/handleGroupExamPaper",
-          {"paperId":this.handlingExamPaper.paperId,"questionType":"choice","questionIds":this.checkedChoiceList})
+          {"paperId": this.handlingExamPaper.paperId, "questionType": "choice", "questionIds": this.checkedChoiceList})
           .then(resp => {
             if (resp && resp.status == 200) {
-              this.$message('成功添加'+resp.data.obj+'道题');
+              this.$message('成功添加' + resp.data.obj + '道题');
             }
           });
       },
-      addJudgeToExamPaper(){
+      addJudgeToExamPaper() {
         this.postJsonRequest("/examPaper/handleGroupExamPaper",
-          {"paperId":this.handlingExamPaper.paperId,"questionType":"judge","questionIds":this.checkedJudgeList})
+          {"paperId": this.handlingExamPaper.paperId, "questionType": "judge", "questionIds": this.checkedJudgeList})
           .then(resp => {
             if (resp && resp.status == 200) {
-              this.$message('成功添加'+resp.data.obj+'道题');
+              this.$message('成功添加' + resp.data.obj + '道题');
             }
           });
       },
-      addSampleAnswerToExamPaper(){
+      addSampleAnswerToExamPaper() {
         this.postJsonRequest("/examPaper/handleGroupExamPaper",
-          {"paperId":this.handlingExamPaper.paperId,"questionType":"sampleAnswer","questionIds":this.checkSampleAnswerList})
+          {
+            "paperId": this.handlingExamPaper.paperId,
+            "questionType": "sampleAnswer",
+            "questionIds": this.checkSampleAnswerList
+          })
           .then(resp => {
             if (resp && resp.status == 200) {
-              this.$message('成功添加'+resp.data.obj+'道题');
+              this.$message('成功添加' + resp.data.obj + '道题');
             }
           });
       },
-      showExamPaper(){
-
+      showExamPaper(row) {
+        this.getRequest("/examPaper/question/list?paperId=" + row.paperId)
+          .then(resp => {
+            if (resp && resp.status == 200) {
+              console.log("resp", resp)
+              this.submitChoiceList = resp.data.obj.choiceList;
+              this.submitJudgeList = resp.data.obj.judgeList;
+              this.submitShortAnswerList = resp.data.obj.shortAnswerList;
+            }
+          });
+        this.examPaperDetailDialogTitle = "试卷详情";
+        this.examPaperDetailDialogVisible = true;
       }
     }
   };

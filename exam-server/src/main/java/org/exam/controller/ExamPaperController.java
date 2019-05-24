@@ -55,4 +55,8 @@ public class ExamPaperController {
             @Valid @RequestBody HandleGourpExamPaperVo handleGourpExamPaperVo){
         return ResponseBean.ok(examPaperService.groupExamPaper(handleGourpExamPaperVo));
     }
+    @GetMapping(value = "/question/list")
+    public ResponseBean getPaperQuestion(Long paperId){
+        return ResponseBean.ok(examPaperService.getPaperQuestion(paperId));
+    }
 }
