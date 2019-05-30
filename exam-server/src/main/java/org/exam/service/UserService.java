@@ -36,16 +36,7 @@ public class UserService {
     @Autowired
     TUserMapper tUserMapper;
 
-    /*@Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    *//*    log.info("[username]:{}", username);
-        if (StringUtils.isBlank(username)) {
-            throw new UsernameNotFoundException(username + " is not exists!");
-        }
-        TUser user = tUserMapper.loadUserByUsername(username);
-        return user;*//*
-    return null;
-    }*/
+
 
     public PageInfo<TUser> list(Integer pageNum, Integer pageSize, String keywords) {
         PageHelper.startPage(pageNum, pageSize);

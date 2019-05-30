@@ -32,8 +32,7 @@ axios.interceptors.response.use(data => {
   }
   // return Promise.resolve(err);
 })
-// let base = 'http://localhost:8082';
-var base = '';
+let base = '';
 export const postRequest = (url, params) => {
   return axios({
     method: 'post',
@@ -47,7 +46,8 @@ export const postRequest = (url, params) => {
       return ret
     }],
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': window.localStorage.token_type + window.localStorage.token
     }
   });
 }
@@ -57,7 +57,8 @@ export const postJsonRequest = (url, params) => {
     url: `${base}${url}`,
     data: params,
     headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
+      'Content-Type': 'application/json;charset=UTF-8',
+      'Authorization': window.localStorage.token_type + window.localStorage.token
     }
   });
 }
@@ -84,7 +85,8 @@ export const putRequest = (url, params) => {
       return ret
     }],
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': window.localStorage.token_type + window.localStorage.token
     }
   });
 }
@@ -100,7 +102,8 @@ export const deleteManyRequest = (url, param) => {
     url: `${base}${url}`,
     data: param,
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Authorization': window.localStorage.token_type + window.localStorage.token
     }
   });
 }
@@ -108,6 +111,9 @@ export const deleteManyRequest = (url, param) => {
 export const getRequest = (url) => {
   return axios({
     method: 'get',
-    url: `${base}${url}`
+    url: `${base}${url}`,
+    headers: {
+      'Authorization': window.localStorage.token_type + window.localStorage.token
+    }
   });
 }

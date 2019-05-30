@@ -27,27 +27,30 @@
         },
         checked: true,
         loginForm: {
-          username: 'admin',
-          password: '123'
+          username: '',
+          password: ''
         },
         loading: false
       }
     },
     methods: {
       submitClick: function () {
-        var _this = this;
+        let _this = this;
         this.loading = true;
-        this.postRequest('/login', {
+        this.postRequest('/oauth/token', {
+          grant_type: 'password',
+          client_id: 'client',
+          client_secret: 'secret',
           username: this.loginForm.username,
           password: this.loginForm.password
         }).then(resp=> {
           _this.loading = false;
           if (resp && resp.status == 200) {
-            var data = resp.data;
-            _this.$store.commit('login', data.obj);
-            var path = _this.$route.query.redirect;
-            _this.$router
-              .replace({path: path == '/' || path == undefined ? '/home' : path});
+            let data = resp.data;
+            window.localStorage.token = data.access_token;
+            window.localStorage.token_type = data.token_type;
+            let path = _this.$route.query.redirect;
+            _this.$router.replace({path: path == '/' || path == undefined ? '/home' : path});
           }
         });
       }

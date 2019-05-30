@@ -12,6 +12,8 @@ export default new Vuex.Store({
       username: window.localStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]')).username,
       roles: window.localStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]')).roles
     },
+    token: '',
+    token_type: '',
     /**
      * 权限菜单储存
      */

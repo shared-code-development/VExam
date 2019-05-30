@@ -8,12 +8,6 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
-      component: Home,
-      hidden: true
-    },
-    {
-      path: '/login',
       name: 'Login',
       component: Login,
       hidden: true
@@ -22,19 +16,7 @@ export default new Router({
       path: '/home',
       name: '主页',
       component: Home,
-      hidden: true,
-      /*children: [
-        {
-          path: '/chat',
-          name: '消息',
-          component: Chat,
-          hidden: true,
-          meta: {
-            keepAlive: false,
-            requireAuth: true
-          }
-        }
-      ]*/
+      hidden: true
     },
   ]
 })
